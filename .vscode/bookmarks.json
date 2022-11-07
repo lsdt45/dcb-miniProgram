@@ -1,0 +1,54 @@
+{
+	"files": [
+		{
+			"path": "uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js",
+			"bookmarks": [
+				{
+					"line": 822,
+					"column": 53,
+					"label": "isInExactPullDownArea"
+				},
+				{
+					"line": 993,
+					"column": 114,
+					"label": "calLegendData"
+				},
+				{
+					"line": 4708,
+					"column": 63,
+					"label": "drawLegend"
+				},
+				{
+					"line": 6344,
+					"column": 85,
+					"label": "drawCharts"
+				},
+				{
+					"line": 7355,
+					"column": 47,
+					"label": "touchPullDown"
+				}
+			]
+		},
+		{
+			"path": "uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue",
+			"bookmarks": [
+				{
+					"line": 607,
+					"column": 25,
+					"label": ""
+				},
+				{
+					"line": 883,
+					"column": 12,
+					"label": ""
+				},
+				{
+					"line": 932,
+					"column": 38,
+					"label": ""
+				}
+			]
+		}
+	]
+}

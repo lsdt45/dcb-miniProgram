@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "echarts": "^5.4.0",
+    "mitt": "^3.0.0"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^2.6.12",
+    "@types/node": "^18.8.3",
+    "@types/uni-app": "^1.4.4",
+    "@types/wechat-miniprogram": "^3.4.1"
+  }
+}

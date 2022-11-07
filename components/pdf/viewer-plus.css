@@ -1,0 +1,239 @@
+html {
+  overflow: hidden;
+}
+
+.toobal .toolbarViewerLeft .toolbarButton::before {
+  position: absolute;
+  left: 5px !important;
+  top: 0 !important;
+}
+
+#navMenu {
+  width: 50%;
+  height: 50%;
+}
+#navMenu.show {
+  display: block !important;
+  background: #ddd;
+  position: absolute;
+  left: 0;
+  top: 50px;
+  z-index: 9999;
+  width: 50vw;
+  height: 70vh;
+}
+
+#viewer {
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+.tab-bar {
+  display: flex;
+  background: white;
+  position: absolute;
+  bottom: -95px;
+  width: 100vw;
+  height: 10vh;
+  z-index: 9999;
+  transition: bottom 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+.tab-bar.show {
+  bottom: 0;
+}
+.tab-bar .tab-bar-left {
+  display: flex;
+  flex-basis: 43%;
+}
+.tab-bar .tab-bar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  right: 20px;
+}
+.tab-bar .tab-bar-right button span {
+  color: #2C72EC;
+}
+.tab-bar .tab-bar-right .el-button {
+  border-radius: 2px !important;
+  border-color: #e9f1fd;
+}
+.tab-bar .tab-bar-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.tab-bar .tab-bar-item .el-icon {
+  font-size: 22px;
+}
+.tab-bar .tab-bar-item .iconfont {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.tab-bar .tab-bar-item span {
+  font-size: 12px;
+}
+
+.outline-dialog, .history-dialog, .guide-dialog, .compare-dialog {
+  width: 100%;
+  height: 100%;
+}
+.outline-dialog .el-overlay, .history-dialog .el-overlay, .guide-dialog .el-overlay, .compare-dialog .el-overlay {
+  z-index: 9999 !important;
+}
+.outline-dialog .el-dialog, .history-dialog .el-dialog, .guide-dialog .el-dialog, .compare-dialog .el-dialog {
+  margin: 0 !important;
+  position: absolute;
+  bottom: -13vh;
+  transition: bottom 0.2s ease-in-out;
+}
+.outline-dialog .overlay, .history-dialog .overlay, .guide-dialog .overlay, .compare-dialog .overlay {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.outline-dialog .dialog, .history-dialog .dialog, .guide-dialog .dialog, .compare-dialog .dialog {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: -85vh;
+  width: 100%;
+  max-height: 86%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  z-index: 10000;
+  background-color: transparent;
+  font-size: 14px;
+  transition: bottom, 0.3s ease-in-out;
+}
+.outline-dialog .dialog .dialog-header, .history-dialog .dialog .dialog-header, .guide-dialog .dialog .dialog-header, .compare-dialog .dialog .dialog-header {
+  box-sizing: border-box;
+  height: 60px;
+  line-height: 60px;
+  text-align: left;
+  padding-left: 30px;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  border-bottom: 1px solid #E9F1FD;
+  background-color: white;
+}
+.outline-dialog .dialog .dialog-header .title, .history-dialog .dialog .dialog-header .title, .guide-dialog .dialog .dialog-header .title, .compare-dialog .dialog .dialog-header .title {
+  flex-basis: 87%;
+  font-weight: bold;
+  font-size: 17px;
+}
+.outline-dialog .dialog .dialog-body, .history-dialog .dialog .dialog-body, .guide-dialog .dialog .dialog-body, .compare-dialog .dialog .dialog-body {
+  overflow: auto;
+  background-color: white;
+}
+.outline-dialog .dialog .dialog-body li, .history-dialog .dialog .dialog-body li, .guide-dialog .dialog .dialog-body li, .compare-dialog .dialog .dialog-body li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #E9F1FD;
+  padding: 15px 30px;
+}
+.outline-dialog .dialog .dialog-body.guide, .history-dialog .dialog .dialog-body.guide, .guide-dialog .dialog .dialog-body.guide, .compare-dialog .dialog .dialog-body.guide {
+  padding: 20px 30px;
+}
+.outline-dialog .dialog .dialog-body .history-li-select, .history-dialog .dialog .dialog-body .history-li-select, .guide-dialog .dialog .dialog-body .history-li-select, .compare-dialog .dialog .dialog-body .history-li-select {
+  background: #e9f1fd;
+  color: #2C72EC;
+}
+.outline-dialog .dialog .dialog-footer, .history-dialog .dialog .dialog-footer, .guide-dialog .dialog .dialog-footer, .compare-dialog .dialog .dialog-footer {
+  box-sizing: border-box;
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  border-top: 4px solid #F4F4F4;
+  background-color: white;
+}
+.outline-dialog .dialog.show, .history-dialog .dialog.show, .guide-dialog .dialog.show, .compare-dialog .dialog.show {
+  bottom: 0;
+}
+.outline-dialog .el-dialog.show, .history-dialog .el-dialog.show, .guide-dialog .el-dialog.show, .compare-dialog .el-dialog.show {
+  bottom: 0;
+}
+.outline-dialog .list-item:active, .history-dialog .list-item:active, .guide-dialog .list-item:active, .compare-dialog .list-item:active {
+  color: #2C72EC;
+  background-color: #e9f1fd;
+}
+.outline-dialog .list-item, .history-dialog .list-item, .guide-dialog .list-item, .compare-dialog .list-item {
+  position: relative;
+}
+.outline-dialog .list-item.selected, .history-dialog .list-item.selected, .guide-dialog .list-item.selected, .compare-dialog .list-item.selected {
+  color: #2C72EC;
+  background-color: #e9f1fd;
+}
+.outline-dialog .list-item .company-main, .history-dialog .list-item .company-main, .guide-dialog .list-item .company-main, .compare-dialog .list-item .company-main {
+  position: absolute;
+  right: 3em;
+  top: 1em;
+  z-index: 1;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 1.5em;
+  font-size: 12px;
+  padding: 3px;
+  background: #ef6250;
+  color: #fff;
+  text-align: center;
+}
+.outline-dialog .list-item .company-compare, .history-dialog .list-item .company-compare, .guide-dialog .list-item .company-compare, .compare-dialog .list-item .company-compare {
+  position: absolute;
+  right: 2.5em;
+  top: 1em;
+  z-index: 1;
+  width: 2.5em;
+  height: 1.5em;
+  border-radius: 1em;
+  font-size: 12px;
+  padding: 3px;
+  background: #e9f1fd;
+  color: #000;
+  text-align: center;
+}
+
+.history-dialog .dialog {
+  z-index: 10001;
+}
+.history-dialog .dialog li {
+  display: flex;
+  justify-content: center;
+}
+.history-dialog .dialog .stock-name {
+  display: inline-block;
+  width: 140px;
+}
+
+#toolbarViewerRight .icon-goback {
+  color: #a0a0a0;
+  right: 32px;
+}
+#toolbarViewerRight .icon-goback::before {
+  position: relative;
+  top: 2px;
+}
+
+#titleBar {
+  width: 100%;
+  height: 2em;
+}
+#titleBar .text {
+  margin-left: 20px;
+  line-height: 2em;
+}/*# sourceMappingURL=viewer-plus.css.map */

@@ -1,0 +1,245 @@
+html {
+    overflow: hidden;
+}
+// 修改pdfviewr自身的样式
+.toobal {
+    .toolbarViewerLeft {
+        .toolbarButton::before {
+            position: absolute;
+            left: 5px !important;
+            top: 0 !important;
+        }
+    }
+}
+
+#navMenu {
+    width: 50%;
+    height: 50%;
+    &.show {
+        display: block !important;
+        background: #ddd;
+        position: absolute;
+        left: 0;
+        top: 50px;
+        z-index: 9999;
+        width: 50vw;
+        height: 70vh;
+    }
+}
+#viewer {
+    overflow: hidden;
+}
+#app {
+    width: 100%;
+    height: 100%;
+}
+.tab-bar {
+    display: flex;
+    background: white;
+    position: absolute;
+    bottom: -95px;
+    width: 100vw;
+    height: 10vh;
+    z-index: 9999;
+    transition: bottom .2s ease-in-out;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 0 6px rgb(0 0 0 / 4%);
+    &.show{
+        bottom: 0;
+    }
+    .tab-bar-left {
+        display: flex;
+        flex-basis: 43%;
+    }
+    .tab-bar-right {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        right: 20px;
+        button span {
+            color: #2C72EC;
+        }
+        .el-button {
+            border-radius: 2px !important;
+            border-color: #e9f1fd;
+        }
+    }
+    .tab-bar-item {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        .el-icon {
+            font-size: 22px;
+        }
+        .iconfont {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        span {
+            font-size: 12px;
+        }
+    }
+}
+
+.outline-dialog, .history-dialog, .guide-dialog, .compare-dialog {
+    width: 100%;
+    height: 100%;
+    .el-overlay {
+        z-index: 9999 !important;
+    }
+    .el-dialog{
+        margin: 0 !important;
+        position: absolute;
+        bottom: -13vh;
+        transition: bottom .2s ease-in-out;
+    }
+    .overlay {
+        z-index: 9999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, .5);
+    }
+    .dialog{
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        bottom: -85vh;
+        width: 100%;
+        // height: 60%;
+        max-height: 86%;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        z-index: 10000;
+        background-color: transparent;
+        font-size: 14px;
+        transition: bottom, .3s ease-in-out;
+        .dialog-header {
+            box-sizing: border-box;
+            height: 60px;
+            line-height: 60px;
+            text-align: left;
+            padding-left: 30px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            border-bottom: 1px solid #E9F1FD;
+            background-color: white;
+            .title {
+                flex-basis: 87%;
+                font-weight: bold;
+                font-size: 17px;
+            }
+        }
+        .dialog-body {
+            overflow: auto;
+            background-color: white;
+            li {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #E9F1FD;
+                padding: 15px 30px;
+            }
+            &.guide {
+                padding: 20px 30px;
+            }
+            .history-li-select {
+                background: #e9f1fd;
+                color: #2C72EC;
+            }
+        }
+        .dialog-footer {
+            box-sizing: border-box;
+            height: 64px;
+            line-height: 64px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            border-top: 4px solid #F4F4F4;
+            background-color: white;
+        }
+        &.show {
+            bottom: 0;
+        }
+    }
+    .el-dialog.show{
+        bottom: 0;
+    }
+    .list-item:active {
+        color: #2C72EC;
+        background-color: #e9f1fd;
+    }
+    .list-item {
+        position: relative;
+        &.selected {
+            color: #2C72EC;
+            background-color: #e9f1fd;
+        }
+        .company-main {
+            position: absolute;
+            right: 3em;
+            top: 1em;
+            z-index: 1;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 1.5em;
+            font-size: 12px;
+            padding: 3px;
+            background: #ef6250;
+            color: #fff;
+            text-align: center;
+        }
+        .company-compare {
+            position: absolute;
+            right: 2.5em;
+            top: 1em;
+            z-index: 1;
+            width: 2.5em;
+            height: 1.5em;
+            border-radius: 1em;
+            font-size: 12px;
+            padding: 3px;
+            background: #e9f1fd;
+            color: #000;
+            text-align: center;            
+        }
+    }
+}
+
+.history-dialog {
+    .dialog {
+        z-index: 10001;
+        li {
+            display: flex;
+            justify-content: center;
+        }
+        .stock-name {
+            display: inline-block;
+            width: 140px;
+        }
+    }
+}
+
+#toolbarViewerRight {
+    .icon-goback {
+        color: #a0a0a0;
+        right: 32px;
+        &::before {
+            position: relative;
+            top: 2px;
+        }
+    }
+}
+
+#titleBar {
+    width: 100%;
+    height: 2em;
+    .text {
+        margin-left: 20px;
+        line-height: 2em;
+    }
+}

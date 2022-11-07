@@ -1,0 +1,185 @@
+.pdf-report {
+	height: 100%;
+	// overflow: hidden;
+	background: #f4f4f4;
+}
+
+.report-wrapper {
+	display: flex;
+	flex-direction: column;
+	font-size: 34rpx;
+	height: 73vh;
+	padding: 30rpx 40rpx 20rpx;
+	&__bg-img {
+		position: absolute;
+		width: 670rpx;
+		height: 350rpx;
+	}
+	// .report-index-main {
+	// 	background-image: url("https://infostar-2020-1301764129.file.myqcloud.com/miniProgram/static/iamge/stock-home/report-guide.png");
+	// 	background-size: cover;
+	// 	background-repeat: no-repeat;
+	// }
+	.report-header {
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		padding: 72rpx 30rpx;
+		border-bottom: $border3;
+		font-weight: bold;
+		color: $color-main;
+		background: transparent;
+		.report-header__stock {
+			margin-bottom: 20rpx;
+			font-size: $font-size-text-big;
+		}
+		.report-header__enter {
+			position: absolute;
+			font-size: 15px;
+			right: 20px;
+			bottom: 38px;
+		}
+		.report-header__report-change {
+			display: flex;
+			.report-header__year-type {
+				display: flex;
+				font-size: $size40;
+			}
+			.report-header__triangle {
+				border-width: 7px 5px;
+				border-style: solid;
+				border-color: #ef6250 transparent transparent transparent;
+				position: relative;
+				top: 11px;
+				left: 5px;
+			}
+			.report-header__panel {
+				width: calc(100% - 2px);
+				height: 0;
+				position: absolute;
+				z-index: 2014;
+				bottom: 0;
+				left: 0;
+				.report-header__scroll-view {
+					max-height: 0;
+					border: $border3;
+					border-width: 0 !important;
+					color: $font-color-black;
+					transition: all 0.3s ease-in-out;
+					.text {
+						font-size: $font-size-text-small;
+						font-weight: normal;
+					}
+				}
+				.list-item {
+					border-bottom: $border3;
+					&.selected .uni-list-item {
+						background: #e9f1fd;
+						color: #2c72ec;
+					}
+				}
+				&.show {
+					.report-header__scroll-view {
+						max-height: 460rpx;
+						border: $border3;
+					}
+				}
+			}
+		}
+	}
+	.report-body {
+		position: relative;
+		width: calc(100% - 2px);
+		.report-body__index {
+			display: flex;
+			justify-content: space-between;
+			border: solid $color-border-main;
+			border-width: 0px 1px;
+			padding: 35rpx 30rpx;
+			font-size: $font-size-text-medium;
+			font-weight: bold;
+			background-color: #fff;
+			.label-left {
+				color: black;
+			}
+			.label-right {
+				font-weight: normal;
+				color: $color-main;
+			}
+		}
+		.report-body__content {
+			// height: calc(100% - 65px);
+			border: 1px solid $border-color-table;
+		}
+		.overlay {
+			position: absolute;
+			bottom: 0;
+			height: 0;
+			width: 100%;
+			background-color: rgba(1, 1, 1, 0.5);
+			&.show {
+				height: 100%;
+			}
+		}
+	}
+	.report-list-view {
+		height: calc(100% - 152px);
+		.report-list {
+			// padding: 50rpx 30rpx 0;
+		}
+		.list-title,
+		.list-main-item {
+			.uni-list-item__container {
+				padding: 7px 15px;
+				padding-left: 26px !important;
+				&:first-child {
+					padding-top: 20px;
+				}
+			}
+		}
+		.list-main-item {
+			&.header {
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+				margin-left: -20rpx;
+				@include SingleTextEllipsis;
+				white-space: normal;
+			}
+			.list-item-dot {
+				background: #ffba00;
+				width: 16rpx;
+				height: 16rpx;
+				border-radius: 16rpx;
+				margin-right: 5px;
+			}
+			.list-main-item__topic {
+				font-size: $font-size-text-small;
+				font-weight: bold;
+				color: $color-main;
+				@include SingleTextEllipsis;
+				&.children-index {
+					position: relative;
+					left: 1em;
+					width: 88%;
+					font-weight: normal;
+					// color: rgba(44, 114, 236, 0.9);
+				}
+			}
+			.list-main-item__pagenum {
+				color: $color-333;
+				font-size: $font-size-text-small;
+			}
+			&:last-child .uni-list-item__container {
+				padding-bottom: 20px;
+			}
+		}
+		.list-title {
+			.uni-list-item__content-title {
+				font-size: $font-size-text-medium;
+				font-weight: bold;
+				color: $color-333;
+			}
+		}
+	}
+}

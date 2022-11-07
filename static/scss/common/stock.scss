@@ -1,0 +1,622 @@
+$table-first-col-width: 150px;
+uni-page-body {
+	height: 100%;
+	padding: 0 10px;
+}
+
+// 个股样式
+.stock-wrapper {
+	overflow: hidden;
+	.stock-header-nav-wrapper {
+		position: relative;
+		// z-index: 1;
+	}
+	.stock-header {
+		display: flex;
+		background-color: white;
+		padding: 10rpx 28rpx;
+		padding-top: 15px;
+		.stock-header-left {
+			display: flex;
+			flex-basis: 100%;
+			position: relative;
+			left: 4rpx;
+			.stock-info {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-basis: 57%;
+				font-size: 14px;
+			}
+			.iconfont {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 48rpx;
+				font-size: $size28;
+				color: $color-main;
+			}
+			.compare_btn {
+				width: 180rpx;
+				margin-left: 20rpx;
+				background-color: #fff;
+				&-clicked {
+					background-color: #e9f1fd;
+				}
+				&::after {
+					border: 0.6px solid #e9f1fd !important;
+				}
+			}
+			.icon-a-comparisoncompany {
+				position: absolute;
+				right: 0;
+				top: 0.4em;
+				font-size: 1.3em;				
+			}
+		}
+		&.report {
+			margin-left: 20rpx;
+		}
+		.stock-header-btns {
+			display: flex;
+			position: relative;
+			right: -10rpx;
+			.u-btn {
+				margin-right: 5px;
+			}
+			.mini-btn {
+				overflow: initial;
+				line-height: 1.8 !important;
+				font-size: 28rpx !important;
+				padding: 0 0.9em !important;
+				margin-right: 10rpx;
+				color: $color-main;
+				background-color: white;
+			}
+		}
+	}
+	.stock-nav {
+		border-bottom: 1px solid $border-color-table;
+		background-color: white;
+		.u-tab-item {
+			width: 10px;
+			font-size: 28rpx !important;
+		}
+		::v-deep .u-tab-bar {
+			bottom: -3px !important;
+		}
+	}
+	.stock-content {
+		position: relative;
+		// z-index: 1;
+		swiper {
+			height: 100%;
+		}
+		// 财务分析
+		.stock-content-financial-analysis {
+			.financial-analysis-header {
+				display: flex;
+				justify-content: space-between;
+				position: relative;
+				z-index: 1;
+				padding-top: 20rpx;
+				padding-bottom: 20rpx;
+				border-bottom: 4px solid #f4f4f4;
+				background-color: #fff;
+				.financial-analysis-header-left {
+					display: flex;
+					// width: 45%;
+					margin-left: 30rpx;
+					align-items: center;
+					.iconfont.icon-stretch {
+						margin-right: 10rpx;
+					}
+					.text {
+						@include SingleTextEllipsis;
+					}
+				}
+				&__analysis-guide {
+					margin-left: 10px;
+					font-size: 10px;
+					padding: 2px 10px;
+					border-radius: 24px;
+					background: $color-border-main;
+				}
+				.financial-analysis-header-right {
+					display: flex;
+					margin-right: 20rpx;
+					.right-item {
+						margin-right: 20rpx;
+					}
+					.iconfont {
+						text-align: center;
+						font-size: 28rpx;
+					}
+					text {
+						font-size: 24rpx;
+					}
+				}
+			}
+			.table-charts {
+				&.single-table,
+				&.multi-table {
+					height: 77vh;
+				}
+			}
+		}
+		.pdf-viewer {
+			.tool-bar {
+				z-index: 999999;
+				position: fixed;
+				color: skyblue;
+				text-align: center;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+				bottom: 30rpx;
+				width: 60%;
+				height: 72rpx;
+				display: flex;
+				left: 20%;
+				justify-content: center;
+				.share-txt {
+					width: 200rpx;
+					height: 72rpx;
+					border-radius: 36rpx;
+					line-height: 72rpx;
+					text-align: center;
+					font-size: 28rpx;
+				}
+				.share-txt {
+					margin-right: 40rpx;
+				}
+			}
+		}
+	}
+	.btn-hover {
+		background-color: $color-dede !important;
+	}
+	.financial-analysis-panel-wrapper {
+		.financial-analysis-modal {
+			z-index: 9999;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgb(0, 0, 0);
+			opacity: 0;
+			transition: opacity 0.3s ease-in-out;
+			&.show {
+				opacity: 0.5;
+			}
+		}
+		.financial-analysis-panel {
+			width: 100%;
+			height: 72vh;
+			.btn-hover {
+				background-color: $color-dede !important;
+			}
+			.uni-list-item {
+				border-top: 1px solid $border-color-table;
+				&__container {
+					padding: 15px 15px;
+				}
+			}
+			.parent-item {
+				font-weight: bold;
+			}
+			.child-item {
+				position: relative;
+				left: 1em;
+			}
+		}
+		.panel-footer {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 128rpx;
+			font-size: $size34;
+			border-top: $border-footer-div;
+		}
+	}
+	// 报告类型面板
+	.report-type-panel,
+	.analy-time-panel {
+		// 多选框
+		::v-deep .u-checkbox {
+			padding-left: 40%;
+			border-top: $border2;
+			border-top-color: $border-color-table;
+		}
+		.u-close {
+			width: 48px;
+			height: 48px;
+			top: 7rpx;
+			right: 30rpx;
+			display: flex;
+			justify-content: center;
+		}
+	}
+	// 报告导读
+	.stock-content-item.report {
+		padding: 30rpx 40rpx 20rpx;
+		.report-wrapper {
+			display: flex;
+			flex-direction: column;
+			font-size: 34rpx;
+			height: 73vh;
+			background-size: cover;
+			background-repeat: no-repeat;
+			&__bg-img {
+				position: absolute;
+				width: 674rpx;
+				height: 528rpx;
+			}
+		}
+		.report-header {
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			padding: 30rpx;
+			border-bottom: $border3;
+			font-weight: bold;
+			color: $color-main;
+			background: transparent;
+			.report-header__stock {
+				margin-bottom: 20rpx;
+				font-size: $font-size-text-big;
+			}
+			.report-header__enter {
+				position: absolute;
+				right: 15px;
+				bottom: 15px;
+			}
+			.report-header__report-change {
+				display: flex;
+				.report-header__year-type {
+					display: flex;
+				}
+				.report-header__triangle {
+					border-width: 8px 7px;
+					border-style: solid;
+					border-color: #ef6250 transparent transparent transparent;
+					position: relative;
+					top: 8px;
+					left: 9px;
+				}
+				.report-header__panel {
+					width: calc(100% - 2px);
+					height: 0;
+					position: absolute;
+					z-index: 2014;
+					bottom: 0;
+					left: 0;
+					.report-header__scroll-view {
+						max-height: 0;
+						border: 0;
+						border: $border3;
+						border-width: 0;
+						color: $font-color-black;
+						transition: all 0.3s ease-in-out;
+						.text {
+							font-size: $font-size-text-small;
+							font-weight: normal;
+						}
+					}
+					.list-item {
+						border-bottom: $border3;
+						&.selected .uni-list-item {
+							background: #e9f1fd;
+							color: #2c72ec;
+						}
+					}
+					&.show {
+						.report-header__scroll-view {
+							max-height: 460rpx;
+							border: $border3;
+						}
+					}
+				}
+			}
+		}
+		.report-body {
+			position: relative;
+			height: 100%;
+			.report-body__index {
+				display: flex;
+				justify-content: space-between;
+				// border-bottom: $border2;
+				padding: 35rpx 30rpx;
+				font-size: $font-size-text-medium;
+				font-weight: bold;
+				.label-left {
+					color: $color-main;
+				}
+				.label-right {
+					font-weight: normal;
+					color: $color-main;
+				}
+			}
+			.report-body__content {
+				height: calc(100% - 50px);
+				border: 1px solid $border-color-table;
+			}
+			.overlay {
+				position: absolute;
+				bottom: 0;
+				height: 0;
+				width: 100%;
+				background-color: rgba(1, 1, 1, 0.5);
+				&.show {
+					height: 100%;
+				}
+			}
+		}
+		.report-list-view {
+			height: calc(100% - 152px);
+			.report-list {
+				// padding: 50rpx 30rpx 0;
+			}
+			.list-title,
+			.list-main-item {
+				.uni-list-item__container {
+					padding-left: 25px !important;
+					// margin-bottom: 20rpx;
+					// background-color: rgb(233, 241, 253) !important;
+				}
+			}
+			.list-main-item {
+				&.header {
+					display: flex;
+					justify-content: space-between;
+					width: 100%;
+					margin-left: -20rpx;
+					text {
+						font-size: $font-size-text-small;
+						font-weight: bold;
+						color: $color-333;
+					}
+					@include SingleTextEllipsis;
+					white-space: normal;
+				}
+				.list-item-dot {
+					background: #ffba00;
+					width: 16rpx;
+					height: 16rpx;
+					border-radius: 16rpx;
+					margin-right: 5px;
+				}
+			}
+			.list-title {
+				.uni-list-item__content-title {
+					font-size: $font-size-text-medium;
+					font-weight: bold;
+					color: $color-333;
+				}
+			}
+		}
+	}
+	// 会计分析
+	.stock-content-item.act-analysis {
+		height: 84vh;
+		.act-analysis-list-view {
+			height: 100%;
+			.act-analysis-list {
+				padding: 50rpx 30rpx 0;
+				.list-title {
+					.uni-list-item__container {
+						background-color: rgb(233, 241, 253) !important;
+					}
+				}
+				.list-item {
+					font-size: $font-size-text-small;
+					color: $color-333;
+					@include SingleTextEllipsis;
+				}
+				.uni-list-item {
+					border-left: 1px solid #e9f1fd;
+					border-right: 1px solid #e9f1fd;
+				}
+			}
+		}
+	}
+	// 分析指南
+	.analy-guide-panel {
+		.panel-body {
+			display: flex;
+			flex-direction: column;
+			border-top: $border-normal-div;
+			width: 93vw;
+			max-height: 70vh;
+			.image {
+				display: block;
+				width: 320rpx;
+				height: 240rpx;
+				margin: 0 auto;
+			}
+			.text-nodata {
+				text-align: center;
+				color: $color-999;
+			}
+		}
+		.u-close {
+			width: 48px;
+			height: 48px;
+			top: 16rpx;
+			right: 26rpx;
+			display: flex;
+			justify-content: center;
+		}
+	}
+	// 面板的头部样式
+	.panel-header {
+		height: 116rpx;
+		line-height: 116rpx;
+		text-align: left;
+		font-weight: bold;
+		font-size: $font-size-text-medium;
+		padding-left: 28rpx;
+		border-bottom: $border2;
+	}
+	.panel-body {
+		// padding: 20rpx 30rpx;
+	}
+	.panel-footer {
+		display: flex;
+		height: 128rpx;
+		align-items: center;
+		justify-content: center;
+		border-top: $border-footer-div;
+		.cancel,
+		.ok {
+			flex: 1;
+		}
+		.cancel {
+			margin-right: $margin40rpx;
+			.u-btn {
+				background-color: $btn-color-f2;
+				color: $color-main;
+			}
+		}
+		.ok {
+			button {
+				border-color: $btn-ok-color;
+				background-color: $btn-ok-color;
+			}
+		}
+		.u-btn {
+			padding: 0 128rpx;
+			border-radius: 5px !important;
+			font-weight: 650;
+		}
+	}
+	.mask-wrapper {
+		position: absolute;
+		bottom: 0;
+		z-index: 10;
+		width: 100%;
+		height: 0;
+		// left: 8px;
+		background-color: white;
+		&.show {
+			// height: calc(100% - 100px);
+		}
+	}
+	.icon-close {
+		position: absolute;
+		bottom: 60rpx;
+		right: 4rpx;
+		z-index: 11;
+		font-size: 25rpx;
+		background-color: rgba(0, 0, 0, 0.5);
+		border-radius: 25rpx;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.6);
+		}
+	}
+	.uicon-close {
+		font-size: 24rpx !important;
+		color: $color-333 !important;
+	}
+	.data-select {
+		display: flex;
+		justify-content: space-between;
+		width: 220rpx;
+		padding: 10rpx 20rpx;
+		border-radius: 2px;
+		border: 1px solid #e9f1fd;
+		.data-select__content {
+			color: $color-666;
+			@include SingleTextEllipsis;
+		}
+		.data-select__arrow {
+			display: inline-block;
+			position: relative;
+			top: 7px;
+			left: 2px;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 6px 5px 6px 5px;
+			border-style: solid;
+			border-color: transparent;
+			border-top-color: $color-666;
+		}
+	}
+	.uni-talbe-td__tooltip {
+		position: absolute;
+		left: 0;
+		z-index: 3;
+		word-break: break-all;
+		white-space: pre-wrap;
+		width: 150px;
+		border: 1px solid black;
+		opacity: 0;
+		overflow: hidden;
+		background: #fff;
+		font-size: 14px;
+		transition: opacity 0.3s ease-in-out;
+	
+		&.show {
+			height: auto;
+			opacity: 1;
+			transition: opacity 0.3s ease-in-out;
+		}
+	}
+	.table-charts__lanscape.table {
+		widows: 100%;
+		position: relative;
+		white-space: nowrap;
+	
+		.uni-table {
+			position: inherit;
+			table-layout: fixed;
+		}
+	
+		.uni-table-tr {
+			.uni-table-th {
+				width: 100px;
+			}
+	
+			.uni-table-th:first-child,
+			.uni-table-td:first-child {
+				position: sticky;
+				left: 0;
+				z-index: 2;
+				width: $table-first-col-width !important;
+				@include SingleTextEllipsis;
+			}
+	
+			.uni-table-th:first-child {
+			}
+		}
+	
+		.uni-table .uni-table-tr:first-child {
+	
+			.uni-table-th,
+			.uni-table-td {
+				background-color: $table-odd-td-bgcolor;
+			}
+		}
+	
+		.uni-table .uni-table-tr:not(:first-child) {
+	
+			.uni-table-th,
+			.uni-table-td {
+				background-color: #fff;
+			}
+		}
+	
+		.uni-table-td {
+			border-bottom-color: $border-color-table !important;
+		}
+		.dcb-table__wrapper.lanscape{
+			margin-left: 60rpx;
+		}
+	}
+
+}

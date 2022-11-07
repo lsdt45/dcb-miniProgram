@@ -1,0 +1,42 @@
+.report-information-wrapper {
+	height: 76vh;
+	.report-list {
+		.list-item {
+			height: $list-height-main;
+			margin-left: 20rpx;
+			.report-header {
+				position: relative;
+				height: $list-height-main - 20rpx;
+				font-size: $font-size-text-medium;
+				.report-header-title {
+					@include TextEllipsis;
+				}
+				.report-header-body {
+					font-size: $font-size-text-small;
+					margin-top: 10rpx;
+					color: $font-color2;
+					@include TextEllipsis;
+				}
+				.report-header-footer {
+					display: flex;
+					position: absolute;
+					width: 100%;
+					bottom: 40rpx;
+					font-size: $font-size-text-mini;
+					color: $font-color2;
+					.report-url {
+						width: 55%;
+						margin-right: 10rpx;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						white-space: nowrap;
+					}
+					.report-createtime {
+						position: absolute;
+						right: 80rpx;
+					}
+				}
+			}
+		}
+	}
+}

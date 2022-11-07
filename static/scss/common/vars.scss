@@ -1,0 +1,50 @@
+// 基本颜色定义
+$color-333: #333;
+$color-666: #666;
+$color-999: #999;
+$color-dede: #dedede;
+$color-dcde: #dcdede;
+$color-border-main: #e9f1fd;
+// 基本大小定义
+$size40: 40rpx;
+$size34: 34rpx;
+$size28: 28rpx;
+$size24: 24rpx;
+
+
+// 页面颜色
+$page-bgcolor: #f4f4f4;
+$color-main: #2C72EC;
+$table-header-color: #f8fbfe; // 表头背景色
+// 字体、按钮颜色
+$font-color1: $color-999;
+$font-color2: rgba(0, 0, 0, 0.498);
+$font-color-black: black;
+$btn-ok-color: $color-main;
+$btn-color-f2: #f2f2f2;
+
+// 字体大小
+$font-size-text-big: $size40;
+$font-size-text-medium: $size34;
+$font-size-text-small: $size28;
+$font-size-text-mini: $size24;
+$list-height-main: 280rpx;
+
+// 间距、边距
+$margin40rpx: 40rpx;
+
+// 边框
+$border1: 1px solid #eee;
+$border2: 1px solid #e8e8e8;
+$border3: 1px solid #e9f1fd;
+// 底部分隔线
+$border-footer-div: 4px solid #F4F4F4;
+// 普通分隔线
+$border-normal-div: 1px solid #e9f1fd;
+$border-color: #e1e1e2;
+$border-color-table: #e9f1fd;
+$btn-border-color: #e9f1fd;
+
+// 表格
+$table-th-color: #eeeff1;
+$table-odd-td-bgcolor: #f2f2f2;

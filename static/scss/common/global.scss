@@ -1,0 +1,76 @@
+// 这里放置通用样式
+
+view, text, scroll-view {
+	font-family: 'PingFang-SC-Regular', 'PingFang SC', sans-serif, 'Microsoft YaHei';
+}
+
+page {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	// overflow-y: hidden;
+}
+
+button, button::after, .u-subsection, .u-item-bg {
+	border-radius: 2px !important;
+}
+button, button::after {
+	border-color: $btn-border-color !important;
+}
+
+// 自定义顶部导航栏的样式
+.uni-navbar__header-container-inner {
+	position: relative;
+	// 导航栏的标题
+	.uni-nav-bar-text {
+		position: absolute;
+		bottom: 10px;
+		font-size: $size34;
+	}
+}
+
+// 自定义uni-table表格样式
+// .uni-table-th.table--border {
+// 	border-right: 1px solid $border-color;
+// }
+
+// .uni-table-scroll {
+// 	&.table--border {
+// 		border: 1px solid $border-color;
+// 		border-bottom: 1px solid $border-color;
+// 	}
+// 	.uni-table-tr:nth-child(odd) {
+// 		background-color: $table-odd-td-bgcolor;
+		
+// 	}
+// }
+
+
+// 自定义uniui样式
+.uni-table-tr .table--border {
+	border: 0;
+	border-right: 1px solid $border-color;
+}
+
+.uni-navbar__header-btns {
+	position: relative;
+	.uni-navbar__content_view {
+		position: absolute;
+		bottom: 10px;	
+		.uniui-left {
+			font-size: 22px !important;
+		}
+	}
+}
+
+.uni-easyinput__content {
+	border-color: $border-color-table;
+	background-color: #f4f4f4;
+	border-radius: 0 !important;
+}
+
+// button点击效果
+.btn-hover-class {
+	background-color: #e9f1fd;
+}
