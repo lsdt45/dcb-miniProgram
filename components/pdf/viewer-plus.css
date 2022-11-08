@@ -120,6 +120,8 @@ html {
   transition: bottom, 0.3s ease-in-out;
 }
 .outline-dialog .dialog .dialog-header, .history-dialog .dialog .dialog-header, .guide-dialog .dialog .dialog-header, .compare-dialog .dialog .dialog-header {
+  display: flex;
+  position: relative !important;
   box-sizing: border-box;
   height: 60px;
   line-height: 60px;
@@ -131,7 +133,6 @@ html {
   background-color: white;
 }
 .outline-dialog .dialog .dialog-header .title, .history-dialog .dialog .dialog-header .title, .guide-dialog .dialog .dialog-header .title, .compare-dialog .dialog .dialog-header .title {
-  flex-basis: 87%;
   font-weight: bold;
   font-size: 17px;
 }
@@ -218,6 +219,53 @@ html {
 .history-dialog .dialog .stock-name {
   display: inline-block;
   width: 140px;
+}
+.history-dialog .company-main {
+  position: relative;
+  top: 1.4em;
+  z-index: 1;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  margin-left: 0.7em;
+  border-radius: 1.5em;
+  font-size: 12px;
+  padding: 3px;
+  background: #ef6250;
+  color: #fff;
+  text-align: center;
+}
+.history-dialog .company-compare {
+  position: relative;
+  top: 1.4em;
+  z-index: 1;
+  width: 2.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  margin-left: 0.7em;
+  border-radius: 1em;
+  font-size: 12px;
+  padding: 3px;
+  background: #e9f1fd;
+  color: #000;
+  text-align: center;
+}
+.history-dialog .iconfont {
+  font-size: 18px;
+}
+.history-dialog .icon-left {
+  position: relative;
+  top: -1px;
+  left: -3px;
+}
+.history-dialog .icon-a-comparisoncompany {
+  margin-left: 0.5em;
+  color: #2C72EC;
+}
+.history-dialog .history-header-right-text {
+  position: absolute;
+  right: 1em;
+  color: #f06958;
 }
 
 #toolbarViewerRight .icon-goback {

@@ -46,7 +46,7 @@
 				<view class="industry-data-picker">
 					<uni-data-picker :localdata="industryPickerTree" :isShowBottomText="true" v-model="curIndustryId"
 						:clearIcon="false" :onlyShowLast="true" :placeholder="`当前行业：${curIndustryName}`" preText="当前行业:"
-						:noShow="currentTab==0?true:false"
+						:noShow="currentTab==0?true:false" @change="changeIndustry"
 						ref="dataPicker">
 					</uni-data-picker>
 					<view class="data-select__arrow" v-if="currentTab!=0"></view>
@@ -206,9 +206,13 @@
 		toast.value.show({
 			title: '您可以在此自定义对比公司，最多可选8个'
 		})
-	}	
-	// 切换tab页的回调
-	function changeTab(index) {
+	}
+	/**
+	 * description: 切换tab页的回调
+	 * @param index - tab页的索引.
+	 * @createTime: 2022-11-07 21:50:38
+	 */
+	function changeTab(index: number) {
 		// 判断是否为系统默认分类，是：赋值默认对比公司列表。否：通过接口获取列表。
 		// 将是否已排序的标识设为false，以便排序
 		table.value.isSorted = false
@@ -232,6 +236,7 @@
 				}
 			})
 			// 重新获取当前行业的表格数据
+			dataPicker.value.clear()
 			tableData.value = []
 			curTableIndex.value = 1
 			getCurIndustryInfo()
@@ -246,6 +251,18 @@
 		curTableIndex.value = 1
 		getCurIndustryInfo()
 	}
+	/**
+	 * description: 选择完行业后重新获取数据
+	 * @param e - 选择完毕的回调参数
+	 */
+	function changeIndustry(e) {
+		if(e.detail.value.length == 0) return
+		let item = e.detail.value[e.detail.value.length - 1]
+		tableData.value = []
+		curTableIndex.value = 1		
+		curIndustryName.value = item.text
+		getCurIndustryCompany(item.value)
+	}	
 	/**
 	 * description: 获取行业分类信息
 	 * @return 
@@ -264,7 +281,8 @@
 	 * description: 获取当前行业分类下的股票信息
 	 * @createTime: 2022-11-01 16:59:49
 	 */
-	function getCurIndustryCompany() {
+	function getCurIndustryCompany(code=null) {
+		let industryCode = null
 		let reportData = null
 		for(let item of endDateList.value) {
 			if(item.value == curSelectDate.value ) {
@@ -272,9 +290,10 @@
 				break
 			}
 		}
+		industryCode = code? code: curIndustryBaseInfo.industryCode
 		let param = {
 			Code: store.state.curStock.secCode,
-			IndustryCode: curIndustryBaseInfo.industryCode,
+			IndustryCode: industryCode,
 			IndustryName: curIndustryClassification.value.typeName,
 			pageIndex: curTableIndex.value,
 			pageSize: pageSize.value,
@@ -297,12 +316,16 @@
 	}
 	/**
 	 * description: 获取当前行业的信息
+	 * @param industryNameParam - 行业名。不传则默认为当前tab页的行业分类。
 	 * @createTime: 2022-11-01 16:59:49
 	 */
-	function getCurIndustryInfo() {
+	function getCurIndustryInfo(industryNameParam=null) {
+		let industryName = ''
+		industryName = industryNameParam? industryNameParam: 
+			curIndustryClassification.value.typeName
 		let param = {
 			Code: store.state.curStock.secCode,
-			IndustryName: curIndustryClassification.value.typeName,
+			IndustryName: industryName,
 		}
 		api.post('/Compare/GetSameIndustryByCode', param).then((resp) => {
 			if (resp.data) {
@@ -494,6 +517,7 @@
 			}
 		})
 	}
+
 	onMounted(() => {
 		initData()
 		getIndustryClassificationInfo()

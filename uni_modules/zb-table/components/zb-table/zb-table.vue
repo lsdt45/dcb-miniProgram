@@ -1012,7 +1012,6 @@ export default {
         })
 				
       }
-			console.dir(this.data)
     },
     throttle(method,delay=60){
       let time = null

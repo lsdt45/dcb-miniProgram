@@ -30,7 +30,8 @@
 				success: (res) => {
 					auth = res.data
 					this.pdfUrl = this.preUrl + options.pdfUrl + '&auth=' + auth + '&code=' + options.code + 
-						'&name=' + options.name + '&nodeid=' + options.nodeid + '&taskid=' + options.taskid + '&page=' + options.page
+						'&name=' + options.name + '&nodeid=' + options.nodeid + '&taskid=' + options.taskid + '&mainCode=' + options.code + 
+						'&mainName=' + options.name + '&mainNodeid=' + options.nodeid + '&mainTaskid=' + options.taskid + '&page=' + options.page
 						+ '&login=' + options.login + '&templateId=' + options.templateId + '&compareList=' + options.compareList
 				}
 			})
