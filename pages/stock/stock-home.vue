@@ -278,7 +278,6 @@
 					})
 					.catch((err: Error) => console.log(err));
 			},
-
 		},
 		onShow() {
 			this.initData();

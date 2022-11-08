@@ -7,7 +7,7 @@
 			<view class="global-table-toolbar">
 				<!-- 对比公司选择 -->
 				<view class="compare-company-select">
-					<uni-data-select v-model="curSelectCompany" :clear="false" :localdata="compareCompanyList" @change="changeCompareCompany">
+					<uni-data-select v-model="curSelectCompany" :clear="false" :localdata="compareCompanyList">
 					</uni-data-select>
 				</view>				
 				<!-- 展现形式选择 -->
@@ -418,6 +418,11 @@
 						})
 					})				
 				})				
+			},
+			curSelectCompany(newVal) {
+				// console.dir(this.$store.state)
+				if(this.baseData.tableData.length == 0) return
+				this.chartsDataProcess()
 			}
 		},
 		options: {
@@ -444,7 +449,6 @@
 					report: [],
 					time: []
 				}
-				// dataFilter.time = [...this.$parent.timeRange]
 				// 选中的报告类型
 				let checkedRptData = this.$parent.rptTypeData.filter((item) => {
 					return item.checked == true
@@ -542,14 +546,14 @@
 					ChartsId: this.chartsId,
 					// ChartsId: '20200812152934384100',
 					MainCode: this.chartsInfoProp.curStock.secCode,
-					MainTime: '2022',
+					MainTime: this.$store.state.curStock.year,
 					TimeList: this.timeList,
 					Granularity: '季',
 					ChartsType: '',
 					LoadIndustryList: [],
 					CodeList: [],
 					BenchCodeList,
-					ReportType: '年度报告',
+					ReportType: this.$store.state.curStock.rptType,
 				}
 
 				this.$api.post('/Report/GetChartsData', param).then((resp) => {
@@ -671,7 +675,7 @@
 				tableChartsUtil.updateOptions(this)
 			},
 			// 改变当前对比公司
-			changeCompareCompany() {
+			changeCompareCompany(e) {
 				this.chartsDataProcess()
 			},
 			// 筛选出默认报告类型和分析时间的数据

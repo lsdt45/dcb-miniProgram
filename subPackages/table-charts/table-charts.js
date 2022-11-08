@@ -10,6 +10,7 @@ export default {
 		resetData(self)
 		// let tarIndex = 0
 		let codeData = []
+		if(self.allChartsTableData.length == 0) return
 		self.allChartsTableData.codeDataList.forEach((item, index) => {
 			if(item.code == self.curSelectCompany) {
 				codeData = item.data.codeData

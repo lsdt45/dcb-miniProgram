@@ -95,14 +95,13 @@
 
 		.compare-industry__header {
 			display: grid;
-			grid-template-columns: 240rpx auto 100rpx;
+			grid-template-columns: 240rpx auto 2.2em;
 			padding: 20px 15px;
 			margin-bottom: 5px;
 			background-color: #fff;
 
 			.tag-count {
 				position: relative;
-				top: -2px;
 			}
 			.text_container {
 				display: flex;

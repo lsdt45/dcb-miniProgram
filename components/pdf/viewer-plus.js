@@ -106,14 +106,28 @@ const main = {
             token: '', // 认证用token
             taskId: '',
             templateId: '', // 模板id
+            // 目标股票信息
+            targetStock: {
+                code: '',
+                name: ''
+            },
             helpMsg: '', // 分析指南文本
             historyRpt: [], // 历史报告
+            historyTitle: '', // 历史报告弹窗标题
+            historyIcon: '', // 历史报告页面右侧的图标类型
             pageNumData: [], // 匹配页码数据
             optionalStockList: [], // 自选股列表
             curPage: '', // 当前页数
             curStock: {
                 secName: '',
                 secCode: ''
+            },
+            compareList: [], // 对比公司
+            mainReport: {
+                stockName: '',
+                stockCode: '',
+                nodeId: '',
+                taskId: ''
             },
             newPdfUrl: '', // 新pdf的文件路径
             preUrl: 'https://report.ducaibao.com.cn/test/wxapp/beta/pdf/web/viewer.html?file=', // pdf预览器
@@ -156,13 +170,38 @@ const main = {
             } else {
                 return 'dialog'
             }
-        },        
+        },
+        // 股票全名，包括当前报告名 
         stockFullName() {
             return this.curStock.secName + "(" + this.curStock.secCode + ")" + " "+ this.curStock.year + '年' + this.curStock.fileName
+            
+        },
+        stockName() {
+            return this.curStock.secName + "(" + this.curStock.secCode + ")"
         },
         historyStockName() {
             return (item)=> {
                 return item.year + '年' + item.name
+            }
+        },
+        // 对比公司列表右侧图表样式
+        compareItemIconTypeClass() {
+            return(item) => {               
+                let className = item.isMain? 'company-main': 'company-compare'
+                return className
+                // if(name == this.curStock.secName) {
+                //     return className + ' ' + 'selected'
+                // } else {
+                //     return className
+                // }
+            }
+        },
+        // 对比公司列表选中样式
+        compareItemTypeClass() {
+            return(item) => {
+                let index = item.name.indexOf('(')
+                let name = item.name.slice(0, index)    
+                return name == this.curStock.secName? 'selected': ''
             }
         },
         // 返回匹配目录的页码
@@ -185,7 +224,26 @@ const main = {
             this.curPage = getQueryVariable('page')
             this.isLogin = getQueryVariable('login')
             this.templateId = getQueryVariable('templateId')
+            this.mainReport.stockName = decodeURI(getQueryVariable('mainName'))
+            this.mainReport.stockCode = getQueryVariable('mainCode')
+            this.mainReport.nodeId = getQueryVariable('mainNodeid')
+            this.mainReport.taskId = getQueryVariable('mainTaskid')
+            // 初始化对比公司列表 start
+            this.oriCompareList = getQueryVariable('compareList')
             this.compareList = decodeURI(getQueryVariable('compareList')).split(',')
+            let newArr = []
+            this.compareList.forEach((item, index, arr) => {
+                // let index = item.indexOf('(')
+                // let code = item.slice(index + 1, -1)
+                // let name = item.slice(0, index)                  
+                let result = item.indexOf(this.mainReport.stockCode)
+                newArr.push({
+                    name: item,
+                    isMain: result!=-1? true: false
+                })
+            })
+            this.compareList = newArr
+            // 初始化对比公司列表 end
             if(this.curPage != '-1') {
                 $("#initPage")[0].innerHTML = this.curPage
             } else {
@@ -230,6 +288,11 @@ const main = {
             } else if(type === 'guide') {
                 this.isShowGuideDialog = false
             } else if(type === 'compare') {
+                this.isShowCompareDialog = false
+            } else if (type === 'all') {
+                this.isShowOutlineDialog = false
+                this.isShowHistoryDialog = false
+                this.isShowGuideDialog = false
                 this.isShowCompareDialog = false
             }
             
@@ -284,22 +347,27 @@ const main = {
             })
         },
         // 通过code获取报告的信息
-        getRptInfoByCode() {
-            let param = {
-                Code: this.curStock.secCode
-            }
-            $.ajax({
-                method: 'POST',
-                url: this.apiUrl + '/Report/GetAllReportInfoByCode',
-                headers: {
-                    'Authorization': 'Bearer ' + this.token
-                },
-                contentType: 'application/json',
-                data: JSON.stringify(param),
-                success: (resp)=> {
-                    let respData = JSON.parse(resp).data
-                    this.historyRpt = respData
-                },
+        getRptInfoByCode(code=0) {
+            return new Promise((resolve, inject) => {
+                let codeParam = 0
+                codeParam = code!=0? code: this.curStock.secCode
+                let param = {
+                    Code: codeParam
+                }
+                $.ajax({
+                    method: 'POST',
+                    url: this.apiUrl + '/Report/GetAllReportInfoByCode',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify(param),
+                    success: (resp)=> {
+                        let respData = JSON.parse(resp).data
+                        this.historyRpt = respData
+                        resolve()
+                    },
+                })
             })
         },
         // 历史报告跳转
@@ -320,9 +388,10 @@ const main = {
                 success: (resp)=> {
                     this.newPdfUrl = JSON.parse(resp).data.filePath
                     history.pushState({page: 1}, null, window.location.href);
-                    window.open(this.preUrl + this.newPdfUrl + '&auth=' + this.token + '&code=' + this.curStock.secCode 
-                        + '&name=' + this.curStock.secName + '&nodeid=' + this.nodeId + '&taskid=' + this.taskId + '&login=' + 
-                        this.isLogin + '&templateId=' + this.templateId, '_self' )
+                    window.open(this.preUrl + this.newPdfUrl + '&auth=' + this.token + '&code=' + this.targetStock.code 
+                        + '&name=' + this.targetStock.name + '&nodeid=' + this.nodeId + '&mainCode=' + this.mainReport.stockCode 
+                        + '&mainName=' + this.mainReport.stockName + '&mainNodeid=' + this.mainReport.nodeId + '&mainTaskid=' + this.mainReport.taskId 
+                        + '&taskid=' + this.taskId + '&login=' + this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList)
                 },
             })
         },
@@ -545,7 +614,51 @@ const main = {
                 },
             })            
         },
-               
+        // 跳转到历史报告页面
+        async toReportChangePage(item) {
+            let index = item.name.indexOf('(')
+            let code = item.name.slice(index + 1, -1)
+            let name = item.name.slice(0, index)
+            await this.getRptInfoByCode(code)
+            this.historyTitle = item.name
+            this.targetStock.code = code
+            this.targetStock.name = name
+            this.historyIcon = item.isMain?'main': 'compare'
+            this.showHistory()
+        },
+        // 跳转到对比公司添加界面
+        toCompareAddPage() {
+            wx.miniProgram.navigateTo({
+                url: '/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true',
+                success: (resp) => {
+                    console.log('跳转成功')
+                }
+            })
+        },
+        // 切换回主报告
+        toMainReport() {
+            let param = {
+                NodeId: this.mainReport.nodeId,
+                TaskId: this.mainReport.taskId
+            }
+            $.ajax({
+                method: 'POST',
+                url: this.apiUrl + '/Report/GetHomeData',
+                headers: {
+                    'Authorization': 'Bearer ' + this.token
+                },
+                contentType: 'application/json',
+                data: JSON.stringify(param),
+                success: (resp)=> {
+                    this.newPdfUrl = JSON.parse(resp).data.filePath
+                    history.pushState({page: 1}, null, window.location.href);
+                    window.open(this.preUrl + this.newPdfUrl + '&auth=' + this.token + '&code=' + this.mainReport.stockCode 
+                        + '&name=' + this.mainReport.stockName + '&nodeid=' + this.mainReport.nodeId + '&mainCode=' + this.mainReport.stockCode 
+                        + '&mainName=' + this.mainReport.stockName + '&mainNodeid=' + this.mainReport.nodeId + '&mainTaskid=' + this.mainReport.taskId + '&taskid=' + this.mainReport.taskId + '&login=' + 
+                        this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList)
+                },
+            })
+        }
     },
     mounted() {
         this.initData()

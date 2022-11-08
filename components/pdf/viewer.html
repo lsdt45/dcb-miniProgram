@@ -491,11 +491,11 @@ See https://github.com/adobe-type-tools/cmap-resources
 						</div>
 						<div :class="outlineDialogClass">
 							<div class="dialog-header">
-								<span class="title">{{ stockFullName }} </span>
+								<span class="title">{{ stockName }} </span>
 							</div>
 							<div class="dialog-body">
 								<ul>
-									<li v-for="(item, index) in rptCatalog" :key="item.id" @click="pageTo(item.id)">
+									<li class="list-item" v-for="(item, index) in rptCatalog" :key="item.id" @click="pageTo(item.id)">
 										<span class="list-item__topic">{{ item.topic }}</span>
 										<span class="list-item__pagenum">{{ matchPage(index) }}</span>
 									</li>
@@ -507,20 +507,26 @@ See https://github.com/adobe-type-tools/cmap-resources
 						</div>
 					</div>
 					<div class="history-dialog">
-						<div class="overlay" v-if="isShowHistoryDialog">
-						</div>
+						<!-- <div class="overlay" v-if="isShowHistoryDialog"> -->
+						<!-- </div> -->
 						<div :class="historyDialogClass">
 							<div class="dialog-header">
-								<span class="title">{{ stockFullName }}</span>
+								<div class="iconfont icon-left" @click="closeDialog('history')"></div>
+								<span class="title">{{ historyTitle }}</span>
+								<div :class="historyIcon=='main'?'company-main':'company-compare'">
+									{{ historyIcon=='main'?'主':'对比' }}
+								</div>
+								<div class="iconfont icon-a-comparisoncompany" @click="toCompareAddPage"></div>
+								<text class="history-header-right-text" @click="toMainReport">切换回主报告</text>
 							</div>
 							<div class="dialog-body">
 								<ul>
-									<li v-for="(item, index) in historyRpt" :key="item.id" @click="changeRpt(item.id)" :ref="'historyItem'+index">
+									<li class="list-item" v-for="(item, index) in historyRpt" :key="item.id" @click="changeRpt(item.id)" :ref="'historyItem'+index">
 										<span class="stock-name">{{ historyStockName(item) }}</span>
 									</li>
 								</ul>
 							</div>
-							<div class="dialog-footer" @click="closeDialog('history')">
+							<div class="dialog-footer" @click="closeDialog('all')">
 								取消
 							</div>
 						</div>
@@ -534,7 +540,15 @@ See https://github.com/adobe-type-tools/cmap-resources
 							</div>
 							<div class="dialog-body">
 								<ul>
-									<li class="compare-item" v-for="(item, index) in compareList" :key="index">{{ item }}</li>
+									<li class="list-item" :class="compareItemTypeClass(item)" v-for="(item, index) in compareList" :key="index" @click="toReportChangePage(item)">
+										<text>{{ item.name }}</text>
+										<div :class="compareItemIconTypeClass(item)">
+											{{ item.isMain?'主':'对比' }}
+										</div>
+									</li>
+									<li @click="toCompareAddPage">
+										更多...
+									</li>
 								</ul>
 							</div>
 							<div class="dialog-footer" @click="closeDialog('compare')">

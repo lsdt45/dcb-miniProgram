@@ -269,7 +269,7 @@
 				rptTypeData: [{
 						name: '年报',
 						type: '12',
-						checked: true,
+						checked: false,
 					},
 					{
 						name: '三季报',
@@ -404,7 +404,11 @@
 						secCode: this.curStock.secCode,
 					},
 				}
-
+				// 初始化报告期选择
+				this.rptTypeData.forEach((item, index, arr) => {
+					let curReportType = this.$util.formatRptType(this.$store.state.curStock.rptType, 'type')
+					arr[index].checked = item.type === curReportType || item.type === 'new'? true: false
+				})
 				this.curReportStr = this.setCurStr(this.rptTypeData, 'name')
 				// 横屏模式画布的canvasId
 				this.canvasId = this.$util.randomWord(true, 8, 8)
