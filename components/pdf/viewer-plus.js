@@ -94,6 +94,7 @@ const main = {
     data() {
         return {
             test: 'hello vue',
+            chartsId: '',
             dialogVisible: false,
             isShowOutlineDialog: false, // 是否显示目录对话框
             isShowHistoryDialog: false, // 是否显示历史报告对话框
@@ -228,6 +229,7 @@ const main = {
             this.mainReport.stockCode = getQueryVariable('mainCode')
             this.mainReport.nodeId = getQueryVariable('mainNodeid')
             this.mainReport.taskId = getQueryVariable('mainTaskid')
+            this.chartsId = getQueryVariable('chartsId')
             // 初始化对比公司列表 start
             this.oriCompareList = getQueryVariable('compareList')
             this.compareList = decodeURI(getQueryVariable('compareList')).split(',')
@@ -392,6 +394,7 @@ const main = {
                         + '&name=' + this.targetStock.name + '&nodeid=' + this.nodeId + '&mainCode=' + this.mainReport.stockCode 
                         + '&mainName=' + this.mainReport.stockName + '&mainNodeid=' + this.mainReport.nodeId + '&mainTaskid=' + this.mainReport.taskId 
                         + '&taskid=' + this.taskId + '&login=' + this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList)
+                        + '&chartsId=' + this.chartsId
                 },
             })
         },
@@ -629,7 +632,7 @@ const main = {
         // 跳转到对比公司添加界面
         toCompareAddPage() {
             wx.miniProgram.navigateTo({
-                url: '/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true',
+                url: `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`,
                 success: (resp) => {
                     console.log('跳转成功')
                 }
@@ -655,7 +658,7 @@ const main = {
                     window.open(this.preUrl + this.newPdfUrl + '&auth=' + this.token + '&code=' + this.mainReport.stockCode 
                         + '&name=' + this.mainReport.stockName + '&nodeid=' + this.mainReport.nodeId + '&mainCode=' + this.mainReport.stockCode 
                         + '&mainName=' + this.mainReport.stockName + '&mainNodeid=' + this.mainReport.nodeId + '&mainTaskid=' + this.mainReport.taskId + '&taskid=' + this.mainReport.taskId + '&login=' + 
-                        this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList)
+                        this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList + '&chartsId=' + this.chartsId)
                 },
             })
         }

@@ -92,6 +92,7 @@
 		IndustryTree
 	} from '@/types/CommonTypes'
 	import DcbPopupPanel from '@/components/dcb-popup-panel/dcb-popup-panel.vue'
+	import config from '@/common/data/index.js'
 	import {
 		list,
 		CompareInfo,
@@ -133,6 +134,8 @@
 	const dataPicker = ref(null)
 	// 所有股票信息-搜索框
 	let allStockSearch = ref < SearchStockInfo[] > ()
+	// 用于获取报告期列表
+	let chartsId = ''
 	// 当前对比公司列表
 	let curCmpList = ref < CompareInfo[] > (aliasReturnCompareInfo(store.state.curCmpList))
 	// 当前行业信息
@@ -168,6 +171,8 @@
 	let searchKeyWord = ref('')
 	// 表格数据
 	let tableData = ref < CompareInfo[] > (util.deepCopy(defaultIndustyList.value))
+	// 时间跨度
+	let timeRange = []
 	let update = ref(false)
 	// 初始化数据
 	function initData() {
@@ -248,10 +253,10 @@
 	 * description: 改变当前报告期后重新获取数据
 	 */
 	function changeEndDate(val) {
-		if(currentTab.value == 0) {
+		if (currentTab.value == 0) {
 			let date = null
-			for(let index in endDateList.value) {
-				if(val == index) {
+			for (let index in endDateList.value) {
+				if (val == index) {
 					date = endDateList.value[index].text
 					break
 				}
@@ -260,7 +265,7 @@
 		} else {
 			tableData.value = []
 			curTableIndex.value = 1
-			getCurIndustryInfo()			
+			getCurIndustryInfo()
 		}
 	}
 	/**
@@ -276,19 +281,32 @@
 		getCurIndustryCompany(item.value)
 	}
 	/**
-	 * description: 获取行业分类信息
-	 * @return 
-	 * @createTime: 2022-11-01 16:59:49
+	 * description: 获取报告期列表
+	 * @createTime: 2022-11-09 09:06:40
 	 */
-	function getIndustryClassificationInfo() {
-		api.post("/Compare/IndustryClassificationTree").then((resp) => {
-			if (resp.data) {
-				identicalIndustriesTreeList.value = resp.data.identicalIndustriesTree
-				otherIndustriesTree.value = resp.data.otherIndustriesTree
-				industryPickerTree.value = getIndustryPickerData(otherIndustriesTree.value)
-			}
-		})
+	function getAnalysisTime() {
+		let start = config.data.MaxStartTime
+		let end = new Date().getFullYear()
+		timeRange = []
+		while (start <= end) {
+			timeRange.push(end.toString())
+			end--
+		}
 	}
+		/**
+		 * description: 获取行业分类信息
+		 * @return 
+		 * @createTime: 2022-11-01 16:59:49
+		 */
+		function getIndustryClassificationInfo() {
+			api.post("/Compare/IndustryClassificationTree").then((resp) => {
+				if (resp.data) {
+					identicalIndustriesTreeList.value = resp.data.identicalIndustriesTree
+					otherIndustriesTree.value = resp.data.otherIndustriesTree
+					industryPickerTree.value = getIndustryPickerData(otherIndustriesTree.value)
+				}
+			})
+		}
 	/**
 	 * description: 获取当前行业分类下的股票信息
 	 * @createTime: 2022-11-01 16:59:49
@@ -344,6 +362,41 @@
 				curIndustryBaseInfo = resp.data
 				curIndustryName.value = curIndustryBaseInfo.industryName
 				getCurIndustryCompany()
+			}
+		})
+	}
+
+	function getChartsData() {
+		let param = {
+			ChartsId: chartsId,
+			MainCode: store.state.curStock.secCode,
+			MainTime: store.state.curStock.year,
+			TimeList: timeRange,
+			Granularity: '季',
+			ChartsType: '',
+			LoadIndustryList: [],
+			CodeList: [],
+			BenchCodeList: [],
+			ReportType: null,
+		}
+		api.post('/Report/GetChartsData', param).then((resp) => {
+			if (resp.status) {
+				console.log(resp)
+				// 获取日期列表
+				let timePeriodTemp = resp.data.codeDataList[0].data.calculationAllData.slice(1);
+				let timePeriod = []
+				timePeriodTemp.forEach(item => {
+					if (item && item.length > 0) {
+						timePeriod.unshift(item[0]);
+					}
+				})
+				timePeriod.unshift('最新日期');
+				timePeriod.forEach((item, index) => {
+					endDateList.value.push({
+						value: index,
+						text: item
+					})
+				})				
 			}
 		})
 	}
@@ -551,7 +604,13 @@
 		initItemChecked()
 	})
 	onLoad((options) => {
+		// 如果是从pdf详情页跳转过来的，则需要单独获取一下报告期列表数据
 		let isFromPdf = options.isFromPdf
+		if(isFromPdf) {
+			chartsId = options.chartsId
+			getAnalysisTime()
+			getChartsData()		
+		}
 	})
 </script>
 

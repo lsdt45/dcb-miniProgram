@@ -23,6 +23,7 @@
 		},
 		onLoad(options) {
 			let auth = null
+			let chartsId = '20201107083344707001'
 			this.preUrl = this.$config.data.PdfViewerUrl
 			this.options = JSON.parse(JSON.stringify(options))
 			 uni.getStorage({
@@ -32,7 +33,7 @@
 					this.pdfUrl = this.preUrl + options.pdfUrl + '&auth=' + auth + '&code=' + options.code + 
 						'&name=' + options.name + '&nodeid=' + options.nodeid + '&taskid=' + options.taskid + '&mainCode=' + options.code + 
 						'&mainName=' + options.name + '&mainNodeid=' + options.nodeid + '&mainTaskid=' + options.taskid + '&page=' + options.page
-						+ '&login=' + options.login + '&templateId=' + options.templateId + '&compareList=' + options.compareList
+						+ '&login=' + options.login + '&templateId=' + options.templateId + '&compareList=' + options.compareList + '&chartsId=' + chartsId
 				}
 			})
 		},
