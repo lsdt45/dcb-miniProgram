@@ -18,13 +18,19 @@ export default {
 		})
 		// let codeData = self.allChartsTableData.codeDataList[tarIndex].data.codeData
 		let tableData = []
+		let unionUnit = self.chartsInfo.unit
 		let unit = ''
 		if (codeData && codeData.length > 0) {
-			if (self.chartsInfo.unit) {
-				unit = '(' + self.chartsInfo.unit + ')'
-			}
 			let formulaData = codeData[0].slice(1)
+			if(unionUnit) unit = `(${unionUnit})`
 			formulaData.forEach((item, index) => {
+				if(!unionUnit) {
+					unit = self.chartsInfo.reportChartsIndexList[index].unitName
+					if(unit == '百分比') unit = '%'
+					if (unit) {
+						unit = '(' + unit + ')'
+					}						
+				}
 				formulaData[index] = item + unit
 			})
 

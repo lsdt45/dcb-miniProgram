@@ -549,18 +549,19 @@ uni-page-body {
 		}
 	}
 	.uni-talbe-td__tooltip {
-		position: absolute;
-		left: 0;
-		z-index: 3;
-		word-break: break-all;
-		white-space: pre-wrap;
-		width: 150px;
-		border: 1px solid black;
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    word-break: break-all;
+    white-space: pre-wrap;
+    width: 150px;
+    padding: 2px;
+    border: 0;
 		opacity: 0;
-		overflow: hidden;
-		background: #fff;
-		font-size: 14px;
-		transition: opacity 0.3s ease-in-out;
+    overflow: hidden;
+    color: #fff;
+    background: #757575;
+    transition: opacity 0.3s ease-in-out;
 	
 		&.show {
 			height: auto;

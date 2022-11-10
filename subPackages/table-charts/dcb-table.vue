@@ -99,7 +99,7 @@
 	})
 	const tooltipOffset = computed(() => {
 		return (index: number) => {
-			return `top:${(index + 1) * 40 + 1}px`
+			return `top:${(index + 1) * 56 }px`
 		}
 	})
 
@@ -147,13 +147,17 @@
 <style lang="scss">
 	.dcb-table__wrapper {
 		.uni-table-tr:nth-of-type(n+2) {
-			height: 42px;
+			height: 4em;
 			.uni-table-td {
-				line-height: 25px;
+				line-height: 20px;
 			}
 		}
+		.uni-table-td {
+			vertical-align: middle;
+		}
 		.uni-table-td:first-of-type .uni-table-td__slot{
-			@include SingleTextEllipsis
+			@include TextEllipsis;
+			white-space: normal;
 		}
 	}
 </style>

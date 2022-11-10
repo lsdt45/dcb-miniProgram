@@ -62,8 +62,6 @@
 	import DcbTable from './dcb-table.vue'
 	import util from '@/common/util.js'
 	import {
-		tagAnnualized,
-		tagQuarterly,
 		testOption
 	} from './table-charts-config'
 	import mitt from 'mitt'
@@ -206,7 +204,6 @@
 					timeData: [], // 时间数据
 					tableData: [], // 图表数据
 				},
-				chratsInfo: [], // 图表设置
 				chartsTitle: '', // 图表标题
 				chartsShowType: 'line', // 图表类型
 				DataProcessText: '数据处理', // 数据处理文本
@@ -215,6 +212,7 @@
 				isShowValue: false, // 是否显示值
 				isReload: false, // 是否重新加载
 				isWatchOpts: true, // 是否开启opts的监听
+				isCurCmpListUpdate: false, // 对比公司是否更新过
 				showValueText: '显示值', // 【显示值】按钮的文本
 				chartContainnerHeight: 400, // 图表容器高度
 				notQuarterly: [],
@@ -223,6 +221,17 @@
 				pixelRatio: 1, // 设备像素比
 				tapLegendResult: {}, // 点击下拉按钮返回的数据
 				timePeriod: [], // 日期列表
+				unit: '', // 单位
+				tagAnnualized: {
+					type: 'annualized',
+					isExsit: false,
+					isSelected: false,					
+				},
+				tagQuarterly: {
+					type: 'quarterly',
+					isExsit: false,
+					isSelected: false,					
+				},
 				testOption,
 				option: {
 					tooltip: {
@@ -260,20 +269,7 @@
 					yAxis: {
 						type: 'value'
 					},
-					series: [{}]
-				},
-				// 图表设置
-				opts: {
-					padding: [15, 10, 10, 0],
-					legend: {
-						float: 'left',
-						lineHeight: 20,
-						itemGap: 20,
-						margin: 10,
-						position: 'top',
-						isShowAllLegend: false,
-						isReload: false,
-					},
+					series: [{}],
 					color: [
 						'#E86452',
 						'#5B8FF9',
@@ -294,8 +290,22 @@
 						'#804F00',
 						'#94F387',
 						'#9D9B58',
-						'#D5E09C',
-					],
+						'#D5E09C',						
+					]
+				},
+				// 图表设置
+				opts: {
+					padding: [15, 10, 10, 0],
+					legend: {
+						float: 'left',
+						lineHeight: 20,
+						itemGap: 20,
+						margin: 10,
+						position: 'top',
+						isShowAllLegend: false,
+						isReload: false,
+					},
+					color: [],
 					dataLabel: false,
 					enableScroll: true,
 					touchMoveLimit: 60,
@@ -387,8 +397,6 @@
 				],
 				curSelect: 0, // 当前选中的图表类型
 				timeList: ['2017', '2018', '2019', '2020', '2021'], // 时间区间
-				tagAnnualized,
-				tagQuarterly,
 				chartsData_categories: [], // 存放经过特殊处理的日期数据便于区分报告类型
 				canvasId: '', // 图表id
 				canvasId_rotate: '', // 横屏图表id
@@ -416,8 +424,9 @@
 							text: item.comp004_OrgName,
 							value: item.comp004_Seccode
 						})
-					})				
-				})				
+					})
+				})
+				this.isCurCmpListUpdate = true
 			},
 			curSelectCompany(newVal) {
 				// console.dir(this.$store.state)
@@ -957,19 +966,19 @@
 				if (val) {
 					switch (val.text) {
 						case '年化数据':
-							tagAnnualized.isSelected = true
+							this.tagAnnualized.isSelected = true
 							this.dataProcessList[0].text = '取消年化'
 							this.deleteDataProcess = this.dataProcessList.splice(1, 1)[0]
 							this.handleData('annualized')
 							break
 						case '单季化数据':
-							tagQuarterly.isSelected = true
+							this.tagQuarterly.isSelected = true
 							this.dataProcessList[1].text = '取消单季化'
 							this.deleteDataProcess = this.dataProcessList.splice(0, 1)[0]
 							this.handleData('quarterly')
 							break
 						case '取消年化':
-							tagAnnualized.isSelected = false
+							this.tagAnnualized.isSelected = false
 							this.dataProcessList[0].text = '年化数据'
 							this.dataProcessList.push({
 								value: this.deleteDataProcess.value,
@@ -978,7 +987,7 @@
 							this.handleData('restore')
 							break
 						case '取消单季化':
-							tagQuarterly.isSelected = false
+							this.tagQuarterly.isSelected = false
 							this.dataProcessList.unshift({
 								value: this.deleteDataProcess.value,
 								text: this.deleteDataProcess.text
@@ -999,32 +1008,40 @@
 				} else if (type === 'restore') {
 					tableChartsUtil.handleAnnualized(this, 'restore')
 				} else if (optionChange) {
-					if (tagAnnualized.isSelected) {
+					if (this.tagAnnualized.isSelected) {
 						tableChartsUtil.handleAnnualized(this, 'annualized')
-					} else if (tagQuarterly.isSelected) {
+					} else if (this.tagQuarterly.isSelected) {
 						tableChartsUtil.handleAnnualized(this, 'quarterly')
 					} else {
 						tableChartsUtil.handleAnnualized(this, 'restore')
 					}
 				}
 			},
-			// 初始化tag的状态
+			/**
+			 * description: 初始化tag的状态
+			 */
 			iniTagStatus(chartsInfo: any) {
 				if (chartsInfo.isAnnualized) {
-					tagAnnualized.isExsit = true
+					this.tagAnnualized.isExsit = true
 				} else {
-					tagAnnualized.isExsit = false
+					this.tagAnnualized.isExsit = false
 				}
 				if (chartsInfo.isQuarterly) {
-					tagQuarterly.isExsit = true
+					this.tagQuarterly.isExsit = true
 				} else {
-					tagQuarterly.isExsit = false
+					this.tagQuarterly.isExsit = false
 				}
 			},
 		},
 		mounted() {
 			this.initData()
 		},
+		onShow() {
+			// 如果对比公司更新过，则重新获取图表数据
+			if(this.isCurCmpListUpdate) {
+				this.getChartsData()
+			}
+		}
 	}
 </script>
 

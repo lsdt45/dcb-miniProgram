@@ -29,6 +29,7 @@
 	import {
 		computed,
 		ref,
+		watch
 	} from 'vue'
 	import {
 		onLoad
@@ -48,12 +49,20 @@
 	const stockFullName = computed(() => {
 		return store.state.curStock.secName + store.state.curStock.secCode;
 	})
-	
+	const stateCurCmpList = computed(() => {
+		return store.state.curCmpList
+	})
 	// 当前对比公司列表
 	let curCmpList: CompareInfo[] = aliasReturnCompareInfo(store.state.curCmpList)
 	cmpIndustryNum.value = curCmpList.length
 	let update = ref(false)
 
+	watch(stateCurCmpList, (newVal) => {
+		curCmpList = aliasReturnCompareInfo(newVal)
+		update.value = !update.value
+		cmpIndustryNum.value = curCmpList.length
+	})
+	
 	function deleteTr(name) {
 		curCmpList = curCmpList.filter((item) => {
 			return item.name != name

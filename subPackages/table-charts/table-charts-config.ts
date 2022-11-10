@@ -18,17 +18,6 @@ export type ReportChartsIndex = ReportIndex
 // 标准图表指标数据
 export type ReportStandardIndex = ReportIndex
 
-export let tagAnnualized: tag = reactive({
-	type: 'annualized',
-	isExsit: false,
-	isSelected: false,
-})
-export let tagQuarterly: tag = reactive({
-	type: 'quarterly',
-	isExsit: false,
-	isSelected: false,
-})
-
 export let testOption = {
 	tooltip: {
 		trigger: 'axis'

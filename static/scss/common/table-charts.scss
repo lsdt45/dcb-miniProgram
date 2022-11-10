@@ -163,10 +163,12 @@ $table-first-col-width: 150px;
 			word-break: break-all;
 			white-space: pre-wrap;
 			width: 150px;
-			border: 1px solid black;
+			padding: 2px;
+			border: 0;
 			opacity: 0;
 			overflow: hidden;
-			background: #fff;
+			color: #fff;
+			background: #757575;
 			transition: opacity 0.3s ease-in-out;
 		
 			&.show {

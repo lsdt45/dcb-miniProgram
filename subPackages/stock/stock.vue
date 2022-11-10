@@ -778,6 +778,9 @@
 				}
 				this.curTimeStr = this.setCurStr(this.anlyTimeData, 'year')
 				this.curReportStr = this.setCurStr(this.rptTypeData, 'name')
+				if(!this.curReportStr) {
+					this.curReportStr = '请选择'
+				}
 				// setTimeout(() => {
 				// 	uni.showTabBar()
 				// }, 320)
