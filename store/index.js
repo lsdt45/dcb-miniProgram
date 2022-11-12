@@ -28,7 +28,7 @@ const store = createStore({
 		userInfo: {}, // 用户登录信息
 		firstEnter: true, // 是否是第一次进入
 		isLogin: false, // 是否登录成功
-		
+		systemInfo: {}, // 设备信息
 		// 图表相关状态
 		tableHandle: {
 			handleAnnualized: false, // 年化
@@ -54,6 +54,9 @@ const store = createStore({
 			} else {
 				state.curStock.rptType = ''
 			}
+		},
+		updateSystemInfo(state, data) {
+			state.systemInfo = data
 		},
 		updateDataFilter(state, data) {
 			state.dataFilter = data

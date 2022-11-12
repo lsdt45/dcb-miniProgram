@@ -3,9 +3,11 @@
 	<!-- <scroll-view scroll-y="true" scroll-x="true"> -->
 		<view class="dcb-table__wrapper lanscape">
 			<uni-table :border="false" emptyText="暂无更多数据" :landscape="landscape">
-				<uni-tr>
+				<uni-tr @trClick="showThFullName()">
 					<uni-th :landscape="landscape" @landscapeClick="landscapeClick()">{{ fstTableTh  }}</uni-th>
 					<uni-th v-for="(item, index) in chartsDataProp.categories" :key="index">{{ item }}</uni-th>
+					<view class="uni-talbe-td__tooltip" :class="{show: isShowThFullName}" style="top:0;">{{ fstTableTh }}
+					</view>					
 				</uni-tr>
 				<uni-tr v-for="(item, index_tr) in chartsDataProp.series" :key="index_tr"
 					@trClick="showFullName(index_tr)">
@@ -15,7 +17,8 @@
 						{{ tableCellData(data) }}
 					</uni-td>
 					<view class="uni-talbe-td__tooltip" :class="{show: curClickTd == index_tr}"
-						:style="tooltipOffset(index_tr)">{{ item.name }}</view>
+						:style="tooltipOffset(index_tr)">{{ item.name }}
+					</view>
 				</uni-tr>
 			</uni-table>
 		</view>
@@ -38,7 +41,8 @@
 		onMounted,
 		onUnmounted,
 		watch,
-		toRef
+		toRef,
+		defineProps
 	} from 'vue'
 	import type { Ref } from 'vue'
 	import $util from '@/common/util.js'
@@ -50,6 +54,8 @@
 	} from './table-charts-config'
 	// import DcbTableTool from './dcb-table-tool.vue'
 	let curClickTd = ref(null); // 当前被选中的单元格
+	let isShowThFullName = ref(false)
+	
 	const instance = getCurrentInstance()
 	const props = defineProps(props_dcb_table)
 	const chartsDataProp = toRef(props, 'chartsData')
@@ -119,6 +125,11 @@
 		}
 	}
 
+	// 显示表头全名
+	function showThFullName() {
+		isShowThFullName.value = !isShowThFullName.value
+	}
+
 	function emitLog(type: string) {
 		if (type === 'annualized') {
 			emit('handleTableData', 'annualized')
@@ -131,7 +142,6 @@
 	function landscapeClick() {
 		emit('landscapeClick')
 	}
-	
 	onMounted(() => {
 			// instance?.proxy?.$Bus.on('on-num', (num) => {
 			// 		console.log(num,'===========>B')

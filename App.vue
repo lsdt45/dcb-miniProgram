@@ -10,24 +10,28 @@
 			onLogin() {
 				this.$api.onLogin();
 			},
-			getNavBarHeight() {
+			// 获取需要的设备信息
+			getSystemInfo() {
 				let clientRect = uni.getMenuButtonBoundingClientRect()
 				let topNavBarHeight = ''
 				uni.getSystemInfo({
 					success: function(res) {
+						// 获取顶部导航区域的高度
 						topNavBarHeight =
 							`${clientRect.bottom + clientRect.top - res.statusBarHeight}px`
 						store.commit('updateNavBarHeight', topNavBarHeight)
+						// 获取当前设备类型
+						store.commit('updateSystemInfo', res)
 					}
-				});
-			}
+				});				
+			},
 		},
 		onLaunch: function() {
 			// 监听401，当api发生401时，应触发回调，重新login
 			// uni.$on("errCode",this.callback)
 			// if(!uni.getStorageSync("Authorization") || !uni.getStorageSync("UserInfo")){
 			this.onLogin()
-			this.getNavBarHeight()
+			this.getSystemInfo()
 			// }
 		},
 

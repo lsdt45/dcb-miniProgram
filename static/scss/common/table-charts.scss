@@ -67,8 +67,10 @@ $table-first-col-width: 150px;
 		.table-charts.table {
 			position: relative;
 			white-space: nowrap;
-			margin-top: 40rpx;
-
+			margin-top: 50rpx;
+			&.ios {
+				margin-top: 100rpx;
+			}
 			.uni-table {
 				position: inherit;
 				table-layout: fixed;

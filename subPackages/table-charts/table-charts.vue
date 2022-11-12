@@ -27,6 +27,7 @@
 		<view class="table-charts charts" v-show="curSelect == 0 || curSelect == 2"
 			:style="`height:${chartContainnerHeight}px;}`">
 			<view class="table-charts__toolbar">
+				<!-- 图表类型切换 -->
 				<view class="table-charts__toolbar left">
 					<uni-tag class="table-charts__toolbar tag type-select" v-for="(item, index) in chartsTypeList"
 						:key="index" :inverted="!item.select" type="primary" :text="item.name"
@@ -47,7 +48,7 @@
 				@getIndex="showMyTooltip" /> -->
 			<view class="rotate-mode-btn iconfont icon-a-appenlarge" @click="rotateMode"></view>
 		</view>
-		<view class="table-charts table" v-show="curSelect == 1 || curSelect == 2">
+		<view class="table-charts table" :class="{ios: $store.state.systemInfo.osName=='ios'}" v-show="curSelect == 1 || curSelect == 2">
 			<dcb-table :chartsData="chartsData" :fstTableTh="fstTableTh" :chartsInfo="chartsInfo"
 				@handleTableData="handleData" @landscapeClick="rotateMode_table()"></dcb-table>
 		</view>
@@ -429,7 +430,6 @@
 				this.isCurCmpListUpdate = true
 			},
 			curSelectCompany(newVal) {
-				// console.dir(this.$store.state)
 				if(this.baseData.tableData.length == 0) return
 				this.chartsDataProcess()
 			}
@@ -474,7 +474,7 @@
 				})
 
 				// 横屏模式下的设置
-				this.opts_rotate = JSON.parse(JSON.stringify(this.opts))
+				this.opts_rotate = this.$util.deepCopy(this.opts)
 				this.opts_rotate.rotate = true
 				this.opts_rotate.xAxis.rotateLabel = true
 				this.opts_rotate.xAxis.itemCount = 20
@@ -679,7 +679,7 @@
 				} else {
 					this.opts.xAxis.scrollShow = true
 				}
-				this.chartsData_beforeConver = JSON.parse(JSON.stringify(this.chartsData))
+				this.chartsData_beforeConver = this.$util.deepCopy(this.chartsData)
 				this.handleData('', true)
 				tableChartsUtil.updateOptions(this)
 			},
@@ -773,20 +773,23 @@
 							categories: this.baseData.timeData,
 							series: series,
 						}
-						this.fstTableTh = this.curStock.secName
+						let stockName = this.$store.state.curCmpList.find((item) => {
+							return item.comp004_Seccode === this.curSelectCompany
+						})
+						this.fstTableTh = stockName != -1? stockName.comp004_OrgName: this.curStock.secName						
 						break
 					case 'Formula':
-						this.baseData.formulaData.forEach((item, index) => {
+						// this.baseData.formulaData.forEach((item, index) => {
 							series.push({
 								name: this.curStock.secName,
-								data: this.baseData.tableData[index],
+								data: this.baseData.tableData[0],
 								label: {
 									formatter: function(param) {
 										return util.dataFormat(param.value, 2)
 									}
 								}
 							})
-						})
+						// })
 						this.fstTableTh = this.baseData.formulaData[0]
 						res = {
 							categories: this.baseData.timeData,
@@ -810,7 +813,7 @@
 				} else {
 					this.opts.xAxis.scrollShow = true
 				}
-				this.chartsData_beforeConver = JSON.parse(JSON.stringify(this.chartsData))
+				this.chartsData_beforeConver = this.$util.deepCopy(this.chartsData)
 				this.option.xAxis.data = this.chartsData.categories
 				if(this.notIdIndex.length > 0) {
 					let series_chartsData = this.chartsData.series
@@ -843,7 +846,7 @@
 			 */
 			rotateMode(): void {
 				// 将该图表的数据复制给横屏图表
-				let opts_rotate = JSON.parse(JSON.stringify(this.opts))
+				let opts_rotate = this.$util.deepCopy(this.opts)
 				this.$parent.isShowRotate = true
 				this.$parent.chartsShowType = this.chartsShowType
 				// 切换为横屏
@@ -963,6 +966,16 @@
 				}
 			},
 			dataProcess(val) {
+				if(this.chartsData_beforeConver.series) {
+					this.chartsData_beforeConver.series.forEach((item, index, arr) => {
+						arr[index].type = this.chartsShowType
+					})					
+				}
+				if(this.chartsDataOri.series) {
+					this.chartsDataOri.series.forEach((item, index, arr) => {
+						arr[index].type = this.chartsShowType
+					})					
+				}				
 				if (val) {
 					switch (val.text) {
 						case '年化数据':

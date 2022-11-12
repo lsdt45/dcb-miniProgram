@@ -1,3 +1,4 @@
+import util from '@/common/util.js'
 // 重置数据
 function resetData(self) {
 	for (let item in self.baseData) {
@@ -18,15 +19,23 @@ export default {
 		})
 		// let codeData = self.allChartsTableData.codeDataList[tarIndex].data.codeData
 		let tableData = []
-		let unionUnit = self.chartsInfo.unit
-		let unit = ''
+		// let unionUnit = self.chartsInfo.unit
+		// let unit = ''
 		if (codeData && codeData.length > 0) {
 			let formulaData = codeData[0].slice(1)
-			if(unionUnit) unit = `(${unionUnit})`
+			// if(unionUnit) unit = `(${unionUnit})`
+			
+			
 			formulaData.forEach((item, index) => {
-				if(!unionUnit) {
+				let unit = ''
+				// if(!unionUnit && self.chartsInfo.reportChartsIndexList[index].unitName) {
+				if(self.chartsInfo.reportChartsIndexList[index].unitName) {
 					unit = self.chartsInfo.reportChartsIndexList[index].unitName
-					if(unit == '百分比') unit = '%'
+					if(unit == '百分比') {
+						unit = '%'
+					} else if(unit == '原始值') {
+						unit = ''
+					}
 					if (unit) {
 						unit = '(' + unit + ')'
 					}						
@@ -84,11 +93,11 @@ export default {
 	 */	
 	handleAnnualized(self, type) {
 		if (type === 'restore') {
-			let tempChartsData = JSON.parse(JSON.stringify(self.chartsData_beforeConver))
+			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
 			self.chartsData = tempChartsData
 			// pass
 		} else if (type === 'annualized') {
-			let tempChartsData = JSON.parse(JSON.stringify(self.chartsData_beforeConver))
+			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
 			tempChartsData.categories.forEach((item, categoriesIndex) => {
 				//拿到时间
 				let splitDate = item.split('-');
@@ -112,8 +121,8 @@ export default {
 			})
 			self.chartsData = tempChartsData
 		} else if (type === 'quarterly') {
-			let tempChartsData_after = JSON.parse(JSON.stringify(self.chartsDataOri))
-			let tempChartsData_before = JSON.parse(JSON.stringify(self.chartsDataOri))
+			let tempChartsData_after = util.deepCopy(self.chartsDataOri)
+			let tempChartsData_before = util.deepCopy(self.chartsDataOri)
 			tempChartsData_after.categories.forEach((item, categoriesIndex) => {
 				//拿到时间
 				let splitDate = item.split('-');
@@ -150,8 +159,12 @@ export default {
 					})
 				}
 			})
-			// 筛选数据、覆盖数据
+			// 筛选数据、覆盖数据。
 			self.chartsData = self.chartsDataFilter(tempChartsData_after)
+			// 还原为当前选择的图表类型
+			self.chartsData.series.forEach((item, index, arr) => {
+				arr[index].type = self.chartsShowType
+			})
 		}
 		this.updateOptions(self)
 	},
