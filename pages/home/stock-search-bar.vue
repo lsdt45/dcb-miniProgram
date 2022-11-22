@@ -1,7 +1,7 @@
 <template>
 	<view class="stock-search-bar__wrapprer">
 		<view class="stock-search-header">
-			<u-search placeholder="请输入股票代码/名称/简拼" shape="square" v-model="searchKeyWord" action-text="自选股"
+			<u-search placeholder="请输入股票代码/名称/简拼" shape="square" v-model="searchKeyWord" clearabled
 				@search="searchStock">
 			</u-search>
 		</view>

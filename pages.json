@@ -170,13 +170,14 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-		},{
-			"path": "pages/stock-trend/stock-trend",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
 		}
+		// {
+		// 	"path": "pages/stock-trend/stock-trend",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// }
 	],
 	"subPackages": [{
 		"root": "subPackages",
@@ -221,12 +222,14 @@
 				"iconPath": "static/image/analysis-01.png",
 				"selectedIconPath": "static/image/analysis-02.png",
 				"text": "分析"
-			}, {
-				"pagePath": "pages/stock-trend/stock-trend",
-				"iconPath": "static/image/market-01.png",
-				"selectedIconPath": "static/image/market-02.png",
-				"text": "行情"
-			}, {
+			}, 
+			// {
+			// 	"pagePath": "pages/stock-trend/stock-trend",
+			// 	"iconPath": "static/image/market-01.png",
+			// 	"selectedIconPath": "static/image/market-02.png",
+			// 	"text": "行情"
+			// }, 
+			{
 				"pagePath": "pages/ucenter/ucenter",
 				"iconPath": "static/image/ucenter-01.png",
 				"selectedIconPath": "static/image/ucenter-02.png",

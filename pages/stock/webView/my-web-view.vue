@@ -44,7 +44,9 @@
 					// 页面重载
 					const pages = getCurrentPages()
 					// 声明一个pages使用getCurrentPages方法
-					const curPage = pages[pages.length - 1]
+					const curPage = pages.find((item) => {
+						return item.route.indexOf('my-web-view') != -1
+					})
 					curPage.$vm.options.login = true
 					curPage.onLoad(curPage.$vm.options)					
 				} else {
@@ -56,7 +58,9 @@
 					// 页面重载
 					const pages = getCurrentPages()
 					// 声明一个pages使用getCurrentPages方法
-					const curPage = pages[pages.length - 1]
+					const curPage = pages.find((item) => {
+						return item.route.indexOf('my-web-view') != -1
+					})
 					// 获取并格式化对比公司列表
 					let compareList = []
 					curPage.$vm.$store.state.curCmpList.forEach((item, index) => {

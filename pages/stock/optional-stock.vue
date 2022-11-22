@@ -6,7 +6,7 @@
 		<view class="optional-stock__header">
 			<uni-list :border="false">
 				<!-- 表头 -->
-				<uni-list-item :border="false">
+				<uni-list-item :border="false" ellipsis="1">
 					<template v-slot:body>
 						<view class="list-wrapper header">
 							<view class="list-item">股票</view>
@@ -18,7 +18,7 @@
 				<uni-swipe-action>
 					<uni-swipe-action-item :right-options="options" v-for="(item, index) in optionalStockData"
 						:key="index" @click="deleteStock(item)">
-						<uni-list-item clickable :border="false" @click="toSpecifyStock(item)">
+						<uni-list-item clickable :border="false" ellipsis="1" @click="toSpecifyStock(item)">
 							<template v-slot:body>
 								<view class="list-wrapper">
 									<view class="list-item">{{ item.secname }}</view>
@@ -58,7 +58,7 @@
 		computed: {
 			...mapState(['navBarHeight'])
 		},
-		onLoad() {
+		onShow() {
 			this.initData()
 		},
 		methods: {
@@ -80,27 +80,33 @@
 				})
 			},
 			// 进入指定股票页面
-			toSpecifyStock(stock) {
-				// 是否登录
+			toSpecifyStock(item) {
 				let userInfo = uni.getStorageSync("UserInfo");
-				let isLogin = false;
 				if (userInfo && userInfo.userClass != 99) {
-					isLogin = true;
-				}
-				if(!isLogin) {
-					return
-				}
-				uni.reLaunch({
-					url: `/pages/stock/stock?reload=true`,
-					success: (resp) => {
-						let stock_temp = {
-							secName: stock.secname,
-							secCode: stock.seccode
-						}
-						// 更新当前股票信息
-						this.$store.commit('setCurStock', stock_temp)
-					}
-				})
+					uni.navigateTo({
+						url: `/pages/home/home?code=${item.seccode}&name=${item.secname}&isJump=true`,
+					});
+				}				
+				// 是否登录
+				// let userInfo = uni.getStorageSync("UserInfo");
+				// let isLogin = false;
+				// if (userInfo && userInfo.userClass != 99) {
+				// 	isLogin = true;
+				// }
+				// if(!isLogin) {
+				// 	return
+				// }
+				// uni.reLaunch({
+				// 	url: `/pages/stock/stock?reload=true`,
+				// 	success: (resp) => {
+				// 		let stock_temp = {
+				// 			secName: stock.secname,
+				// 			secCode: stock.seccode
+				// 		}
+				// 		// 更新当前股票信息
+				// 		this.$store.commit('setCurStock', stock_temp)
+				// 	}
+				// })
 			},
 			/**
 			 * author: ljw
@@ -176,7 +182,7 @@
 			height: 100rpx;
 			line-height: 100rpx;
 			font-size: $font-size-text-medium;
-			color: $font-color-black;
+			color: $color-main;
 			text-align: center;
 		}
 
@@ -200,6 +206,7 @@
 
 			.list-item__last {
 				flex: 1;
+				margin-left: 90rpx;
 			}
 		}
 	}

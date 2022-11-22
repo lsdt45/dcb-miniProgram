@@ -2,7 +2,7 @@
   <view class="stock-trend-wrapper">
     <!-- <uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true">
 		</uni-nav-bar> -->
-    <dcb-nav-bar :title="curStock.secName" search></dcb-nav-bar>
+    <dcb-nav-bar :title="stockFullName" search></dcb-nav-bar>
     <view class="indexQuotes">
       <view :class="indexUpBkColor(item)" v-for="(item, index) in indexData" :key="index">
         <view>{{ item.f14 }}</view>
@@ -410,6 +410,10 @@ export default {
         }
       };
     },
+		// 股票全名
+		stockFullName() {
+			return this.curStock.secName + ' ' + this.curStock.secCode
+		},		
   },
 
   onShow: function (option) {

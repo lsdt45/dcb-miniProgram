@@ -1,4 +1,5 @@
 import util from '@/common/util.js'
+import { log } from 'console'
 // 重置数据
 function resetData(self) {
 	for (let item in self.baseData) {
@@ -9,8 +10,9 @@ function resetData(self) {
 export default {
 	getBaseData(self) {
 		resetData(self)
-		// let tarIndex = 0
+		// 从数据中筛选出当前对比公司的数据
 		let codeData = []
+		let nullIndex = [] // 虚指标
 		if(self.allChartsTableData.length == 0) return
 		self.allChartsTableData.codeDataList.forEach((item, index) => {
 			if(item.code == self.curSelectCompany) {
@@ -29,20 +31,27 @@ export default {
 			formulaData.forEach((item, index) => {
 				let unit = ''
 				// if(!unionUnit && self.chartsInfo.reportChartsIndexList[index].unitName) {
-				if(self.chartsInfo.reportChartsIndexList[index].unitName) {
-					unit = self.chartsInfo.reportChartsIndexList[index].unitName
-					if(unit == '百分比') {
-						unit = '%'
-					} else if(unit == '原始值') {
-						unit = ''
-					}
-					if (unit) {
-						unit = '(' + unit + ')'
-					}						
+				try {
+					if(index < self.chartsInfo.reportChartsIndexList.length && self.chartsInfo.reportChartsIndexList[index].unitName) {
+						unit = self.chartsInfo.reportChartsIndexList[index].unitName
+						if(unit == '百分比') {
+							unit = '%'
+						} else if(unit == '原始值') {
+							unit = ''
+						}
+						if (unit) {
+							unit = '(' + unit + ')'
+						}						
+					}					
+				} catch(e) {
+					console.log(e)
 				}
-				formulaData[index] = item + unit
+				if(self.chartsInfo.reportChartsIndexList[index].linkKey) {
+					formulaData[index] = item + unit
+				} else {
+					nullIndex.push(index)
+				}
 			})
-
 			self.baseData.formulaData = formulaData
 			// 初始化数据
 			self.baseData.formulaData.forEach((item, index) => {
@@ -52,11 +61,27 @@ export default {
 				self.baseData.timeData.push(item[0])
 				tableData.push(item.slice(1))
 			})
-
+			// 如果有长度为0的成员，则依据指标长度，将其全部置空
+			tableData.forEach((item, index) => {
+				if(item.length == 0) {
+					for(let i in self.baseData.formulaData) {
+						item.push(null)
+					}
+				}
+			})
 
 			tableData.forEach(item => {
 				item.forEach((data, index) => {
-					self.baseData.tableData[index].push(Number(Number(data).toFixed(2)))
+					let result = nullIndex.find((item) => {
+						return item == index
+					})
+					if(result!=undefined) {
+						self.baseData.tableData[index].push('')
+					} else if(data == null || data == '') {
+						self.baseData.tableData[index].push('--')
+					} else {
+						self.baseData.tableData[index].push(Number(Number(data).toFixed(2)))
+					}
 				})
 			})
 			// console.dir(self.baseData.formulaData)

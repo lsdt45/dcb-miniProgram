@@ -42,7 +42,7 @@
 	const trInfo = toRef(props, 'trInfo')
 
 	watch(isShowHoverBtnProp, (newVal) => {
-		console.log(`isShowHoverBtnProp=${newVal}`)
+		// console.log(`isShowHoverBtnProp=${newVal}`)
 	})
 	// watch(offsetLeftProp, (newVal) => {
 	// })

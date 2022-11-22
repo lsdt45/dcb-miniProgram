@@ -78,7 +78,8 @@
 		GridComponent,
 		DatasetComponent,
 		TransformComponent,
-		LegendComponent
+		LegendComponent,
+		DataZoomComponent 
 	} from './echarts/components';
 	// 标签自动布局，全局过渡动画等特性
 	import {
@@ -96,6 +97,7 @@
 		GridComponent,
 		DatasetComponent,
 		TransformComponent,
+		DataZoomComponent,
 		LineChart,
 		BarChart,
 		LabelLayout,
@@ -271,6 +273,9 @@
 						type: 'value'
 					},
 					series: [{}],
+					dataZoom: {
+						type: "inside"
+					},
 					color: [
 						'#E86452',
 						'#5B8FF9',
@@ -364,15 +369,7 @@
 					},
 				],
 				// 数据处理选项
-				dataProcessList: [{
-						value: 0,
-						text: '年化数据',
-					},
-					{
-						value: 1,
-						text: '单季化数据',
-					}
-				],
+				dataProcessList: [],
 				deleteDataProcess: {
 					value: null,
 					text: ''
@@ -517,13 +514,11 @@
 						})
 						if (this.chartsInfo.defaultChart === 'bar') {
 							this.chartsShowType = 'bar'
-							// this.opts.extra.column.type = 'group'
 							this.chartsTypeList[1].select = true
 						}
 						// 堆叠柱状图
 						else if (this.chartsInfo.defaultChart === 'stack') {
 							this.chartsShowType = 'stack'
-							// this.opts.extra.column.type = 'stack'
 							this.chartsTypeList[2].select = true
 						}
 						// 折线图
@@ -531,6 +526,21 @@
 							this.chartsShowType = 'line'
 							this.chartsTypeList[0].select = true
 						} else {}
+						// 获取数据处理的选项
+						let value = 0
+						if(this.chartsInfo.isAnnualized) {
+							this.dataProcessList.push({
+								value,
+								text: '年化数据'
+							})
+							value ++
+						}
+						if(this.chartsInfo.isQuarterly) {
+							this.dataProcessList.push({
+								value,
+								text: '单季化数据'
+							})							
+						}
 						tableChartsUtil.getDefaultTableType(this)
 						tableChartsUtil.getNotIdIndex(this)
 						// 获取图表数据
@@ -799,7 +809,7 @@
 				}
 				this.notIdIndex.forEach((item, index) => {
 					res.series[item].data.forEach((dataItem, dataIndex, dataArr) => {
-						dataArr[dataIndex] = '--'
+						dataArr[dataIndex] = ''
 					})
 				})
 				this.chartsDataOri = this.$util.deepCopy(res)

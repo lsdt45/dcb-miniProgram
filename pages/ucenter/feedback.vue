@@ -30,7 +30,7 @@
 		data() {
 			return {
 				Content: "",
-				ContactType: 1,
+				ContactType: 0,
 				ContactInfo: ""
 			};
 		},

@@ -8,13 +8,14 @@
 			</view>
 		</view>
 		<view class="stock-home__menu" v-if="!isShowDetail">
-			<view class="stock-home__menu-card" v-for="(item,index) in navigMenuData" :key="index"
-				@click="toStock(item)">
-				<image referrerPolicy='no-referrer' class="stock-home__menu-card-img" :src="setImgUrl(index)"
-					mode="scaleToFill"></image>
-				<view class="stock-home__menu-card-content">
-					<text :class="menuIconType(index)" :style="menuIconColor(index)"></text>
-					<text class="stock-home__menu-card-topic"> {{ item.topic }} </text>
+			<view class="stock-home__menu-card" v-for="(item,index) in navigMenuData" :key="index"	@click="toStock(item)">
+				<view >
+					<image referrerPolicy='no-referrer' class="stock-home__menu-card-img" :src="setImgUrl(index)"
+						mode="scaleToFill"></image>
+					<view class="stock-home__menu-card-content">
+						<text :class="menuIconType(index)" :style="menuIconColor(index)"></text>
+						<text class="stock-home__menu-card-topic"> {{ item.topic }} </text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -58,7 +59,9 @@
 				baseInfoData: new Map(), // 基础指标信息
 				indexData: [],
 				userStock: [],
-				userStockStr: ""
+				userStockStr: "",
+				userInfo:"",
+				serverTime:""
 			}
 		},
 		components: {
@@ -126,10 +129,15 @@
 						this.navigDataItem = navigData.NavigJson.children
 						this.formatNavData(this.navigDataItem, 0)
 						// 获取一级模板作为首页导航菜单，并去掉id中"_"后面的数据
+						
 						this.navigDataItem.forEach((item, index) => {
-							this.navigMenuData.push(item)
-							this.navigMenuData[index].id = this.$util.getNodeIdById(this.navigMenuData[
-								index].id)
+							let userClass=new Date(this.userInfo.endTime)>this.serverTime?this.userInfo.userClass:0
+							let info =item.userClassAuth.filter(t=>t.userClass==userClass)[0]
+							if(info && info.detailedAuth==0 && item.isShow){
+								item.id = this.$util.getNodeIdById(item.id)
+								this.navigMenuData.push(item)
+								//this.navigMenuData[index].id = this.$util.getNodeIdById(this.navigMenuData[index].id)
+							}
 						})
 					}
 				}).catch(err => {
@@ -282,6 +290,8 @@
 		onShow() {
 			this.initData();
 			this.getDefaultCompareList();
+			this.userInfo=uni.getStorageSync("UserInfo")
+			this.serverTime =uni.getStorageSync("serverTime")
 		}
 	}
 </script>

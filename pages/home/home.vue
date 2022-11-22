@@ -220,7 +220,8 @@
 			// 进入自选股界面
 			toStockMarket() {
 				uni.navigateTo({
-					url: "/pages/stock-market/stock-market",
+					// url: "/pages/stock-market/stock-market",
+					url: "/pages/stock/optional-stock",
 				});
 			},
 			// 跳转到分析首页

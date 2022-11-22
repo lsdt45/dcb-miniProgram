@@ -83,7 +83,8 @@
 		defineProps
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onUnload
 	} from '@dcloudio/uni-app'
 	import api from '@/common/api/api.js'
 	import store from '@/store/index.js'
@@ -165,6 +166,8 @@
 	let isShowPanel = ref(false)
 	// 是否显示搜索结果
 	let isShowResult = ref(false)
+	// 是否来自pdf页面
+	let isFromPdf = ref('')
 	// 每次获取数据的个数
 	let pageSize = ref(65)
 	// 搜索框关键词
@@ -589,15 +592,10 @@
 	// 返回pdf页面
 	function backPdfPage() {
 		uni.navigateBack({
-			delta: 1,
-			success: () => {
-				uni.$emit('updateCompareList', {
-					isLogin: true
-				})
-			}
+			delta: 1
 		})
 	}
-
+	
 	onMounted(() => {
 		initData()
 		getIndustryClassificationInfo()
@@ -605,11 +603,19 @@
 	})
 	onLoad((options) => {
 		// 如果是从pdf详情页跳转过来的，则需要单独获取一下报告期列表数据
-		let isFromPdf = options.isFromPdf
+		isFromPdf.value = options.isFromPdf
 		if(isFromPdf) {
 			chartsId = options.chartsId
 			getAnalysisTime()
 			getChartsData()		
+		}
+	})
+	onUnload(() => {
+		// 如果是从pdf详情页跳转过来的，返回之后进行额外处理
+		if(isFromPdf.value) {
+			uni.$emit('updateCompareList', {
+				isLogin: true
+			})
 		}
 	})
 </script>

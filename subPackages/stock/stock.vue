@@ -501,7 +501,8 @@
 							this.navigDataItem = this.navigData.NavigJson.children.find((item) => {
 								let itemId = this.$util.getNodeIdById(item.id)
 								return itemId == this.curAnalysisNode.id
-							}).children
+							}).children			
+									
 							this.formatNavData(this.navigDataItem, 1)
 							/* 将当前节点的所有子节点提取出来 */
 							// this.tempNavigDataItemTree.forEach((item, index) => {

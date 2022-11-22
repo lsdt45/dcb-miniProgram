@@ -38,7 +38,9 @@ function request(url, options) {
 				console.log("fail:" + err.statusCode)
 				reject(err.data)
 			},
-			complete: () => {
+			complete: (info) => {
+				let serverTime = new Date(info.header.Date)
+				uni.setStorageSync("serverTime",serverTime)
 				if(options.load) {
 					uni.hideLoading();
 				}

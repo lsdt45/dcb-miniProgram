@@ -44,9 +44,9 @@
 							<view class="report-list">
 								<uni-list :border="false">
 									<uni-list-item class="list-main-item" v-for="(item, index) in showIndexData"
-										:key="item.id" :border="false" clickable @click="toPdfView(item.id)">
+										:key="item.id"  :border="false" clickable @click="toPdfView(item.id)">
 										<template v-slot:header>
-											<view class="list-main-item header">
+											<view  class="list-main-item header">
 												<text class="list-main-item__topic" :class="childrenIndexClass(item.level)">{{ item.topic }}</text>
 												<text class="list-main-item__pagenum">{{ matchPage(index) }}</text>
 											</view>
@@ -86,6 +86,8 @@
 					headerHeight: 0,
 					indexHeight: 0,
 				},
+				userInfo:"",
+				serverTime:""
 			};
 		},
 		props: {},
@@ -152,6 +154,8 @@
 				.exec();
 			this.initData();
 			this.getDefaultCompareList();
+			this.userInfo=uni.getStorageSync("UserInfo")
+			this.serverTime =uni.getStorageSync("serverTime")
 		},
 		methods: {
 			initData() {
@@ -374,9 +378,14 @@
 			getSpecifiedLevelIndex(src: indexDataType[], level: number) {
 				// let result: indexDataType[] = []
 				src.forEach((item) => {
+					//v-if="item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0] && item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0].detailedAuth==0" 
 					if(level < item.level)
 						return
-					this.showIndexData.push(item)
+					let userClass=new Date(this.userInfo.endTime)>this.serverTime?this.userInfo.userClass:0
+					let info =item.userClassAuth.filter(t=>t.userClass==userClass)[0]
+					if(info && info.detailedAuth==0 && item.isShow){
+						this.showIndexData.push(item)
+					}
 					if(item.children && item.children.length > 0) {
 						this.getSpecifiedLevelIndex(item.children, level)
 					}

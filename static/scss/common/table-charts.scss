@@ -28,13 +28,15 @@ $table-first-col-width: 150px;
 				display: inline-flex;
 			}
 			.compare-company-select {
-				width: 170rpx;
+				width: 180rpx;
 				margin-right: 20rpx;
 				.uni-data-select {
 					border-radius: 2px;
 					border-color: #e9f1fd;
 					height: 30px !important;
+					padding-left: 4px !important;
 				}
+				
 			}			
 			.charts-mode-select {
 				position: relative;
@@ -49,7 +51,7 @@ $table-first-col-width: 150px;
 			}
 			.data-process-select {
 				position: relative;
-				width: 100px;
+				width: 90px;
 				margin-left: 20rpx;
 				.uni-data-select {
 					height: 25px !important;
@@ -60,6 +62,9 @@ $table-first-col-width: 150px;
 				.uni-data-select__input-text {
 					font-size: 14px !important;
 					color: black;
+				}
+				.uni-data-select__selector-item {
+					padding: 0px 5px !important;
 				}
 			}
 		}

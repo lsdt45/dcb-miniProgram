@@ -9,13 +9,13 @@
           <uni-col :span="8">
             <view>股票</view>
           </uni-col>
-          <uni-col :span="8">
+         <uni-col :span="8">
             <view class="selfSelectStockNumHead">
               <text class="selfSelectStock-new">最新</text>
             </view>
           </uni-col>
           <uni-col :span="8">
-            <view class="selfSelectStockNumHead">涨幅</view>
+            <view class="selfSelectStockNumHead">涨跌</view>
           </uni-col>
         </view>
       </uni-row>
@@ -32,7 +32,7 @@
                     <text class="selfSelectStockSecCode">{{  item.f12  }}</text>
                   </view>
                 </uni-col>
-                <uni-col :span="8">
+               <uni-col :span="8">
                   <view :class="newTextClass(item)">
                     {{  formatDataFixed(item.f2, 2) == null ? item.f18 : formatDataFixed(item.f2, 2)  }}
                   </view>
