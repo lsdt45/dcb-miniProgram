@@ -223,12 +223,6 @@
 				"selectedIconPath": "static/image/analysis-02.png",
 				"text": "分析"
 			}, 
-			// {
-			// 	"pagePath": "pages/stock-trend/stock-trend",
-			// 	"iconPath": "static/image/market-01.png",
-			// 	"selectedIconPath": "static/image/market-02.png",
-			// 	"text": "行情"
-			// }, 
 			{
 				"pagePath": "pages/ucenter/ucenter",
 				"iconPath": "static/image/ucenter-01.png",

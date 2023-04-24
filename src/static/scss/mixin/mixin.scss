@@ -38,3 +38,32 @@
 		}
 	}	
 }
+
+// 自定义data-select组件的样式
+@mixin DcbDataSelect {
+	.data-select {
+		display: flex;
+		justify-content: space-between;
+		width: 220rpx;
+		padding: 10rpx 20rpx;
+		border-radius: 2px;
+		border: 1px solid #e9f1fd;
+		.data-select__content {
+			color: $color-666;
+			@include SingleTextEllipsis;
+		}
+		.data-select__arrow {
+			display: inline-block;
+			position: relative;
+			top: 7px;
+			left: 2px;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 6px 5px 6px 5px;
+			border-style: solid;
+			border-color: transparent;
+			border-top-color: $color-666;
+		}
+	}
+}

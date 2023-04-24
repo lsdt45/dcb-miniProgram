@@ -88,8 +88,8 @@
 	} from '@dcloudio/uni-app'
 	import api from '@/common/api/api.js'
 	import store from '@/store/index.js'
-	import util from '@/common/util.js'
-	import {
+	import util from '@/common/util'
+	import type {
 		IndustryTree
 	} from '@/types/CommonTypes'
 	import DcbPopupPanel from '@/components/dcb-popup-panel/dcb-popup-panel.vue'

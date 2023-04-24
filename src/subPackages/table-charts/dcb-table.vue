@@ -45,7 +45,7 @@
 		// defineProps
 	} from 'vue'
 	import type { Ref } from 'vue'
-	import $util from '@/common/util.js'
+	import $util from '@/common/util'
 	import { props_dcb_table } from './table-charts-config'
 	import type {
 		ChartsInfo,

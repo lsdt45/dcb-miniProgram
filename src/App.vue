@@ -41,6 +41,8 @@ onHide(() => {})
 <style lang="scss">
 /* 每个页面公共css */
 @import './uni_modules/vk-uview-ui/index.scss';
+@import "@/static/scss/common/pdf-report.scss";
+@import '@/static/scss/common/report-infomation.scss';
 /* 图标字体 */
 @import '@/static/iconfont/iconfont.css';
 </style>

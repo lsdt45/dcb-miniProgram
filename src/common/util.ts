@@ -7,7 +7,7 @@ var dateUtils = {
 		'分钟': 60000,
 		'秒': 1000
 	},
-	humanize: function(milliseconds) {
+	humanize: function (milliseconds: number) {
 		var humanize = '';
 		for (var key in this.UNITS) {
 			if (milliseconds >= this.UNITS[key]) {
@@ -17,26 +17,26 @@ var dateUtils = {
 		}
 		return humanize || '刚刚';
 	},
-	format: function(dateStr) {
+	format: function (dateStr) {
 		var date = this.parse(dateStr)
 		var diff = Date.now() - date.getTime();
 		if (diff < this.UNITS['天']) {
 			return this.humanize(diff);
 		}
-		var _format = function(number) {
+		var _format = function (number) {
 			return (number < 10 ? ('0' + number) : number);
 		};
 		return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDate()) +
 			'-' +
 			_format(date.getHours()) + ':' + _format(date.getMinutes());
 	},
-	parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+	parse: function (str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
 		var a = str.split(/[^0-9]/);
 		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
 	}
 };
 // 深拷贝的实现
-function deepCopy(obj, map) {
+function deepCopy(obj: any, map?: any) {
 	//判断是否是第一次调用deepCopy方法，是的话创建一个weakmap实例来装遍历过程中出现过的对象
 	if (!map) {
 		map = new WeakMap()
@@ -68,12 +68,14 @@ function deepCopy(obj, map) {
 
 export default {
 	/**
-	 * @description 转时间格式
-	 * @param {Object} FormatDate(date, "yyyy-MM-dd");
+	 * description: 根据指定的格式，对给定的日期对象进行格式化。
+	 * @param now - 要格式化的日期对象。
+	 * @param mask - 要使用的格式化模板。
+	 * @return 格式化后的日期字符串。
 	 */
-	FormatDate(now, mask) {
+	FormatDate(now: Date, mask: string) {
 		var d = now;
-		var zeroize = function(value, length) {
+		var zeroize = function (value, length) {
 			if (!length) length = 2;
 			value = String(value);
 			for (var i = 0, zeros = ''; i < (length - value.length); i++) {
@@ -82,7 +84,7 @@ export default {
 			return zeros + value;
 		}
 
-		return mask.replace(/"[^"]*"|'[^']*'|\b(?:d{1,4}|m{1,4}|yy(?:yy)?|([hHMstT])\1?|[lLZ])\b/g, function($0) {
+		return mask.replace(/"[^"]*"|'[^']*'|\b(?:d{1,4}|m{1,4}|yy(?:yy)?|([hHMstT])\1?|[lLZ])\b/g, function ($0) {
 			switch ($0) {
 				case 'd':
 					return d.getDate();
@@ -100,9 +102,9 @@ export default {
 					return zeroize(d.getMonth() + 1);
 				case 'MMM':
 					return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-						[
-							d.getMonth()
-						];
+					[
+						d.getMonth()
+					];
 				case 'MMMM':
 					return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
 						'September', 'October', 'November', 'December'
@@ -139,21 +141,26 @@ export default {
 					return d.getHours() < 12 ? 'AM' : 'PM';
 				case 'Z':
 					return d.toUTCString().match(/[A-Z]+$/);
-					// Return quoted strings with the surrounding quotes removed
+				// Return quoted strings with the surrounding quotes removed
 				default:
 					return $0.substr(1, $0.length - 2);
 			}
 		});
 	},
-
-	formatLocation(longitude, latitude) {
+	/**
+	 * description: 格式化经度和纬度值。
+	 * @param longitude - 经度值，可以是数值或字符串。
+	 * @param latitude - 纬度值，可以是数值或字符串。
+	 * @return 经度和纬度的格式化结果对象。
+	 */
+	formatLocation(longitude: number | string, latitude: number | string) {
 		if (typeof longitude === 'string' && typeof latitude === 'string') {
 			longitude = parseFloat(longitude)
 			latitude = parseFloat(latitude)
 		}
 
-		longitude = longitude.toFixed(2)
-		latitude = latitude.toFixed(2)
+		longitude = typeof longitude === 'number' ? longitude.toFixed(2) : longitude
+		latitude = typeof latitude === 'number' ? latitude.toFixed(2) : latitude
 
 		return {
 			longitude: longitude.toString().split('.'),
@@ -167,7 +174,7 @@ export default {
 	 * @param {string} dateTime1 - 时间1.
 	 * @param {string} dateTime2 - 时间2.
 	 */
-	formatCreateTime(dateTime1, dateTime2) {
+	formatCreateTime(dateTime1: string, dateTime2: string) {
 		// 转换成秒数
 		let parseDate1 = Date.parse(dateTime1);
 		let parseDate2 = Date.parse(dateTime2);
@@ -192,32 +199,19 @@ export default {
 	//  * @param {function} fn - 原方法.
 	//  * @param {number} delay - 延时.
 	//  * 不应传入匿名函数
-	
-	debounce(fn, delay) {
+
+	debounce(fn: Function, delay: number) {
 		let timer = false;
-		return function() {
-		  timer && clearTimeout(timer);
-		  timer = setTimeout(() => {
-			fn.apply(this, arguments); // 把参数传进去
-		  }, delay);
+		return function () {
+			timer && clearTimeout(timer);
+			timer = setTimeout(() => {
+				fn.apply(this, arguments); // 把参数传进去
+			}, delay);
 		};
 	},
-	// debounce(fn, delay) {
-	// 	let timer = null // 声明定时器
-	// 	return function() {
-	// 		let context = this
-	// 		let args = arguments
-	// 		clearTimeout(timer)
-	// 		timer = setTimeout(() => {
-	// 			fn.apply(context, args)
-	// 		}, delay)
-	// 	}
-	// },
-
-
 
 	// 格式化报告类型名称
-	formatRptType(name, type = "") {
+	formatRptType(name: string, type = "") {
 		let fmtName = ''
 		let typeReturn = ''
 		if (name === '第一季度报告') {
@@ -238,7 +232,6 @@ export default {
 		} else {
 			return fmtName
 		}
-
 	},
 
 	/*
@@ -247,7 +240,7 @@ export default {
 	 ** xuanfeng 2014-08-28
 	 */
 
-	randomWord(randomFlag, min, max) {
+	randomWord(randomFlag: boolean, min: number, max: number) {
 		let str = "",
 			range = min,
 			arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
@@ -272,8 +265,8 @@ export default {
 	 * @param {number} quantile - 要保留的位数.
 	 * @return any
 	 */
-	dataFormat(num, quantile = 0) {
-		return (typeof(num) == 'number' && num != 0) ? num.toFixed(quantile).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, '$1,') : num;
+	dataFormat(num: any, quantile = 0) {
+		return (typeof (num) == 'number' && num != 0) ? num.toFixed(quantile).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, '$1,') : num;
 	},
 	/**
 	 * author: ljw
@@ -282,7 +275,7 @@ export default {
 	 * @return nodeId
 	 * @createTime: 2022-07-01 15:15:15
 	 */
-	getNodeIdById(id) {
+	getNodeIdById(id: string) {
 		let nodeId = null
 		// 根据类型提取NodeId，如果有"_"，则只选择前面的部分
 		let index = id.indexOf('_')
@@ -294,4 +287,27 @@ export default {
 		return nodeId
 	},
 	deepCopy
+}
+
+export function formatRptType(name, type = "") {
+	let fmtName = ''
+	let typeReturn = ''
+	if (name === '第一季度报告') {
+		fmtName = '一季报'
+		typeReturn = '03'
+	} else if (name === '半年度报告') {
+		fmtName = '半年报'
+		typeReturn = '06'
+	} else if (name === '第三季度报告') {
+		fmtName = '三季报'
+		typeReturn = '09'
+	} else if (name === '年度报告') {
+		fmtName = '年报'
+		typeReturn = '12'
+	}
+	if (type === "type") {
+		return typeReturn
+	} else {
+		return fmtName
+	}
 }

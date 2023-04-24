@@ -211,7 +211,7 @@ $table-first-col-width: 150px;
 		}
 
 		.u-mask {
-			background-color: #fff !important;
+			// background-color: #fff !important;
 		}
 
 		.dcb-table__wrapper {
@@ -224,4 +224,5 @@ $table-first-col-width: 150px;
 			color: $color-333;
 			overflow: inherit;
 		}
+		@include DcbDataSelect;
 	}

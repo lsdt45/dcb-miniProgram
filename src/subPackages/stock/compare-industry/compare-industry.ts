@@ -1,10 +1,10 @@
-import utils from '@/common/util.js'
+import utils from '@/common/util'
 import store from '@/store/index.js'
 import {
 	reactive,
 	ref
 } from 'vue'
-interface CompareInfo {
+export interface CompareInfo {
 	name: string,
 	code: number,
 	mainBusinessIncome: string, // 主营业务收入
@@ -148,7 +148,7 @@ function aliasReturnCompareInfo(data: any): CompareInfo[] {
 }
 
 function updateList(list: CompareInfo[]) {
-	let curCmpList = []
+	let curCmpList: any[] = []
 	list.forEach((item: any) => {
 		let tempItem = {
 			comp004_OrgName: item.name,
@@ -170,4 +170,4 @@ function updateList(list: CompareInfo[]) {
 	
 // }
 
-export { CompareInfo, aliasReturnCompareInfo, updateList }
+export { aliasReturnCompareInfo, updateList }

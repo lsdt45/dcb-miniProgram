@@ -12,7 +12,8 @@
     "lib": ["esnext", "dom"],
     "types": ["@dcloudio/types","@types/wechat-miniprogram", "@types/uni-app", "@types/node", "mitt"],
     "outDir": "./dist",
+    "declaration": true, // 是否自动创建类型声明文件
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "files": ["src/index.tsx.tssrc/index.d.tsdex.d.tsdex.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "./auto-imports.d.ts"],
+  // "files": ["src/index.tsx.tssrc/index.d.tsdex.d.tsdex.d.ts"],
 }

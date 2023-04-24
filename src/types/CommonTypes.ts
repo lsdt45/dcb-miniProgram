@@ -21,3 +21,8 @@ export interface IndustryTree {
 	typeId: string,
 	typeName: string
 }
+
+export type LocalData = {
+	value: number,
+	text: string
+}

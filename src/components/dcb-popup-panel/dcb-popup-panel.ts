@@ -20,5 +20,13 @@ export let propsObj = {
 	title: {
 		type: String,
 		default: ''
+	},
+	multiple: {
+		type: Boolean,
+		default: false
+	},
+	curSelect: {
+		type: Object,
+		default: () => {}
 	}
 }

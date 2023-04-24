@@ -10,11 +10,22 @@ function request(url, options) {
 		}
 
 		let header = options.header
+		// #ifdef MP
 		if (url.toLowerCase().indexOf("/wx/") != -1) {
 			url = config.data.API_ROOT_AUTH + url
 		} else {
 			url = config.data.API_ROOT_ZJZT + url
 		}
+		// #endif
+		
+		// #ifdef H5
+		if (url.toLowerCase().indexOf("/userinfo/userlogin") != -1) {
+			url = config.data.API_ROOT_AUTH + url
+		} else {
+			url = config.data.API_ROOT_ZJZT + url
+		}
+		// #endif
+		
 		header.authorization = "Bearer " + wx.getStorageSync("Authorization")
 		uni.request({
 			url: url,
@@ -29,6 +40,7 @@ function request(url, options) {
 					if(!isLogin){
 						onLogin()
 					}
+					
 				}
 				if (res.statusCode === 200) {
 					resolve(JSON.parse(JSON.stringify(res.data)))
@@ -70,6 +82,7 @@ function post(url, options, header = {}, load=true) {
 }
 
 function onLogin() {
+	// #ifdef MP
 	uni.login({
 		success: (codeRes) => {
 			if (codeRes.code) {
@@ -106,8 +119,40 @@ function onLogin() {
 			isLogin = false;
 		}
 	})
+	// #endif
+	//#ifdef H5
+	post('/UserInfo/UserLogin', {
+		UserName: "Guest",
+		LoginCName: "*",
+		LoginIP: "*.*.*.*",
+		UserClass: 99
+	},{simulate:true}).then(res => {
+		if (res.status) {
+			uni.setStorageSync("Authorization",res.token)
+			uni.setStorageSync("UserInfo",res.data)
+			
+			let userinfo = uni.getStorageSync("UserInfo")
+			// if(!store.state.firstEnter) {
+				store.commit('updateUserInfo', res.data)
+			// }
+			isLogin = true;
+			store.commit('updateLoginStatus', isLogin)
+			// 页面重载
+			// const pages = getCurrentPages()
+			// // 声明一个pages使用getCurrentPages方法
+			// const curPage = pages[pages.length - 1]
+			// curPage.onLoad(curPage.options) // 传入参数
+			// curPage.onShow()
+			// curPage.onReady()
+			
+		}
+	}).catch(err => {
+		uni.setStorageSync("Authorization",null)
+		uni.setStorageSync("UserInfo",null)
+		isLogin = false;
+	})
+	// #endif
 }
-
 
 export default {
 	get,

@@ -1,6 +1,6 @@
 import App from './App.vue'
 import uView from '@/uni_modules/vk-uview-ui';
-import util from '@/common/util.js'
+import util from '@/common/util'
 import api from '@/common/api/api.js'
 import config from '@/common/data/index.js'
 import store from '@/store'
