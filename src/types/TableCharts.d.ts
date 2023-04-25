@@ -9,10 +9,25 @@ export namespace TableCharts {
   type BaseData = {
     formulaData: any[];
     codeData: any[];
-    timeData: any[];
+    timeData: {
+      name: string,
+      type: number
+    }[];
     tableData: any[];
   };
-
+  // 图表最终显示的数据类型
+  type ChartsData = {
+    categories: string[],
+    series: any[],
+    type: number,
+    typeName: string,
+  }
+  // 图表处理后的数据类型
+  type AllChartsData = {
+    stockName: string,
+    stockCode: string,
+    chartsData: ChartsData[],
+  }
   type Tag = {
     type: string;
     isExsit: boolean;
@@ -86,7 +101,10 @@ export namespace TableCharts {
 
 
   export type Data = {
-    allChartsTableData: any[];
+    allChartsTableData: AllChartsData[];
+    allChartsTableData_origin: {
+      [key: string]: any
+    };
     baseData: BaseData;
     chartContainnerHeight: number;
     chartsData: any;

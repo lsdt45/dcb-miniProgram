@@ -187,7 +187,8 @@
 					text: '游泳',
 				},
 			],
-			allChartsTableData: [], // 所有的图表数据
+			allChartsTableData_origin: [], // 所有的原始图表数据
+			allChartsTableData: [], // 处理后的所有的图表数据
 			// 使用中的图表数据
 			chartsData: {},
 			chartsData_beforeConver: {}, // 转化前的数据
@@ -611,7 +612,7 @@
 
 				this.$api.post('/Report/GetChartsData', param).then((resp: any) => {
 					if (resp.status) {
-						this.allChartsTableData = resp.data
+						this.allChartsTableData_origin = resp.data
 						this.chartsDataProcess() // 处理图表数据
 						// 获取日期列表
 						let timePeriod = resp.data.codeDataList[0].data.calculationAllData.slice(1)
@@ -651,8 +652,8 @@
 				// 筛选报告类型
 				for (let i = 0; i < this.baseData.timeData.length; i++) {
 					for (let j = 0; j < checkedRptData.length; j++) {
-						let type = this.baseData.timeData[i].split('-')[1]
-						let year = this.baseData.timeData[i].split('-')[0]
+						let type = this.baseData.timeData[i].name.split('-')[1]
+						let year = this.baseData.timeData[i].name.split('-')[0]
 						if (type == checkedRptData[j].type) {
 							data_temp.categories.push(this.baseData.timeData[i])
 							data_temp.year.push(year)
@@ -747,8 +748,8 @@
 				// 筛选报告类型
 				for (let i = 0; i < this.baseData.timeData.length; i++) {
 					for (let j = 0; j < this.dataFilter.report.length; j++) {
-						let type = this.baseData.timeData[i].split('-')[1]
-						let year = this.baseData.timeData[i].split('-')[0]
+						let type = this.baseData.timeData[i].name.split('-')[1]
+						let year = this.baseData.timeData[i].name.split('-')[0]
 						if (type == this.dataFilter.report[j]) {
 							data_temp.categories.push(this.baseData.timeData[i])
 							data_temp.year.push(year)
@@ -768,7 +769,7 @@
 					})
 					if (isExist == undefined) {
 						data_temp.categories.push(lastTime)
-						data_temp.year.push(lastTime.split('-')[0])
+						data_temp.year.push(lastTime.name.split('-')[0])
 						data_temp.index.push(this.baseData.timeData.length - 1)
 					}
 				}
