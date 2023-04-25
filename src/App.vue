@@ -45,4 +45,5 @@ onHide(() => {})
 @import '@/static/scss/common/report-infomation.scss';
 /* 图标字体 */
 @import '@/static/iconfont/iconfont.css';
+@import "@/static/scss/common/global.scss";
 </style>

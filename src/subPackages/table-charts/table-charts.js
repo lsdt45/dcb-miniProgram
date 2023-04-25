@@ -1,5 +1,4 @@
-import util from '@/common/util.js'
-import { log } from 'console'
+import util from '@/common/util.ts'
 // 重置数据
 function resetData(self) {
 	for (let item in self.baseData) {
@@ -7,84 +6,86 @@ function resetData(self) {
 	}
 }
 
+
+
+// 封装一个函数，用于获取单位名称
+function getUnitName(indexList, index) {
+	// 定义一些常量
+	const PERCENTAGE = '百分比'
+	const ORIGINAL_VALUE = '原始值'
+	let unit = ''
+	try {
+		if (index < indexList.length && indexList[index].unitName) {
+			unit = indexList[index].unitName // 获取单位名称
+			if (unit == PERCENTAGE) {
+				unit = '%'
+			} else if (unit == ORIGINAL_VALUE) {
+				unit = ''
+			}
+			if (unit) {
+				unit = '(' + unit + ')' // 单位加括号
+			}
+		}
+	} catch (e) {
+		console.log(e)
+	}
+	return unit
+}
+
+// 封装一个函数，用于处理空值
+function handleEmptyValue(data, nullIndex, index) {
+	const EMPTY_VALUE = '--'
+	if (nullIndex.includes(index)) { // 如果是虚指标，用空字符串代替
+		data = ''
+	} else if (data == null || data == '') { // 如果是空值，用'--'代替
+		data = EMPTY_VALUE
+	} else { // 否则，保留两位小数并转换为数字类型
+		data = Number(Number(data).toFixed(2))
+	}
+	return data
+}
+
 export default {
 	getBaseData(self) {
 		resetData(self)
+		// 如果没有数据，直接返回
+		if (self.allChartsTableData.length == 0) return
 		// 从数据中筛选出当前对比公司的数据
-		let codeData = []
+		let codeData = [] // 当前公司的数据
 		let nullIndex = [] // 虚指标
-		if(self.allChartsTableData.length == 0) return
 		self.allChartsTableData.codeDataList.forEach((item, index) => {
-			if(item.code == self.curSelectCompany) {
-				codeData = item.data.codeData
+			if (item.code == self.curSelectCompany) {
+				codeData = item.data.codeData // 找到当前公司的数据
 			}
 		})
-		// let codeData = self.allChartsTableData.codeDataList[tarIndex].data.codeData
-		let tableData = []
-		// let unionUnit = self.chartsInfo.unit
-		// let unit = ''
 		if (codeData && codeData.length > 0) {
-			let formulaData = codeData[0].slice(1)
-			// if(unionUnit) unit = `(${unionUnit})`
-			
-			
+			let formulaData = codeData[0].slice(2) // 公式数据，去掉第一个元素（时间）和第二个元素（cType）
 			formulaData.forEach((item, index) => {
-				let unit = ''
-				// if(!unionUnit && self.chartsInfo.reportChartsIndexList[index].unitName) {
-				try {
-					if(index < self.chartsInfo.reportChartsIndexList.length && self.chartsInfo.reportChartsIndexList[index].unitName) {
-						unit = self.chartsInfo.reportChartsIndexList[index].unitName
-						if(unit == '百分比') {
-							unit = '%'
-						} else if(unit == '原始值') {
-							unit = ''
-						}
-						if (unit) {
-							unit = '(' + unit + ')'
-						}						
-					}					
-				} catch(e) {
-					console.log(e)
-				}
-				if(self.chartsInfo.reportChartsIndexList[index]&&self.chartsInfo.reportChartsIndexList[index].linkKey) {
-					formulaData[index] = item + unit
+				let unit = getUnitName(self.chartsInfo.reportChartsIndexList, index) // 获取单位名称
+				if (self.chartsInfo.reportChartsIndexList[index] && self.chartsInfo.reportChartsIndexList[index].linkKey) {
+					formulaData[index] = item + unit // 公式数据加上单位
 				} else {
-					nullIndex.push(index)
+					// nullIndex.push(index) // 如果没有linkKey，说明是虚指标，记录下标
 				}
 			})
-			self.baseData.formulaData = formulaData
+			self.baseData.formulaData = formulaData // 更新基础数据的公式数据
 			// 初始化数据
 			self.baseData.formulaData.forEach((item, index) => {
-				self.baseData.tableData[index] = []
+				self.baseData.tableData[index] = [] // 基础数据的表格数据按照公式数据的长度初始化为空数组
 			})
-			codeData.slice(1).forEach((item, index) => {
-				self.baseData.timeData.push(item[0])
-				tableData.push(item.slice(1))
-			})
-			// 如果有长度为0的成员，则依据指标长度，将其全部置空
-			tableData.forEach((item, index) => {
-				if(item.length == 0) {
-					for(let i in self.baseData.formulaData) {
-						item.push(null)
+			codeData.slice(1).forEach((item, index) => { // 遍历除了公式数据之外的其他数据（时间和数值）
+				self.baseData.timeData.push(item[0]) // 将时间数据添加到基础数据的时间数据中
+				let tableRow = item.slice(2) // 表格的一行数据，去掉时间和cType
+				if (tableRow.length == 0) { // 如果表格的一行数据为空，说明没有数值，需要用null填充
+					for (let i in self.baseData.formulaData) { // 按照公式数据的长度填充null
+						tableRow.push(null)
 					}
 				}
-			})
-
-			tableData.forEach(item => {
-				item.forEach((data, index) => {
-					let result = nullIndex.find((item) => {
-						return item == index
-					})
-					if(result!=undefined) {
-						self.baseData.tableData[index].push('')
-					} else if(data == null || data == '') {
-						self.baseData.tableData[index].push('--')
-					} else {
-						self.baseData.tableData[index].push(Number(Number(data).toFixed(2)))
-					}
+				tableRow.forEach((data, index) => { // 遍历表格的一行数据
+					data = handleEmptyValue(data, nullIndex, index) // 处理空值
+					self.baseData.tableData[index].push(data) // 将处理后的数据添加到基础数据的表格数据中
 				})
 			})
-			// console.dir(self.baseData.formulaData)
 		}
 	},
 	/**
@@ -115,7 +116,7 @@ export default {
 	 * @param {object} self - vue实例.
 	 * @param {string} type - 处理类型
 	 * @createTime: 2022-10-12 16:37:07
-	 */	
+	 */
 	handleAnnualized(self, type) {
 		if (type === 'restore') {
 			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
@@ -170,7 +171,7 @@ export default {
 						let value = tempChartsData_after.series[seriesIndex].data[categoriesIndex]
 						//都为空时不处理，直接按空算
 						if ((value == null || value == '') && (beforeValue == null || beforeValue ==
-								''))
+							''))
 							return;
 						//单个数据为空时按0算
 						if (value == null || value == '')
@@ -180,7 +181,7 @@ export default {
 						let decimalNumber = value.toString().indexOf('.') == -1 ? 0 : 2;
 						tempChartsData_after.series[seriesIndex].data[categoriesIndex] = Number((
 							parseFloat(value) - parseFloat(beforeValue)).toFixed(
-							decimalNumber))
+								decimalNumber))
 					})
 				}
 			})
@@ -193,55 +194,126 @@ export default {
 		}
 		this.updateOptions(self)
 	},
-		updateOptions(self) {
-				self.option.xAxis.data = self.chartsData.categories
-				self.option.series = self.chartsData.series
-				self.$refs['chart'].setOption(self.option)
-		},
+	updateOptions(self) {
+		self.option.xAxis.data = self.chartsData.categories
+		self.option.series = self.chartsData.series
+		self.$refs['chart'].setOption(self.option)
+	},
 	/**
 	 * description: 更新当前图表类型
 	 * @param {object} self - vue实例.
 	 * @createTime: 2022-10-18 11:13:22
-	 */			
-		setChartType(self, type='init') {
-			switch(self.chartsShowType) {
-				case 'line':
-					self.option.series.forEach((item, index, arr) =>{
-						arr[index].type = 'line'
-					})
-				break
-				case 'bar':
-					self.option.series.forEach((item, index, arr) =>{
-						arr[index].type = 'bar'
-						arr[index].stack = ''
-					})
-					break
-				case 'stack':
-					self.option.series.forEach((item, index, arr) =>{
-						arr[index].type = 'bar'
-						arr[index].stack = 'stack'
-					})
-				break
-			}
-			if(type === 'update') {
-				self.$refs['chart'].setOption(self.option)
-			}
-		},
-		// 获取无指标id的指标名所对应的index数组
-		getNotIdIndex(self) {
-			self.notIdIndex = []
-			if(self.chartsInfo.reportChartsIndexList.length > 0) {
-				self.chartsInfo.reportChartsIndexList.forEach((item, index) => {
-					if(!item.fieldId) {
-						self.notIdIndex.push(index)
-					}
+	 */
+	setChartType(self, type = 'init') {
+		switch (self.chartsShowType) {
+			case 'line':
+				self.option.series.forEach((item, index, arr) => {
+					arr[index].type = 'line'
 				})
-			} else if(self.chartsInfo.reportStandardIndexList.length > 0) {
-				self.chartsInfo.reportStandardIndexList.forEach((item, index) => {
-					if(!item.fieldId) {
-						self.notIdIndex.push(index)
-					}
-				})	
+				break
+			case 'bar':
+				self.option.series.forEach((item, index, arr) => {
+					arr[index].type = 'bar'
+					arr[index].stack = ''
+				})
+				break
+			case 'stack':
+				self.option.series.forEach((item, index, arr) => {
+					arr[index].type = 'bar'
+					arr[index].stack = 'stack'
+				})
+				break
+		}
+		if (type === 'update') {
+			self.$refs['chart'].setOption(self.option)
+		}
+	},
+	// 获取无指标id的指标名所对应的index数组
+	getNotIdIndex(self) {
+		self.notIdIndex = []
+		if (self.chartsInfo.reportChartsIndexList.length > 0) {
+			self.chartsInfo.reportChartsIndexList.forEach((item, index) => {
+				if (!item.fieldId) {
+					self.notIdIndex.push(index)
+				}
+			})
+		} else if (self.chartsInfo.reportStandardIndexList.length > 0) {
+			self.chartsInfo.reportStandardIndexList.forEach((item, index) => {
+				if (!item.fieldId) {
+					self.notIdIndex.push(index)
+				}
+			})
+		}
+	},
+	// 设置Code页面类型的图表数据和表格标题
+	setCodeChartData(self) {
+		let series = []
+		let res = {}
+		self.baseData.formulaData.forEach((item, index) => {
+			series.push({
+				name: item,
+				data: self.baseData.tableData[index],
+				label: {
+					formatter: function (param) {
+						return util.dataFormat(param.value, 2)
+					},
+				},
+			})
+		})
+		res = {
+			categories: self.baseData.timeData,
+			series: series,
+		}
+		let stockName = self.$store.state.curCmpList.find((item) => {
+			return item.comp004_Seccode === self.curSelectCompany
+		})
+		self.fstTableTh = stockName != -1 ? stockName.comp004_OrgName : self.curStock.secName
+		return res
+	},
+
+	// 设置Formula页面类型的图表数据和表格标题
+	setFormulaChartData(self) {
+		let series = []
+		let res = {}
+		// 只取第一个公式数据作为图表数据和表格标题
+		series.push({
+			name: self.curStock.secName,
+			data: self.baseData.tableData[0],
+			label: {
+				formatter: function (param) {
+					return util.dataFormat(param.value, 2)
+				},
+			},
+		})
+		self.fstTableTh = self.baseData.formulaData[0]
+		res = {
+			categories: self.baseData.timeData,
+			series: series,
+		}
+		return res
+	},
+
+	// 判断是否需要显示滚动条
+	isScrollShow(self) {
+		if (self.chartsData.series.length > 0 && self.chartsData.series[0].data.length <= self.opts.xAxis.itemCount) {
+			return false
+		} else {
+			return true
+		}
+	},
+	// 移除不需要显示的指标
+	removeNotIdIndex(self) {
+		let series_chartsData = self.chartsData.series
+		let series_option = []
+		for (let i = 0; i < series_chartsData.length; i++) {
+			if (!self.notIdIndex.includes(i)) {
+				series_option.push(series_chartsData[i])
+			} else {
+				series_chartsData[i].data.forEach((dataItem, dataIndex, dataArr) => {
+					dataArr[dataIndex] = ''
+				})
 			}
 		}
+		self.option.series = series_option
+	},
 }

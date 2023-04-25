@@ -51,10 +51,10 @@
 		</view>
 		<dcb-popup-panel
 			type="selector"
+			multiple
 			v-model:data="financialReportType"
 			:isShowPanel="isShowPanel"
-			:curSelect="curReportTypeObj"
-			title = '合并报表类型'
+			title="合并报表类型"
 			@itemClick="itemClickReportType"
 			@update:isShowPanel="(val: boolean) => (isShowPanel = val)"
 			@updateCurSelect="updateCurSelect"></dcb-popup-panel>
@@ -86,7 +86,7 @@
 	import { CanvasRenderer } from './echarts/renderers'
 	import type TableChartsTypes from '@/types/TableCharts'
 	import tableCharts from './table-charts.js'
-import type { LocalData } from '@/types/CommonTypes'
+	import type { LocalData } from '@/types/CommonTypes'
 	echarts.use([
 		LegendComponent,
 		TitleComponent,
@@ -218,18 +218,22 @@ import type { LocalData } from '@/types/CommonTypes'
 				{
 					value: 1,
 					text: '合并报表(调整后)',
+					checked: true,
 				},
 				{
 					value: 2,
 					text: '合并报表(调整前)',
+					checked: false,
 				},
 				{
 					value: 3,
 					text: '母公司报表(调整后)',
+					checked: false,
 				},
 				{
 					value: 4,
 					text: '母公司报表(调整前)',
+					checked: false,
 				},
 			],
 			isShowRotate: false, // 是否为横屏模式
@@ -478,7 +482,7 @@ import type { LocalData } from '@/types/CommonTypes'
 				this.canvasId = this.$util.randomWord(true, 8, 8)
 				this.canvasId_rotate = this.canvasId + 'rotate'
 				// 初始化时间区间
-				this.timeList = [...(this.$parent as any).timeRange]
+				this.timeList = [...(this.$parent as any).timeRange].slice(0, 5)
 				// 初始化类型选择
 				let dataFilter = {
 					report: [],
@@ -803,86 +807,38 @@ import type { LocalData } from '@/types/CommonTypes'
 			chartsDataProcess() {
 				this.chartsData_categories = []
 				tableChartsUtil.getBaseData(this)
-				let series: any[] = []
 				let res = {}
+				// 根据不同的页面类型，设置不同的图表数据和表格标题
 				switch (this.chartsInfo.defaultPageType) {
 					case 'Code':
-						this.baseData.formulaData.forEach((item, index) => {
-							series.push({
-								name: item,
-								data: this.baseData.tableData[index],
-								label: {
-									formatter: function (param: any) {
-										return util.dataFormat(param.value, 2)
-									},
-								},
-							})
-						})
-						res = {
-							categories: this.baseData.timeData,
-							series: series,
-						}
-						let stockName = this.$store.state.curCmpList.find((item) => {
-							return item.comp004_Seccode === this.curSelectCompany
-						})
-						this.fstTableTh = stockName != -1 ? stockName.comp004_OrgName : this.curStock.secName
+						res = tableChartsUtil.setCodeChartData(this)
 						break
 					case 'Formula':
-						// this.baseData.formulaData.forEach((item, index) => {
-						series.push({
-							name: this.curStock.secName,
-							data: this.baseData.tableData[0],
-							label: {
-								formatter: function (param) {
-									return util.dataFormat(param.value, 2)
-								},
-							},
-						})
-						// })
-						this.fstTableTh = this.baseData.formulaData[0]
-						res = {
-							categories: this.baseData.timeData,
-							series: series,
-						}
+						res = tableChartsUtil.setFormulaChartData(this)
 						break
 				}
-				this.notIdIndex.forEach((item, index) => {
-					res.series[item].data.forEach((dataItem, dataIndex, dataArr) => {
-						dataArr[dataIndex] = ''
-					})
-				})
+				// 深拷贝原始图表数据
 				this.chartsDataOri = this.$util.deepCopy(res)
 				// 筛选出默认报告类型和分析时间的数据
 				this.chartsDataFilter(res)
+				// 深拷贝筛选后的图表数据
 				this.chartsData = this.$util.deepCopy(res)
 				// 判断数据数量是否不大于图表配置中的单屏显示数量，是：不显示滚动条。否：显示
-				if (this.chartsData.series.length > 0 && this.chartsData.series[0].data.length <= this.opts.xAxis.itemCount) {
-					this.opts.xAxis.scrollShow = false
-				} else {
-					this.opts.xAxis.scrollShow = true
-				}
+				this.opts.xAxis.scrollShow = tableChartsUtil.isScrollShow(this)
+				// 深拷贝转换前的图表数据
 				this.chartsData_beforeConver = this.$util.deepCopy(this.chartsData)
+				// 设置x轴的类目数据
 				this.option.xAxis.data = this.chartsData.categories
+				// 如果有不需要显示的指标，将其数据置为空字符串，并从图表系列中移除
 				if (this.notIdIndex.length > 0) {
-					let series_chartsData = this.chartsData.series
-					let series_option = this.option.series
-					for (let i = 0, j = 0; i < series_chartsData.length; i++) {
-						for (; j < this.notIdIndex.length; ) {
-							if (i != this.notIdIndex[j]) {
-								series_option.push(series_chartsData[i])
-								break
-							} else {
-								j++
-								break
-							}
-						}
-					}
-					series_option.shift()
+					tableChartsUtil.removeNotIdIndex(this)
 				} else {
+					// 如果没有不需要显示的指标，直接将图表数据赋值给图表系列
 					this.option.series = this.chartsData.series
 				}
 
 				tableChartsUtil.setChartType(this)
+				// 初始化图表并设置图表选项
 				this.$refs['chart'].init(echarts, (chart) => {
 					chart.setOption(this.option)
 				})
@@ -893,7 +849,10 @@ import type { LocalData } from '@/types/CommonTypes'
 			 */
 			rotateMode(): void {
 				// 将该图表的数据复制给横屏图表
-				let opts_rotate = (this.$util.deepCopy(this.opts)(this.$parent as any).isShowRotate = true(this.$parent as any).chartsShowType = this.curSelectChartType)
+				let opts_rotate =
+					(this.$util.deepCopy(this.opts)(this.$parent as any).isShowRotate =
+					true(this.$parent as any).chartsShowType =
+						this.curSelectChartType)
 				// 切换为横屏
 				wx.setPageOrientation({
 					orientation: 'landscape',

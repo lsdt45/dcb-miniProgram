@@ -14,12 +14,12 @@
 					</u-checkbox-group>
 				</view>
 				<!-- 单选 -->
-				<view class="radio">
+				<view class="radio" v-else>
 					<uni-data-checkbox v-model="curSelectValue" :localdata="listData"></uni-data-checkbox>
 				</view>
 				<view class="panel-footer">
 					<view class="panel-footer-btns">
-						<u-button class="cancel" size="medium">取消</u-button>
+						<u-button class="cancel" size="medium" @click="closePanel()">取消</u-button>
 						<u-button class="ok" type="primary" size="medium" @click="confirm">确定</u-button>
 					</view>
 				</view>
@@ -164,6 +164,9 @@
 			.checklist-text {
 				font-size: 15px;
 			}
+		}
+		.multiple {
+			padding: 20rpx 40rpx;
 		}
 		.panel-footer {
 			display: flex;
