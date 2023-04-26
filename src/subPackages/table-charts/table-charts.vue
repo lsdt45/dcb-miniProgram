@@ -46,6 +46,9 @@
 				:chartsData="chartsData"
 				:fstTableTh="fstTableTh"
 				:chartsInfo="chartsInfo"
+				:formatMethod="formatMethod"
+				thWidth="110"
+				doubleTh
 				@handleTableData="handleData"
 				@landscapeClick="rotateMode_table()"></dcb-table>
 		</view>
@@ -752,7 +755,7 @@
 						let type = curSelectTimeData[i].name.split('-')[1]
 						let year = curSelectTimeData[i].name.split('-')[0]
 						if (type == this.dataFilter.report[j]) {
-							data_temp.categories.push(curSelectTimeData[i].name)
+							data_temp.categories.push(curSelectTimeData[i])
 							data_temp.year.push(year)
 							data_temp.index.push(i)
 							break
@@ -769,7 +772,7 @@
 						return item == lastTime.name
 					})
 					if (isExist == undefined) {
-						data_temp.categories.push(lastTime.name)
+						data_temp.categories.push(lastTime)
 						data_temp.year.push(lastTime.name.split('-')[0])
 						data_temp.index.push(curSelectTimeData.length - 1)
 					}
@@ -951,8 +954,9 @@
 				}
 				this.$refs['chart'].setOption(this.option)
 			},
-			updateCurSelect(val: Ref<number>) {
-				this.curReportTypeObj = tableChartsUtil.getCTypeObj(val.value) as LocalData
+			updateCurSelect(val: any[]) {
+				this.financialReportType = val
+				this.chartsDataProcess()
 			},
 			showMyTooltip(e: any) {
 				let legendHeight = e.opts.chartData.legendData.area.wholeHeight / this.pixelRatio
@@ -1019,6 +1023,9 @@
 							break
 					}
 				}
+			},
+			formatMethod(type: string) {
+				return tableChartsUtil.getCTypeText(type)
 			},
 			// 处理年化和季化
 			handleData(type: string, optionChange: boolean = false) {

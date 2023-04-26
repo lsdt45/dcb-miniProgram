@@ -1,5 +1,3 @@
-import { reactive } from 'vue'
-
 interface tag {
 	type: string, // 类型
 	isExsit: boolean // 是否显示
@@ -116,5 +114,19 @@ export let props_dcb_table = {
 	landscape: {
 		type: Boolean,
 		default: false
+	},
+	// 是否为双行表头
+	doubleTh: {
+		type: Boolean,
+		default: false
+	},
+	// 格式化方法
+	formatMethod: {
+		type: Function,
+		default: (type: string) => type
+	},
+	thWidth: {
+		type: String,
+		default: '100'
 	}
 }

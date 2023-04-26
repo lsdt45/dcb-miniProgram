@@ -1,6 +1,5 @@
 import util from '@/common/util'
 import type { TableCharts } from '@/types/TableCharts'
-import { log } from 'console'
 // 重置数据
 function resetData(self: any) {
 	for (let item in self.baseData) {
@@ -124,7 +123,7 @@ export default {
 	 * @param {string} type - 处理类型
 	 * @createTime: 2022-10-12 16:37:07
 	 */
-	handleAnnualized(self, type) {
+	handleAnnualized(self: TableCharts.Data, type: string) {
 		if (type === 'restore') {
 			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
 			self.chartsData = tempChartsData
@@ -201,7 +200,7 @@ export default {
 		}
 		this.updateOptions(self)
 	},
-	updateOptions(self) {
+	updateOptions(self: TableCharts.Datav) {
 		self.option.xAxis.data = self.chartsData.categories
 		self.option.series = self.chartsData.series
 		self.$refs['chart'].setOption(self.option)
@@ -211,7 +210,7 @@ export default {
 	 * @param {object} self - vue实例.
 	 * @createTime: 2022-10-18 11:13:22
 	 */
-	setChartType(self, type = 'init') {
+	setChartType(self: TableCharts.Data, type = 'init') {
 		switch (self.chartsShowType) {
 			case 'line':
 				self.option.series.forEach((item, index, arr) => {
@@ -236,7 +235,7 @@ export default {
 		}
 	},
 	// 获取无指标id的指标名所对应的index数组
-	getNotIdIndex(self) {
+	getNotIdIndex(self: TableCharts.Data) {
 		self.notIdIndex = []
 		if (self.chartsInfo.reportChartsIndexList.length > 0) {
 			self.chartsInfo.reportChartsIndexList.forEach((item, index) => {
@@ -303,7 +302,7 @@ export default {
 	},
 
 	// 判断是否需要显示滚动条
-	isScrollShow(self) {
+	isScrollShow(self: TableCharts.Data) {
 		if (self.chartsData.series.length > 0 && self.chartsData.series[0].data.length <= self.opts.xAxis.itemCount) {
 			return false
 		} else {
@@ -311,7 +310,7 @@ export default {
 		}
 	},
 	// 移除不需要显示的指标
-	removeNotIdIndex(self) {
+	removeNotIdIndex(self: TableCharts.Data) {
 		let series_chartsData = self.chartsData.series
 		let series_option = []
 		for (let i = 0; i < series_chartsData.length; i++) {
@@ -367,5 +366,26 @@ export default {
 			tableData.push(tempData)
 		})
 		return { tableData, timeData }
-	}
+	},
+	// 根据类型数字返回对应的报表类型文本
+	getCTypeText(type: string) {
+		let result = ''
+		switch (type) {
+			case '1':
+				result = '合并报表(调整后)'
+				break
+			case '2':
+				result = '合并报表(调整前)'
+				break
+			case '3':
+				result = '母公司报表(调整后)'
+				break
+			case '4':
+				result = '母公司报表(调整前)'
+				break
+			default:
+				result = ''
+		}
+		return result
+	},
 }

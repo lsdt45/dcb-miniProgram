@@ -109,7 +109,10 @@
 	}
 	// 确认
 	function confirm() {
-		emit('updateCurSelect', curSelectValue)
+		props.multiple
+			? emit('updateCurSelect', listData.value)
+			: emit('updateCurSelect', curSelectValue.value)
+		
 		closePanel()
 	}
 	
