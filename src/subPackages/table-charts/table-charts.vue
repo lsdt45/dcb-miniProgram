@@ -6,19 +6,24 @@
 			<view class="charts-title">
 				<text>{{ chartsTitle }}</text>
 			</view>
-			<view class="global-table-toolbar">
-				<!-- 对比公司选择 -->
-				<view class="compare-company-select">
-					<uni-data-select v-model="curSelectCompany" :clear="false" :localdata="compareCompanyList"></uni-data-select>
-				</view>
-				<!-- 展现形式选择 -->
-				<view class="charts-mode-select">
-					<uni-data-select v-model="curSelect" :clear="false" :localdata="tableTypeList" @change="sectionChange"></uni-data-select>
-				</view>
-				<!-- 数据处理 -->
-				<view class="data-process-select" v-if="tagAnnualized.isExsit">
-					<uni-data-select placeholder="数据处理" :clear="false" :localdata="dataProcessList" :fixedText="true" @change="dataProcess"></uni-data-select>
-				</view>
+		</view>
+		<view class="global-table-toolbar">
+			<!-- 对比公司选择 -->
+			<view class="compare-company-select">
+				<uni-data-select v-model="curSelectCompany" :clear="false" :localdata="compareCompanyList"></uni-data-select>
+			</view>
+			<!-- 展现形式选择 -->
+			<view class="charts-mode-select">
+				<uni-data-select v-model="curSelect" :clear="false" :localdata="tableTypeList" @change="sectionChange"></uni-data-select>
+			</view>
+			<!-- 数据处理 -->
+			<view class="data-process-select" v-if="tagAnnualized.isExsit">
+				<uni-data-select placeholder="数据处理" :clear="false" :localdata="dataProcessList" :fixedText="true" @change="dataProcess"></uni-data-select>
+			</view>
+			<!-- 报表类型切换 -->
+			<view class="data-select report-type" @click="changeReportType">
+				<text class="data-select__content">{{ curReportTypeObj.text }}</text>
+				<view class="data-select__arrow"></view>
 			</view>
 		</view>
 		<view class="table-charts charts" v-show="curSelect == 0 || curSelect == 2" :style="`height:${chartContainnerHeight}px;}`">
@@ -26,11 +31,6 @@
 				<view class="table-charts__toolbar left">
 					<!-- 图表类型切换 -->
 					<uni-data-select v-model="curSelectChartType" :clear="false" :localdata="chartsTypeList" @change="changeChartType"></uni-data-select>
-					<!-- 报表类型切换 -->
-					<view class="data-select report-type" @click="changeReportType">
-						<text class="data-select__content">{{ curReportTypeObj.text }}</text>
-						<view class="data-select__arrow"></view>
-					</view>
 				</view>
 				<view class="table-charts__toolbar right">
 					<uni-tag class="table-charts__toolbar tag" :inverted="!isShowValue" type="primary" :text="showValueText" @click="tagClick_showValue"></uni-tag>
@@ -744,14 +744,15 @@
 					year: [],
 					index: [],
 				}
-				let resData = []
+				let curSelectTimeData = tableChartsUtil.getTimeDataByReportType(this)
+				let resData: any[] = []
 				// 筛选报告类型
-				for (let i = 0; i < this.baseData.timeData.length; i++) {
+				for (let i = 0; i < curSelectTimeData.length; i++) {
 					for (let j = 0; j < this.dataFilter.report.length; j++) {
-						let type = this.baseData.timeData[i].name.split('-')[1]
-						let year = this.baseData.timeData[i].name.split('-')[0]
+						let type = curSelectTimeData[i].name.split('-')[1]
+						let year = curSelectTimeData[i].name.split('-')[0]
 						if (type == this.dataFilter.report[j]) {
-							data_temp.categories.push(this.baseData.timeData[i])
+							data_temp.categories.push(curSelectTimeData[i].name)
 							data_temp.year.push(year)
 							data_temp.index.push(i)
 							break
@@ -763,14 +764,14 @@
 					return item == 'new'
 				})
 				if (result != undefined) {
-					let lastTime = this.baseData.timeData[this.baseData.timeData.length - 1]
+					let lastTime = curSelectTimeData[curSelectTimeData.length - 1]
 					let isExist = data_temp.categories.find((item) => {
-						return item == lastTime
+						return item == lastTime.name
 					})
 					if (isExist == undefined) {
-						data_temp.categories.push(lastTime)
+						data_temp.categories.push(lastTime.name)
 						data_temp.year.push(lastTime.name.split('-')[0])
-						data_temp.index.push(this.baseData.timeData.length - 1)
+						data_temp.index.push(curSelectTimeData.length - 1)
 					}
 				}
 

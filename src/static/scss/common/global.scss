@@ -70,7 +70,12 @@ button, button::after {
 	border-radius: 0 !important;
 }
 
+.uni-data-select {
+	padding: 10rpx 20rpx !important;
+	border-radius: 2px !important;
+	border: 1px solid $color-border-main !important;
+}
 // button点击效果
 .btn-hover-class {
-	background-color: #e9f1fd;
+	background-color: $color-border-main;
 }
