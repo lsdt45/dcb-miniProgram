@@ -124,6 +124,7 @@ export default {
 	 * @createTime: 2022-10-12 16:37:07
 	 */
 	handleAnnualized(self: TableCharts.Data, type: string) {
+		self.notQuarterly = []
 		if (type === 'restore') {
 			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
 			self.chartsData = tempChartsData
@@ -132,7 +133,7 @@ export default {
 			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
 			tempChartsData.categories.forEach((item, categoriesIndex) => {
 				//拿到时间
-				let splitDate = item.split('-');
+				let splitDate = item.name.split('-');
 				if (splitDate.length >= 2) {
 					splitDate = splitDate[1];
 				}
@@ -157,23 +158,35 @@ export default {
 			let tempChartsData_before = util.deepCopy(self.chartsDataOri)
 			tempChartsData_after.categories.forEach((item, categoriesIndex) => {
 				//拿到时间
-				let splitDate = item.split('-');
+				let splitDate = item.name.split('-');
 				let year = splitDate[0]
 				if (splitDate.length >= 2) {
 					splitDate = splitDate[1];
 				}
 				//一季度数据不计算
 				if (splitDate != 3) {
-					let beforeArr = tempChartsData_before.categories[categoriesIndex - 1]
+					// 选出上一个同报告类型的季度的数据
+					let beforeArr = []
+					for (let i = categoriesIndex - 1; i >= 0; i--) {
+						if (tempChartsData_before.categories[i].type == item.type) {
+							beforeArr = tempChartsData_before.categories[i]
+							break
+						}
+					}
 					//当前年度和上一数据年度不一致，说明没有上一个季度数据无法被季化
-					if (beforeArr.split('-')[0] != year && self.notQuarterly.indexOf(item) == -1) {
+					if (beforeArr.name.split('-')[0] != year && self.notQuarterly.indexOf(item) == -1) {
 						self.notQuarterly.push(item)
 						return;
 					}
 					//先用原始数据季化
 					tempChartsData_after.series.forEach((seriesItem, seriesIndex, seriesArr) => {
-						let beforeValue = tempChartsData_before.series[seriesIndex].data[
-							categoriesIndex - 1]
+						let beforeValue = ''
+						for (let i = categoriesIndex - 1; i >= 0; i--) {
+							if (tempChartsData_before.categories[i].type == item.type) {
+								beforeValue = tempChartsData_before.series[seriesIndex].data[i]
+								break
+							}
+						}
 						let value = tempChartsData_after.series[seriesIndex].data[categoriesIndex]
 						//都为空时不处理，直接按空算
 						if ((value == null || value == '') && (beforeValue == null || beforeValue ==
@@ -195,13 +208,14 @@ export default {
 			self.chartsData = self.chartsDataFilter(tempChartsData_after)
 			// 还原为当前选择的图表类型
 			self.chartsData.series.forEach((item, index, arr) => {
-				arr[index].type = self.chartsShowType
+				arr[index].type = self.curSelectChartType
 			})
 		}
 		this.updateOptions(self)
 	},
 	updateOptions(self: TableCharts.Datav) {
 		self.option.xAxis.data = self.chartsData.categories
+		this.setXAxisData(self)
 		self.option.series = self.chartsData.series
 		self.$refs['chart'].setOption(self.option)
 	},
@@ -211,7 +225,7 @@ export default {
 	 * @createTime: 2022-10-18 11:13:22
 	 */
 	setChartType(self: TableCharts.Data, type = 'init') {
-		switch (self.chartsShowType) {
+		switch (self.curSelectChartType) {
 			case 'line':
 				self.option.series.forEach((item, index, arr) => {
 					arr[index].type = 'line'
@@ -388,4 +402,13 @@ export default {
 		}
 		return result
 	},
+	// 设置x轴的类目数据
+	setXAxisData(self: TableCharts.Data) {
+		// 遍历timeData，将成员中的name提取出来，作为x轴的类目数据
+		let xAxisData: any[] = []
+		self.chartsData.categories.forEach((item) => {
+			xAxisData.push(item.name)
+		})
+		self.option.xAxis.data = xAxisData
+	}
 }

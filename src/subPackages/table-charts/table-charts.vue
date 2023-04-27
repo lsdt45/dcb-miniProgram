@@ -66,7 +66,7 @@
 
 <script lang="ts">
 	import { mapState } from 'vuex'
-	import tableChartsUtil from './table-charts.js'
+	import tableChartsUtil from './table-charts'
 	import DcbTable from './dcb-table.vue'
 	import util from '@/common/util'
 	import { testOption } from './table-charts-config'
@@ -833,7 +833,7 @@
 				// 深拷贝转换前的图表数据
 				this.chartsData_beforeConver = this.$util.deepCopy(this.chartsData)
 				// 设置x轴的类目数据
-				this.option.xAxis.data = this.chartsData.categories
+				tableChartsUtil.setXAxisData(this)
 				// 如果有不需要显示的指标，将其数据置为空字符串，并从图表系列中移除
 				if (this.notIdIndex.length > 0) {
 					tableChartsUtil.removeNotIdIndex(this)
@@ -854,10 +854,9 @@
 			 */
 			rotateMode(): void {
 				// 将该图表的数据复制给横屏图表
-				let opts_rotate =
-					(this.$util.deepCopy(this.opts)(this.$parent as any).isShowRotate =
-					true(this.$parent as any).chartsShowType =
-						this.curSelectChartType)
+				// let opts_rotate =
+				// 	(this.$util.deepCopy(this.opts)(this.$parent as any).isShowRotate == true ?
+				// 	(this.$parent as any).chartsShowType = this.curSelectChartType)
 				// 切换为横屏
 				wx.setPageOrientation({
 					orientation: 'landscape',
@@ -886,15 +885,15 @@
 			 */
 			rotateMode_table(): void {
 				// 将该图表的数据复制给横屏表格
-				;(this.$parent as any).chartsShowType =
-					this.curSelectChartType(this.$parent as any).fstTableTh =
-					this.fstTableTh(this.$parent as any).chartsData_lanscape =
-					this.$util.deepCopy(this.chartsData)(this.$parent as any).chartsInfo_lanscape =
-					this.$util.deepCopy(this.chartsInfo)(this.$parent as any).isShowRotate_table =
-						true
-				wx.setPageOrientation({
-					orientation: 'landscape',
-				})
+				// (this.$parent as any).chartsShowType =
+				// 	this.curSelectChartType(this.$parent as any).fstTableTh =
+				// 	this.fstTableTh(this.$parent as any).chartsData_lanscape =
+				// 	this.$util.deepCopy(this.chartsData)(this.$parent as any).chartsInfo_lanscape =
+				// 	this.$util.deepCopy(this.chartsInfo)(this.$parent as any).isShowRotate_table =
+				// 		true
+				// wx.setPageOrientation({
+				// 	orientation: 'landscape',
+				// })
 			},
 			/**
 			 * author: ljw

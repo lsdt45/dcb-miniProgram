@@ -40,7 +40,7 @@
 					</table-charts>
 				</scroll-view>
 				<!-- 多图表显示 -->
-				<scroll-view class="table-charts multi-table" v-else scroll-x="true" scroll-y="true" @scroll="scroll"
+				<scroll-view class="table-charts multi-table" v-else scroll-y="true" @scroll="scroll"
 					:scroll-top="scrollTop.new">
 					<table-charts v-for="(item, index) in chartsIdArr" :key="index" :chartsInfoProp="chartsInfo"
 						:chartsId="item" :chartsType="curAnalysisNode.type" :ref="'multiTalbe' + index.toString()"
