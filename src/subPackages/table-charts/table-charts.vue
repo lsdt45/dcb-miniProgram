@@ -466,6 +466,7 @@
 			curSelectCompany(newVal) {
 				if (this.baseData.tableData.length == 0) return
 				this.chartsDataProcess()
+				this.handleData('', true)
 			},
 		},
 		options: {
