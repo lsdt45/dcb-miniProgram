@@ -1,3 +1,5 @@
+/** @format */
+
 import util from '@/common/util'
 import type { TableCharts } from '@/types/TableCharts'
 // 重置数据
@@ -6,8 +8,6 @@ function resetData(self: any) {
 		self.baseData[item] = []
 	}
 }
-
-
 
 // 获取单位名称
 function getUnitName(indexList, index) {
@@ -36,11 +36,14 @@ function getUnitName(indexList, index) {
 // 处理空值
 function handleEmptyValue(data: any, nullIndex: string[], index: number) {
 	const EMPTY_VALUE = '--'
-	if (nullIndex.includes(typeof (index) == 'string' ? index : index.toString())) { // 如果是虚指标，用空字符串代替
+	if (nullIndex.includes(typeof index == 'string' ? index : index.toString())) {
+		// 如果是虚指标，用空字符串代替
 		data = ''
-	} else if (data == null || data == '') { // 如果是空值，用'--'代替
+	} else if (data == null || data == '') {
+		// 如果是空值，用'--'代替
 		data = EMPTY_VALUE
-	} else { // 否则，保留两位小数并转换为数字类型
+	} else {
+		// 否则，保留两位小数并转换为数字类型
 		data = Number(Number(data).toFixed(2))
 	}
 	return data
@@ -76,18 +79,22 @@ export default {
 			self.baseData.formulaData.forEach((item: any, index: number) => {
 				self.baseData.tableData[index] = [] // 基础数据的表格数据按照公式数据的长度初始化为空数组
 			})
-			codeData.slice(1).forEach((item, index) => { // 遍历除了公式数据之外的其他数据（时间和数值）
+			codeData.slice(1).forEach((item, index) => {
+				// 遍历除了公式数据之外的其他数据（时间和数值）
 				self.baseData.timeData.push({
 					name: item[0],
-					type: item[1]
+					type: item[1],
 				}) // 将时间数据添加到基础数据的时间数据中
 				let tableRow = item.slice(2) // 表格的一行数据，去掉时间和cType
-				if (tableRow.length == 0) { // 如果表格的一行数据为空，说明没有数值，需要用null填充
-					for (let i in self.baseData.formulaData) { // 按照公式数据的长度填充null
+				if (tableRow.length == 0) {
+					// 如果表格的一行数据为空，说明没有数值，需要用null填充
+					for (let i in self.baseData.formulaData) {
+						// 按照公式数据的长度填充null
 						tableRow.push(null)
 					}
 				}
-				tableRow.forEach((data: any[], index: number) => { // 遍历表格的一行数据
+				tableRow.forEach((data: any[], index: number) => {
+					// 遍历表格的一行数据
 					data = handleEmptyValue(data, nullIndex, index) // 处理空值
 					self.baseData.tableData[index].push(data) // 将处理后的数据添加到基础数据的表格数据中
 				})
@@ -118,99 +125,122 @@ export default {
 		}
 	},
 	/**
+	 * description: 恢复原始数据的方法
+	 */
+	restoreOriginalData(self: TableCharts.Data) {
+		// 深拷贝原始数据
+		let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
+		// 覆盖当前数据
+		self.chartsData = tempChartsData
+	},
+
+	/**
+	 * description: 年化数据的方法
+	 * @param title - description.
+	 */
+	annualizeData(self: TableCharts.Data) {
+		// 深拷贝原始数据
+		let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
+		// 遍历每个类别
+		tempChartsData.categories.forEach((item, categoriesIndex) => {
+			// 获取时间和季度
+			let [year, quarter] = item.name.split('-')
+			// 确定倍数，根据季度不同，乘以不同的系数
+			let multiplier = quarter == 3 ? 4.0 : quarter == 6.0 ? 2 : quarter == 9 ? 4 / 3 : 1
+			// 如果倍数不为1，说明需要年化处理
+			if (multiplier != 1) {
+				// 遍历每个系列
+				tempChartsData.series.forEach((seriesItem, seriesIndex, seriesArr) => {
+					// 获取当前值
+					let value = tempChartsData.series[seriesIndex].data[categoriesIndex]
+					// 如果值是有效的数字，就乘以倍数并保留两位小数
+					if (value > 0 && value != null && value != '' && value != '0' && value != '0.0000') {
+						tempChartsData.series[seriesIndex].data[categoriesIndex] = (parseFloat(value) * multiplier).toFixed(2)
+					}
+				})
+			}
+		})
+		// 覆盖当前数据
+		self.chartsData = tempChartsData
+	},
+	/**
+	 * description: 季化数据的方法
+	 */
+	quarterizeData(self: TableCharts.Data) {
+		// 深拷贝原始数据，用于计算和筛选
+		let tempChartsData_after = util.deepCopy(self.chartsDataOri)
+		let tempChartsData_before = util.deepCopy(self.chartsDataOri)
+		// 清空不是季度的类别数组
+		self.notQuarterly = []
+		// 遍历每个类别
+		tempChartsData_after.categories.forEach((item, categoriesIndex) => {
+			// 获取时间和季度
+			let [year, quarter] = item.name.split('-')
+			// 如果是一季度数据，不需要处理，直接跳过
+			if (quarter == 3) return
+			// 找到上一个同报告类型的季度的类别和值，如果没有找到，说明无法季化，加入notQuarterly数组中，并跳过
+			let beforeCategory = null
+			let beforeValues = []
+			for (let i = categoriesIndex - 1; i >= 0; i--) {
+				if (tempChartsData_before.categories[i].type == item.type) {
+					beforeCategory = tempChartsData_before.categories[i]
+					beforeValues = tempChartsData_before.series.map((series) => series.data[i])
+					break
+				}
+			}
+			if (beforeCategory == null || beforeCategory.name.split('-')[0] != year) {
+				self.notQuarterly.push(item)
+				return
+			}
+			// 遍历每个系列
+			tempChartsData_after.series.forEach((seriesItem, seriesIndex, seriesArr) => {
+				// 获取当前值和上一个季度的值
+				let value = tempChartsData_after.series[seriesIndex].data[categoriesIndex]
+				let beforeValue = beforeValues[seriesIndex]
+				// 如果两个值都为空，不处理，直接跳过
+				if ((value == null || value == '') && (beforeValue == null || beforeValue == '')) return
+				// 如果单个值为空，按0处理
+				if (value == null || value == '') value = '0.00'
+				if (beforeValue == null || beforeValue == '') beforeValue = '0.00'
+				// 计算小数位数
+				let decimalNumber = value.toString().indexOf('.') == -1 ? 0 : 2
+				// 计算季化后的值，即当前值减去上一个季度的值，并保留小数位数
+				tempChartsData_after.series[seriesIndex].data[categoriesIndex] = Number((parseFloat(value) - parseFloat(beforeValue)).toFixed(decimalNumber))
+			})
+		})
+		// 筛选数据、覆盖数据。
+		self.chartsData = self.chartsDataFilter(tempChartsData_after)
+		// 还原为当前选择的图表类型
+		self.chartsData.series.forEach((item, index, arr) => {
+			arr[index].type = self.curSelectChartType
+		})
+	},
+	/**
 	 * description: 年化、单季化处理
 	 * @param {object} self - vue实例.
 	 * @param {string} type - 处理类型
 	 * @createTime: 2022-10-12 16:37:07
 	 */
 	handleAnnualized(self: TableCharts.Data, type: string) {
-		self.notQuarterly = []
-		if (type === 'restore') {
-			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
-			self.chartsData = tempChartsData
-			// pass
-		} else if (type === 'annualized') {
-			let tempChartsData = util.deepCopy(self.chartsData_beforeConver)
-			tempChartsData.categories.forEach((item, categoriesIndex) => {
-				//拿到时间
-				let splitDate = item.name.split('-');
-				if (splitDate.length >= 2) {
-					splitDate = splitDate[1];
-				}
-				//确定倍数
-				let doublevalue = splitDate == 3 ? 4.00 : splitDate == 6.00 ? 2 : splitDate == 9 ?
-					4 /
-					3 : 1;
-				if (doublevalue != 1) {
-					tempChartsData.series.forEach((seriesItem, seriesIndex, seriesArr) => {
-						let item = tempChartsData.series[seriesIndex].data[categoriesIndex]
-						if (item > 0 && item != null && item != '' && item != '0' &&
-							item != '0.0000') {
-							tempChartsData.series[seriesIndex].data[categoriesIndex] = (parseFloat(
-								item) * doublevalue).toFixed(2)
-						}
-					})
-				}
-			})
-			self.chartsData = tempChartsData
-		} else if (type === 'quarterly') {
-			let tempChartsData_after = util.deepCopy(self.chartsDataOri)
-			let tempChartsData_before = util.deepCopy(self.chartsDataOri)
-			tempChartsData_after.categories.forEach((item, categoriesIndex) => {
-				//拿到时间
-				let splitDate = item.name.split('-');
-				let year = splitDate[0]
-				if (splitDate.length >= 2) {
-					splitDate = splitDate[1];
-				}
-				//一季度数据不计算
-				if (splitDate != 3) {
-					// 选出上一个同报告类型的季度的数据
-					let beforeArr = []
-					for (let i = categoriesIndex - 1; i >= 0; i--) {
-						if (tempChartsData_before.categories[i].type == item.type) {
-							beforeArr = tempChartsData_before.categories[i]
-							break
-						}
-					}
-					//当前年度和上一数据年度不一致，说明没有上一个季度数据无法被季化
-					if (beforeArr.name.split('-')[0] != year && self.notQuarterly.indexOf(item) == -1) {
-						self.notQuarterly.push(item)
-						return;
-					}
-					//先用原始数据季化
-					tempChartsData_after.series.forEach((seriesItem, seriesIndex, seriesArr) => {
-						let beforeValue = ''
-						for (let i = categoriesIndex - 1; i >= 0; i--) {
-							if (tempChartsData_before.categories[i].type == item.type) {
-								beforeValue = tempChartsData_before.series[seriesIndex].data[i]
-								break
-							}
-						}
-						let value = tempChartsData_after.series[seriesIndex].data[categoriesIndex]
-						//都为空时不处理，直接按空算
-						if ((value == null || value == '') && (beforeValue == null || beforeValue ==
-							''))
-							return;
-						//单个数据为空时按0算
-						if (value == null || value == '')
-							value = '0.00'
-						if (beforeValue == null || beforeValue == '')
-							beforeValue = '0.00'
-						let decimalNumber = value.toString().indexOf('.') == -1 ? 0 : 2;
-						tempChartsData_after.series[seriesIndex].data[categoriesIndex] = Number((
-							parseFloat(value) - parseFloat(beforeValue)).toFixed(
-								decimalNumber))
-					})
-				}
-			})
-			// 筛选数据、覆盖数据。
-			self.chartsData = self.chartsDataFilter(tempChartsData_after)
-			// 还原为当前选择的图表类型
-			self.chartsData.series.forEach((item, index, arr) => {
-				arr[index].type = self.curSelectChartType
-			})
+		// 根据不同的类型，调用不同的子方法
+		switch (type) {
+			case 'restore':
+				// 恢复原始数据
+				this.restoreOriginalData(self)
+				break
+			case 'annualized':
+				// 年化数据
+				this.annualizeData(self)
+				break
+			case 'quarterly':
+				// 季化数据
+				this.quarterizeData(self)
+				break
+			default:
+				// 无效的类型
+				console.error('Invalid type: ' + type)
 		}
+		// 更新图表选项
 		this.updateOptions(self)
 	},
 	updateOptions(self: TableCharts.Datav) {
@@ -363,7 +393,7 @@ export default {
 		let tableData: any[] = []
 		// 根据已选择的报告类型，从timeData中筛选出对应的下标
 		self.baseData.timeData.forEach((timeDataItem: any, index: number) => {
-			curSelectReportTypeList.forEach(typeListItem => {
+			curSelectReportTypeList.forEach((typeListItem) => {
 				if (timeDataItem.type == typeListItem.value) {
 					curReportTypeIndex.push(index)
 					timeData.push(timeDataItem)
@@ -375,8 +405,8 @@ export default {
 		self.baseData.tableData.forEach((item: any, index: number) => {
 			let tempData: any[] = []
 			curReportTypeIndex.forEach((item2) => {
-				tempData.push(item[item2]);
-			});
+				tempData.push(item[item2])
+			})
 			tableData.push(tempData)
 		})
 		return { tableData, timeData }
@@ -410,5 +440,5 @@ export default {
 			xAxisData.push(item.name)
 		})
 		self.option.xAxis.data = xAxisData
-	}
+	},
 }
