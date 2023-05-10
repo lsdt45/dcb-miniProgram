@@ -20,3 +20,8 @@ dist
 *.sln
 *.sw?
 /.svn
+node_modules-1/_@esbuild_win32-x64@0.16.17@@esbuild/win32-x64/esbuild.exe
+BC4Key.txt
+.vscode/settings.json
+.vscode/launch.json
+.vscode/bookmarks.json

@@ -1,6 +1,6 @@
 <template>
 	<!-- #ifdef H5 -->
-	<td class="uni-table-td" :rowspan="rowspan" :colspan="colspan" :class="{'table--border':border}" :style="{width:width + 'px','text-align':align}">
+	<td class="uni-table-td" :rowspan="rowspan" :colspan="colspan" :class="{'table--border':border, 'bold': isBold}" :style="{width:width + 'px','text-align':align}">
 		<slot></slot>
 	</td>
 	<!-- #endif -->

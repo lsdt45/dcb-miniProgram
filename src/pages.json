@@ -6,7 +6,6 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
 		},
 		{
 			"path": "pages/stock-market/stock-market",
@@ -16,8 +15,7 @@
 				"navigationBarBackgroundColor": "#fff",
 				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
-
-		}, 
+		},
 		// {
 		// 	"path": "pages/stock/stock",
 		// 	"style": {
@@ -26,7 +24,6 @@
 		// 		"navigationBarBackgroundColor": "#fff",
 		// 		"navigationStyle": "custom" // 隐藏系统导航栏
 		// 	}
-
 		// }, 
 		{
 			"path": "pages/report/report",
@@ -35,23 +32,23 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/report/report-web-view",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/ucenter",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/stock/webView/my-web-view",
 			"style": {
 				"navigationBarTitleText": "",
@@ -59,29 +56,29 @@
 				"navigationBarBackgroundColor": "#2C72EC",
 				"navigationBarTextStyle": "white"
 			}
-		}, {
-			"path": "pages/stock/article/article-column-list",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
 		},
+		// {
+		// 	"path": "pages/stock/article/article-column-list",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
 		{
 			"path": "pages/stock/article/article-detail",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/contactMe",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/privacyInfo",
 			"style": {
 				"navigationBarTitleText": "读财报",
@@ -89,50 +86,48 @@
 				"navigationStyle": "default",
 				"navigationBarBackgroundColor": "#2C72EC"
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/login",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/stock/report-infomation",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/phoneLogin",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/stock/stock-search",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/stock/optional-stock",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, 
+		},
 		// {
 		// 	"path": "pages/stock/table-charts/table-charts",
 		// 	"style": {
 		// 		"navigationBarTitleText": "",
 		// 		"enablePullDownRefresh": false
 		// 	}
-
 		// }, 
 		{
 			"path": "pages/ucenter/feedback",
@@ -141,30 +136,31 @@
 				"enablePullDownRefresh": false
 				// "navigationStyle": "custom" // 隐藏系统导航栏
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/useDesc",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/ucenter/useInfo",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
 				"navigationBarBackgroundColor": "#2C72EC",
-				"navigationBarTextStyle": "white"				
+				"navigationBarTextStyle": "white"
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/stock/pdf-report",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},
+		{
 			"path": "pages/stock/stock-home",
 			"style": {
 				"navigationBarTitleText": "",
@@ -179,23 +175,29 @@
 		// 	}
 		// }
 	],
-	"subPackages": [{
-		"root": "subPackages",
-		"pages": [{
-			"path": "stock/stock",
-			"pageOrientation": "landscape"
-		},
+	"subPackages": [
 		{
-			"path": "stock/compare-industry/compare-industry"
-		},
-		{
-			"path": "stock/compare-industry/compare-industry-add"
-		}]
-	}],
+			"root": "subPackages",
+			"pages": [
+				{
+					"path": "stock/stock",
+					"pageOrientation": "landscape"
+				},
+				{
+					"path": "stock/compare-industry/compare-industry"
+				},
+				{
+					"path": "stock/compare-industry/compare-industry-add"
+				}
+			]
+		}
+	],
 	"preloadRule": {
 		"subPackages/stock/stock": {
 			"network": "all",
-			"packages": ["__APP__"]
+			"packages": [
+				"__APP__"
+			]
 		}
 	},
 	"globalStyle": {
@@ -211,7 +213,8 @@
 		"borderStyle": "black",
 		"backgroundColor": "#FFFFFF",
 		"iconWidth": "12px",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/stock/pdf-report",
 				"iconPath": "static/image/report-01.png",
 				"selectedIconPath": "static/image/report-02.png",
@@ -222,12 +225,17 @@
 				"iconPath": "static/image/analysis-01.png",
 				"selectedIconPath": "static/image/analysis-02.png",
 				"text": "分析"
-			}, 
+			},
 			{
 				"pagePath": "pages/ucenter/ucenter",
 				"iconPath": "static/image/ucenter-01.png",
 				"selectedIconPath": "static/image/ucenter-02.png",
+				//  #ifdef MP
 				"text": "我的"
+				// #endif
+				//  #ifdef H5
+				"text": "更多"
+				// #endif
 			}
 		]
 	},

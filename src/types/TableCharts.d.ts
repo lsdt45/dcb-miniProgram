@@ -143,6 +143,7 @@ export namespace TableCharts {
     opts: Opts;
     opts_rotate: Opts;
     pixelRatio: number | undefined;
+    parent: any;
     range: Range[];
     reloadChart: boolean;
     showValueText: string;

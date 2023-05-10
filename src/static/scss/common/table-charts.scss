@@ -19,8 +19,13 @@ $table-first-col-width: 150px;
 		grid-template-columns: 100px 80px 100px;
 		grid-gap: 10px;
 		margin-bottom: 10px;
+
 		.report-type {
 			width: 145px;
+		}
+
+		.uni-data-select__input-text {
+			font-size: 15px;
 		}
 	}
 
@@ -179,7 +184,7 @@ $table-first-col-width: 150px;
 		}
 	}
 
-	.uni-talbe-td__tooltip {
+	.uni-table-td__tooltip {
 		position: absolute;
 		left: 0;
 		z-index: 3;

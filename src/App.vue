@@ -30,7 +30,9 @@ function getSystemInfo() {
 onLaunch(() => {
 	// 监听401，当api发生401时，应触发回调，重新login
 	onLogin()
+	// #ifndef H5
 	getSystemInfo()
+	// #endif
 })
 
 onShow(() => {})

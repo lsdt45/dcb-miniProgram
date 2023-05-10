@@ -153,7 +153,7 @@
 	export default {
 		components: {
 			TableCharts,
-			ArticleColumnList,
+			// ArticleColumnList,
 			ReportInfomation,
 			PdfReport,
 			DcbTable

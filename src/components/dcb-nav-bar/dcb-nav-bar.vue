@@ -1,9 +1,11 @@
 <template>
 	<view class="dcb-nav-bar__wrapper">
 		<uni-nav-bar :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true">
-			<template class="stock-home_header-title" v-slot:default>
-				<text class="stock-home_header-title-text" @click="toSearch">{{ title }}</text>
-				<view class="iconfont icon-search" @click="toSearch" v-if="search"></view>
+			<template v-slot:default>
+				<view class="stock-home_header-title">
+					<text class="stock-home_header-title-text" @click="toSearch">{{ title }}</text>
+					<view class="iconfont icon-search" @click="toSearch" v-if="search"></view>
+				</view>
 			</template>
 			<template v-slot:left>
 				<view :class="leftIcon" @click="toSpecifiedPage"></view>

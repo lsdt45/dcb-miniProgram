@@ -75,336 +75,336 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'vuex'
-import type { indexDataType } from './pdf-report-type'
-export default {
-	data() {
-		return {
-			rectData: '',
-			isShowPanel: false, // 报告选择面板的显示
-			scrollStyle: 'display: none;', // 面板内联样式
-			bodyHeight: 0, // report-body的高度
-			curSelectIndex: 0, // 当前选中的行
-			pageNumData: [], // 匹配页码数据
-			listIndexData: [], // 报告导读目录
-			showIndexData: [],
-			rptListData: [], // 当前股票所有报告列表
-			curTaskInfo: [], // 当前pdf报告信息
-			// 计算用高度
-			calUseHeight: {
-				headerHeight: 0,
-				indexHeight: 0,
+	import { mapState } from 'vuex'
+	import type { indexDataType } from './pdf-report-type'
+	export default {
+		data() {
+			return {
+				rectData: '',
+				isShowPanel: false, // 报告选择面板的显示
+				scrollStyle: 'display: none;', // 面板内联样式
+				bodyHeight: 0, // report-body的高度
+				curSelectIndex: 0, // 当前选中的行
+				pageNumData: [], // 匹配页码数据
+				listIndexData: [], // 报告导读目录
+				showIndexData: [],
+				rptListData: [], // 当前股票所有报告列表
+				curTaskInfo: [], // 当前pdf报告信息
+				// 计算用高度
+				calUseHeight: {
+					headerHeight: 0,
+					indexHeight: 0,
+				},
+				userInfo: '',
+				serverTime: '',
+			}
+		},
+		props: {},
+		computed: {
+			...mapState(['curStock', 'navBarHeight']),
+			// 动态设置内容区的高度以自适应
+			rptContentHeight() {
+				return `height: calc(100vh - ${this.calUseHeight.headerHeight}px - ${this.calUseHeight.indexHeight}px - ${this.navBarHeight} - 40rpx);`
 			},
-			userInfo: '',
-			serverTime: '',
-		}
-	},
-	props: {},
-	computed: {
-		...mapState(['curStock', 'navBarHeight']),
-		// 动态设置内容区的高度以自适应
-		rptContentHeight() {
-			return `height: calc(100vh - ${this.calUseHeight.headerHeight}px - ${this.calUseHeight.indexHeight}px - ${this.navBarHeight} - 40rpx);`
-		},
-		// 面板样式切换
-		panelClass() {
-			if (this.isShowPanel) {
-				return 'report-header__panel show'
-			} else {
-				return 'report-header__panel'
-			}
-		},
-		rptFullName() {
-			let name = this.$util.formatRptType(this.curStock.rptType)
-			return this.curStock.year + '年' + name
-		},
-		overlayClass() {
-			if (this.isShowPanel) {
-				return 'overlay show'
-			} else {
-				return 'overlay'
-			}
-		},
-		matchPage() {
-			return (index: number) => {
-				if (this.pageNumData.length > 0) {
-					return this.pageNumData[index].matchPage
+			// 面板样式切换
+			panelClass() {
+				if (this.isShowPanel) {
+					return 'report-header__panel show'
+				} else {
+					return 'report-header__panel'
 				}
-			}
-		},
-		// 股票全名
-		stockFullName() {
-			return this.curStock.secName + ' ' + this.curStock.secCode
-		},
-		// 子级缩进样式
-		childrenIndexClass() {
-			return (level: number) => {
-				if (level == 2) {
-					return 'children-index'
+			},
+			rptFullName() {
+				let name = this.$util.formatRptType(this.curStock.rptType)
+				return this.curStock.year + '年' + name
+			},
+			overlayClass() {
+				if (this.isShowPanel) {
+					return 'overlay show'
+				} else {
+					return 'overlay'
 				}
-			}
+			},
+			matchPage() {
+				return (index: number) => {
+					if (this.pageNumData.length > 0) {
+						return this.pageNumData[index].matchPage
+					}
+				}
+			},
+			// 股票全名
+			stockFullName() {
+				return this.curStock.secName + ' ' + this.curStock.secCode
+			},
+			// 子级缩进样式
+			childrenIndexClass() {
+				return (level: number) => {
+					if (level == 2) {
+						return 'children-index'
+					}
+				}
+			},
 		},
-	},
-	onShow() {
-		// 获取内置组件的布局信息
-		const query = uni.createSelectorQuery().in(this)
-		query
-			.select('.report-wrapper')
-			.boundingClientRect((data) => {
-				this.rectData = data
-			})
-			.exec()
+		onShow() {
+			// #ifdef MP-WEIXIN
+			// 获取内置组件的布局信息
+			const query = uni.createSelectorQuery().in(this)
+			query
+				.select('.report-wrapper')
+				.boundingClientRect((data) => {
+					this.rectData = data
+				})
+				.exec()
 
-		query
-			.select('.report-body')
-			.boundingClientRect((data) => {
-				this.bodyHeight = data.height - 89
-			})
-			.exec()
-		this.initData()
-		this.getDefaultCompareList()
-		this.userInfo = uni.getStorageSync('UserInfo')
-		this.serverTime = uni.getStorageSync('serverTime')
-	},
-	methods: {
-		initData() {
-			this.changeCurSelectIndex()
-			this.getRptGuideData()
-			this.getTaskInfo()
-			setTimeout(this.getlistBodyHeight, 0)
+			query
+				.select('.report-body')
+				.boundingClientRect((data) => {
+					this.bodyHeight = data.height - 89
+				})
+				.exec()
+			// #endif
+			this.initData()
+			this.getDefaultCompareList()
+			this.userInfo = uni.getStorageSync('UserInfo')
+			this.serverTime = uni.getStorageSync('serverTime')
 		},
-		toPdfView(nodeId: number) {
-			this.showPdf(nodeId)
-		},
-		// 控制显示报告选择面板
-		handlePanelShow() {
-			if (this.isShowPanel) {
-				this.isShowPanel = !this.isShowPanel
-			} else {
-				this.scrollStyle = 'display:block;'
-				setTimeout(() => {
+		methods: {
+			initData() {
+				this.changeCurSelectIndex()
+				this.getRptGuideData()
+				this.getTaskInfo()
+				setTimeout(this.getlistBodyHeight, 0)
+			},
+			toPdfView(nodeId: number) {
+				this.showPdf(nodeId)
+			},
+			// 控制显示报告选择面板
+			handlePanelShow() {
+				if (this.isShowPanel) {
 					this.isShowPanel = !this.isShowPanel
-				}, 20)
-			}
-		},
-		showPdf(nodeId: number) {
-			let param = {
-				NodeId: this.$util.getNodeIdById(nodeId),
-				TaskId: this.curTaskInfo.id,
-			}
-			this.$api.post('/Report/GetHomeData', param).then((resp) => {
-				if (resp.status) {
-					this.pdfUrl = resp.data.filePath
-					let matchPage = ''
-					if (resp.data.reportKeyInfoData) {
-						matchPage = resp.data.reportKeyInfoData.matchPage
-					} else {
-						matchPage = '1'
-					}
-					// 是否登录
-					let userInfo = uni.getStorageSync('UserInfo')
-					let isLogin = false
-					// 获取对比公司列表
-					let compareList = []
-					this.$store.state.curCmpList.forEach((item, index) => {
-						let listItem = `${item.comp004_OrgName}(${item.comp004_Seccode})`
-						compareList.push(listItem)
-					})
-					if (userInfo && userInfo.userClass != 99) {
-						isLogin = true
-					}
-					let templateId = this.$config.data.ReportNavigateTemplateId
-					uni.navigateTo({
-						url:
-							'/pages/stock/webView/my-web-view?code=' +
-							this.curStock.secCode +
-							'&name=' +
-							this.curStock.secName +
-							'&pdfUrl=' +
-							this.pdfUrl +
-							'&nodeid=' +
-							nodeId +
-							'&taskid=' +
-							this.curTaskInfo.id +
-							'&page=' +
-							matchPage +
-							'&login=' +
-							isLogin +
-							'&templateId=' +
-							templateId +
-							'&compareList=' +
-							compareList.join(','),
-					})
+				} else {
+					this.scrollStyle = 'display:block;'
+					setTimeout(() => {
+						this.isShowPanel = !this.isShowPanel
+					}, 20)
 				}
-			})
-		},
-		// 切换当前报告
-		changeReport(item) {
-			this.curTaskInfo.id = item.id
-			let stock = JSON.parse(JSON.stringify(this.curStock))
-			stock.rptType = item.name
-			stock.year = item.year
-			this.$store.commit('setCurStock', stock)
-			this.getReportPageNum()
-			this.changeCurSelectIndex()
-			this.isShowPanel = false
-		},
-		// 获取页码信息
-		getReportPageNum() {
-			let templateId = 0
-			this.pageNumData = []
-			templateId = this.$config.data.ReportNavigateTemplateId
-			let param = {
-				TaskId: this.curTaskInfo.id,
-				TemplateId: templateId,
-			}
-			this.$api.post('/Report/GetMatchList', param).then((resp) => {
-				if (resp.status) {
-					// 处理返回的数据，map化
-					let dataMap = new Map()
-					resp.data.forEach((item) => {
-						dataMap.set(item.id, {
-							analyseNodeName: item.analyseNodeName,
-							matchPage: item.matchPage,
-						})
-					})
-					// 获取匹配的页码
-					this.showIndexData.forEach((item) => {
-						let id = this.$util.getNodeIdById(item.id)
-						let value = dataMap.get(id)
-						this.pageNumData.push({
-							topic: item.topic,
-							matchPage: value.matchPage,
-						})
-					})
+			},
+			// 用于获取PDF文件的URL，并跳转到相应的页面
+			showPdf(nodeId: number) {
+				// 定义一个参数对象，包含节点ID和任务ID
+				let param = {
+					NodeId: this.$util.getNodeIdById(nodeId),
+					TaskId: this.curTaskInfo.id,
 				}
-			})
-		},
-		// 获取报告导读数据
-		getRptGuideData() {
-			this.showIndexData = []
-			let param = {
-				Id: this.$config.data.ReportNavigateTemplateId,
-			}
-			this.$api
-				.get('/Report/GetNavigJsonById', param)
-				.then((resp) => {
+				// 调用API接口，获取PDF文件的路径和其他信息
+				this.$api.post('/Report/GetHomeData', param).then((resp) => {
+					// 如果请求成功
 					if (resp.status) {
-						this.listIndexData = JSON.parse(resp.data.navigJson).children
-						let result = this.processingIndexData(JSON.parse(resp.data.navigJson).children, 0)
-						this.getSpecifiedLevelIndex(result, 2)
+						// 获取PDF文件的路径
+						this.pdfUrl = resp.data.filePath
+						// 获取PDF文件的匹配页码，如果没有则默认为1
+						let matchPage = resp.data.reportKeyInfoData?.matchPage || '1'
+						// 获取用户信息，判断是否登录
+						let userInfo = uni.getStorageSync('UserInfo')
+						let isLogin = userInfo && userInfo.userClass != 99
+						// 获取对比公司列表，转换为字符串格式
+						let compareList = this.$store.state.curCmpList.map((item) => `${item.comp004_OrgName}(${item.comp004_Seccode})`).join(',')
+						// 获取当前系统信息，获取浏览器名称
+						let systemInfo = uni.getSystemInfoSync()
+						let browserName = systemInfo.browserName
+						// 获取报告导航模板ID
+						let templateId = this.$config.data.ReportNavigateTemplateId
+						// 定义一个对象，包含跳转页面所需的所有参数
+						let query = {
+							code: this.curStock.secCode,
+							name: this.curStock.secName,
+							pdfUrl: this.pdfUrl,
+							nodeid: nodeId,
+							taskid: this.curTaskInfo.id,
+							page: matchPage,
+							login: isLogin,
+							templateId: templateId,
+							compareList: compareList,
+							browserName: browserName,
+						}
+						// 使用Object.entries方法和map方法，将query对象转换为一个二维数组，每个子数组包含一个键值对
+						let queryArray = Object.entries(query).map(([key, value]) => [key, String(value)])
+						// 使用URLSearchParams类来构造查询字符串，避免手动拼接参数
+						let queryString = new URLSearchParams(queryArray).toString()
+						// 构造跳转的URL，使用基础路径和查询字符串拼接
+						let url = `/pages/stock/webView/my-web-view?${queryString}`
+						// 跳转到目标页面
+						uni.navigateTo({ url })
 					}
 				})
-				.catch((err) => {
-					console.log(err)
-				})
-		},
-		// 获取当前股票报告列表
-		getTaskInfo() {
-			let param = {
-				Code: this.curStock.secCode,
-			}
-			this.$api.post('/Report/GetAllReportInfoByCode', param).then((resp) => {
-				if (resp.status) {
-					this.rptListData = resp.data
-					// 选择当前时间和报告类型的taskinfo
-					let result = this.rptListData.find((item) => {
-						return item.year === this.curStock.year && item.name === this.curStock.rptType
-					})
-					this.curTaskInfo = JSON.parse(JSON.stringify(result))
-					// this.rptListData.forEach((item, index) => {
-					//   this.rptListData[index].isSelected = false;
-					// });
-					this.getReportPageNum()
+			},
+			// 切换当前报告
+			changeReport(item) {
+				this.curTaskInfo.id = item.id
+				let stock = JSON.parse(JSON.stringify(this.curStock))
+				stock.rptType = item.name
+				stock.year = item.year
+				this.$store.commit('setCurStock', stock)
+				this.getReportPageNum()
+				this.changeCurSelectIndex()
+				this.isShowPanel = false
+			},
+			// 获取页码信息
+			getReportPageNum() {
+				let templateId = 0
+				this.pageNumData = []
+				templateId = this.$config.data.ReportNavigateTemplateId
+				let param = {
+					TaskId: this.curTaskInfo.id,
+					TemplateId: templateId,
 				}
-			})
-		},
-		getlistBodyHeight() {
-			let query = uni.createSelectorQuery().in(this)
-			query
-				.select('.report-header')
-				.boundingClientRect((data) => {
-					this.calUseHeight.headerHeight = data.height
-				})
-				.exec()
-			query
-				.select('.report-body__index')
-				.boundingClientRect((data) => {
-					this.calUseHeight.indexHeight = data.height
-				})
-				.exec()
-		},
-		/**
-		 * description: 获取默认对比公司列表
-		 * @createTime: 2022-10-25 17:35:56
-		 */
-		getDefaultCompareList() {
-			let param = {
-				Code: this.$store.state.curStock.secCode,
-				ReportDate: null,
-			}
-			this.$api
-				.post('/Compare/GetToCompareList_CompanyAndFinance', param)
-				.then((res: any) => {
-					this.$store.commit('updateCurCmpList', res.data.defaultCompareList)
-					this.$store.commit('updateDefaultIndustyList', res.data.defaultCompareList)
-					let industryName = ''
-					let curStock = { ...this.$store.state.curStock }
-					this.$config.data.IndustryTree.forEach((industry) => {
-						let result = res.data.compareIndustry.find((compareIndustry) => {
-							return compareIndustry.comp004_002 == industry
+				this.$api.post('/Report/GetMatchList', param).then((resp) => {
+					if (resp.status) {
+						// 处理返回的数据，map化
+						let dataMap = new Map()
+						resp.data.forEach((item) => {
+							dataMap.set(item.id, {
+								analyseNodeName: item.analyseNodeName,
+								matchPage: item.matchPage,
+							})
 						})
-						if (result) {
-							if (result.comp004_006) {
-								industryName = result.comp004_006
-							}
+						// 获取匹配的页码
+						this.showIndexData.forEach((item) => {
+							let id = this.$util.getNodeIdById(item.id)
+							let value = dataMap.get(id)
+							this.pageNumData.push({
+								topic: item.topic,
+								matchPage: value.matchPage,
+							})
+						})
+					}
+				})
+			},
+			// 获取报告导读数据
+			getRptGuideData() {
+				this.showIndexData = []
+				let param = {
+					Id: this.$config.data.ReportNavigateTemplateId,
+				}
+				this.$api
+					.get('/Report/GetNavigJsonById', param)
+					.then((resp) => {
+						if (resp.status) {
+							this.listIndexData = JSON.parse(resp.data.navigJson).children
+							let result = this.processingIndexData(JSON.parse(resp.data.navigJson).children, 0)
+							this.getSpecifiedLevelIndex(result, 2)
 						}
 					})
-					curStock.industry = industryName
-					this.$store.commit('setCurStock', curStock)
+					.catch((err) => {
+						console.log(err)
+					})
+			},
+			// 获取当前股票报告列表
+			getTaskInfo() {
+				let param = {
+					Code: this.curStock.secCode,
+				}
+				this.$api.post('/Report/GetAllReportInfoByCode', param).then((resp) => {
+					if (resp.status) {
+						this.rptListData = resp.data
+						// 选择当前时间和报告类型的taskinfo
+						let result = this.rptListData.find((item) => {
+							return item.year === this.curStock.year && item.name === this.curStock.rptType
+						})
+						this.curTaskInfo = JSON.parse(JSON.stringify(result))
+						// this.rptListData.forEach((item, index) => {
+						//   this.rptListData[index].isSelected = false;
+						// });
+						this.getReportPageNum()
+					}
 				})
-				.catch((err: Error) => console.log(err))
-		},
-		// 改变当前选中的行
-		changeCurSelectIndex() {
-			this.rptListData.forEach((item, index) => {
-				if (this.curStock.rptType == item.name && item.year == this.curStock.year) {
-					this.curSelectIndex = index
+			},
+			getlistBodyHeight() {
+				let query = uni.createSelectorQuery().in(this)
+				query
+					.select('.report-header')
+					.boundingClientRect((data) => {
+						this.calUseHeight.headerHeight = data.height
+					})
+					.exec()
+				query
+					.select('.report-body__index')
+					.boundingClientRect((data) => {
+						this.calUseHeight.indexHeight = data.height
+					})
+					.exec()
+			},
+			/**
+			 * description: 获取默认对比公司列表
+			 * @createTime: 2022-10-25 17:35:56
+			 */
+			getDefaultCompareList() {
+				let param = {
+					Code: this.$store.state.curStock.secCode,
+					ReportDate: null,
 				}
-			})
+				this.$api
+					.post('/Compare/GetToCompareList_CompanyAndFinance', param)
+					.then((res: any) => {
+						this.$store.commit('updateCurCmpList', res.data.defaultCompareList)
+						this.$store.commit('updateDefaultIndustyList', res.data.defaultCompareList)
+						let industryName = ''
+						let curStock = { ...this.$store.state.curStock }
+						this.$config.data.IndustryTree.forEach((industry) => {
+							let result = res.data.compareIndustry.find((compareIndustry) => {
+								return compareIndustry.comp004_002 == industry
+							})
+							if (result) {
+								if (result.comp004_006) {
+									industryName = result.comp004_006
+								}
+							}
+						})
+						curStock.industry = industryName
+						this.$store.commit('setCurStock', curStock)
+					})
+					.catch((err: Error) => console.log(err))
+			},
+			// 改变当前选中的行
+			changeCurSelectIndex() {
+				this.rptListData.forEach((item, index) => {
+					if (this.curStock.rptType == item.name && item.year == this.curStock.year) {
+						this.curSelectIndex = index
+					}
+				})
+			},
+			// 处理从接口处返回的目录数据
+			processingIndexData(src: indexDataType[], level: number): indexDataType[] {
+				let result: indexDataType[] = []
+				src.forEach((item, index) => {
+					result.push(item)
+					result[index].level = level + 1
+					if (item.children && item.children.length > 0) {
+						this.processingIndexData(item.children, result[index].level)
+					}
+				})
+				return result
+			},
+			// 获取指定层级的目录
+			getSpecifiedLevelIndex(src: indexDataType[], level: number) {
+				// let result: indexDataType[] = []
+				src.forEach((item) => {
+					//v-if="item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0] && item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0].detailedAuth==0"
+					if (level < item.level) return
+					let userClass = new Date(this.userInfo.endTime) > this.serverTime ? this.userInfo.userClass : 0
+					let info = item.userClassAuth.filter((t) => t.userClass == userClass)[0]
+					if (info && info.detailedAuth == 0 && item.isShow) {
+						this.showIndexData.push(item)
+					}
+					if (item.children && item.children.length > 0) {
+						this.getSpecifiedLevelIndex(item.children, level)
+					}
+				})
+			},
 		},
-		// 处理从接口处返回的目录数据
-		processingIndexData(src: indexDataType[], level: number): indexDataType[] {
-			let result: indexDataType[] = []
-			src.forEach((item, index) => {
-				result.push(item)
-				result[index].level = level + 1
-				if (item.children && item.children.length > 0) {
-					this.processingIndexData(item.children, result[index].level)
-				}
-			})
-			return result
-		},
-		// 获取指定层级的目录
-		getSpecifiedLevelIndex(src: indexDataType[], level: number) {
-			// let result: indexDataType[] = []
-			src.forEach((item) => {
-				//v-if="item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0] && item.userClassAuth.filter(t=>t.userClass==(new Date(userInfo.endTime)>serverTime?userInfo.userClass:0))[0].detailedAuth==0"
-				if (level < item.level) return
-				let userClass = new Date(this.userInfo.endTime) > this.serverTime ? this.userInfo.userClass : 0
-				let info = item.userClassAuth.filter((t) => t.userClass == userClass)[0]
-				if (info && info.detailedAuth == 0 && item.isShow) {
-					this.showIndexData.push(item)
-				}
-				if (item.children && item.children.length > 0) {
-					this.getSpecifiedLevelIndex(item.children, level)
-				}
-			})
-		},
-	},
-}
+	}
 </script>
 
 <style lang="scss">
-// @import "@/static/scss/common/pdf-report.scss";
+	// @import "@/static/scss/common/pdf-report.scss";
 </style>

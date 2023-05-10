@@ -35,36 +35,7 @@ var dateUtils = {
 		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
 	}
 };
-// 深拷贝的实现
-function deepCopy(obj: any, map?: any) {
-	//判断是否是第一次调用deepCopy方法，是的话创建一个weakmap实例来装遍历过程中出现过的对象
-	if (!map) {
-		map = new WeakMap()
-	}
-	//判断传入的obj是否为对象
-	if (obj === null || (typeof obj).toLowerCase() != 'object') {
-		return obj
-	}
-	//如果map中已经存在这个对象说明出现了循环引用问题
-	if (map.get(obj)) {
-		return obj
-	}
-	//map中没有就往map中存入该对象
-	map.set(obj, obj)
-	//根据obj的类型来给newObj创建初始值
-	let newObj = Array.isArray(obj) ? [] : {}
-	//遍历obj
-	for (let i in obj) {
-		if (obj.hasOwnProperty(i)) { //判断当前属性是否为obj自身的属性
-			if ((typeof obj[i]).toLowerCase() === 'object') { //判断当前属性是否为对象类型
-				newObj[i] = deepCopy(obj[i], map) //如果是对象类型就使用该方法进行递归处理
-			} else {
-				newObj[i] = obj[i] //不是对象类型就直接拷贝
-			}
-		}
-	}
-	return newObj //返回拷贝完成的newObj
-};
+
 
 export default {
 	/**
@@ -245,8 +216,7 @@ export default {
 			range = min,
 			arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
 				'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
-				'E',
-				'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+				'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 			];
 		let pos = 0
 		// 随机产生
@@ -286,7 +256,36 @@ export default {
 		}
 		return nodeId
 	},
-	deepCopy
+	// 深拷贝的实现
+	deepCopy(obj: any, map?: any) {
+		//判断是否是第一次调用deepCopy方法，是的话创建一个weakmap实例来装遍历过程中出现过的对象
+		if (!map) {
+			map = new WeakMap()
+		}
+		//判断传入的obj是否为对象
+		if (obj === null || (typeof obj).toLowerCase() != 'object') {
+			return obj
+		}
+		//如果map中已经存在这个对象说明出现了循环引用问题
+		if (map.get(obj)) {
+			return obj
+		}
+		//map中没有就往map中存入该对象
+		map.set(obj, obj)
+		//根据obj的类型来给newObj创建初始值
+		let newObj = Array.isArray(obj) ? [] : {}
+		//遍历obj
+		for (let i in obj) {
+			if (obj.hasOwnProperty(i)) { //判断当前属性是否为obj自身的属性
+				if ((typeof obj[i]).toLowerCase() === 'object') { //判断当前属性是否为对象类型
+					newObj[i] = this.deepCopy(obj[i], map) //如果是对象类型就使用该方法进行递归处理
+				} else {
+					newObj[i] = obj[i] //不是对象类型就直接拷贝
+				}
+			}
+		}
+		return newObj //返回拷贝完成的newObj
+	},
 }
 
 export function formatRptType(name, type = "") {

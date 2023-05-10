@@ -152,7 +152,7 @@
 </template>
 
 <script lang="ts">
-	import ArticleColumnList from '@/pages/stock/article/article-column-list.vue'
+	// import ArticleColumnList from '@/pages/stock/article/article-column-list.vue'
 	import ReportInfomation from '@/pages/stock/report-infomation.vue'
 	import TableCharts from '@/subPackages/table-charts/table-charts.vue'
 	import PdfReport from '@/pages/stock/pdf-report.vue'
@@ -166,7 +166,7 @@
 	export default {
 		components: {
 			TableCharts,
-			ArticleColumnList,
+			// ArticleColumnList,
 			ReportInfomation,
 			PdfReport,
 			DcbTable

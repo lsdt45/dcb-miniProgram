@@ -17,6 +17,7 @@
 }
 
 // 修改uni-tag的样式
+/* #ifdef MP */
 @mixin myUniTagStyle {
 	margin-right: 10rpx;
 	text-align: center;
@@ -38,6 +39,28 @@
 		}
 	}	
 }
+/* #endif */
+/* #ifdef H5 */
+@mixin myUniTagStyle {
+	.uni-tag {
+		position: relative;
+		left: 5px;
+		font-size: 14px;
+		font-weight: 500;
+		border-radius: 2px;
+		line-height: 20px;
+		color: black;
+		&.uni-tag--primary {
+			background-color: $color-border-main;
+			border-color: #c0d5f9;
+		}
+		&.uni-tag--primary--inverted {
+			background-color: #fff;
+			border-color: $color-border-main;
+		}
+	}	
+}
+/* #endif */
 
 // 自定义data-select组件的样式
 @mixin DcbDataSelect {

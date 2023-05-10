@@ -252,6 +252,7 @@
 			notIdIndex: [], // 无指标id的指标名所对应的index数组
 			reloadChart: true, // 重新加载图表
 			pixelRatio: 1, // 设备像素比
+			parent: {}, // 父组件
 			tapLegendResult: {}, // 点击下拉按钮返回的数据
 			timePeriod: [], // 日期列表
 			unit: '', // 单位
@@ -479,6 +480,12 @@
 			 * @createTime: 2022-06-30 15:38:44
 			 */
 			initData() {
+				// #ifdef H5
+				this.parent = this?.$parent?.$parent?.$parent?.$parent?.$parent
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.parent = this.$parent
+				// #endif
 				if (this.chartsId && this.chartsType != 'null') {
 					this.getChartsInfo()
 				}
@@ -487,21 +494,21 @@
 				this.canvasId = this.$util.randomWord(true, 8, 8)
 				this.canvasId_rotate = this.canvasId + 'rotate'
 				// 初始化时间区间
-				this.timeList = [...(this.$parent as any).timeRange].slice(0, 5)
+				this.timeList = [...this.parent.timeRange].slice(0, 5)
 				// 初始化类型选择
 				let dataFilter = {
 					report: [],
 					time: [],
 				}
 				// 选中的报告类型
-				let checkedRptData = (this.$parent as any).rptTypeData.filter((item) => {
+				let checkedRptData = (this.parent as any).rptTypeData.filter((item) => {
 					return item.checked == true
 				})
 				checkedRptData.forEach((item: any) => {
 					dataFilter.report.push(item.type)
 				})
 				// 选中的分析时间
-				let anlyTimeData = (this.$parent as any).anlyTimeData.filter((item) => {
+				let anlyTimeData = (this.parent as any).anlyTimeData.filter((item) => {
 					return item.checked == true
 				})
 				anlyTimeData.forEach((item) => {
@@ -872,12 +879,12 @@
 				}
 				// 设置1s延时，避免渲染出错
 				setTimeout(() => {
-					;(this.$parent as any).$refs.chart.init(echarts, (chart) => {
+					;(this.parent as any).$refs.chart.init(echarts, (chart) => {
 						chart.setOption(tempOption)
 					})
 				}, 1000)
 				setTimeout(() => {
-					;(this.$parent as any).$refs.chart.resize()
+					;(this.parent as any).$refs.chart.resize()
 				}, 1100)
 			},
 			/**
@@ -902,7 +909,7 @@
 			 * @createTime: 2022-07-02 11:27:33
 			 */
 			closeRotateMode() {
-				;(this.$parent as any).isShowRotate = false
+				;(this.parent as any).isShowRotate = false
 				this.chartsData_rotate = {}
 			},
 			/**
@@ -1078,4 +1085,10 @@
 
 <style lang="scss">
 	@import '@/static/scss/common/table-charts.scss';
+	/* #ifdef H5 */
+	.tag {
+		margin-right: 40rpx;
+	}
+	@include myUniTagStyle;
+	/* #endif */
 </style>

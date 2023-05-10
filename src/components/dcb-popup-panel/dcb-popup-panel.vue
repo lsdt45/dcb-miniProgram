@@ -65,7 +65,8 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue'
 
-	import { ListData, propsObj } from './dcb-popup-panel'
+	import { propsObj } from './dcb-popup-panel'
+	import type { ListData } from './dcb-popup-panel'
 
 	const props = defineProps(propsObj)
 	const emit = defineEmits(['update:data', 'update:isShowPanel', 'itemClick', 'updateCurSelect'])
@@ -109,13 +110,11 @@
 	}
 	// 确认
 	function confirm() {
-		props.multiple
-			? emit('updateCurSelect', listData.value)
-			: emit('updateCurSelect', curSelectValue.value)
-		
+		props.multiple ? emit('updateCurSelect', listData.value) : emit('updateCurSelect', curSelectValue.value)
+
 		closePanel()
 	}
-	
+
 	onMounted(() => {
 		// curSelectValue.value = props.curSelect
 	})
@@ -211,4 +210,16 @@
 			}
 		}
 	}
+	/* #ifdef H5 */
+	// 面板的头部样式
+	.panel-header {
+		height: 116rpx;
+		line-height: 116rpx;
+		text-align: left;
+		font-weight: bold;
+		font-size: $font-size-text-medium;
+		padding-left: 28rpx;
+		border-bottom: $border2;
+	}
+	/* #endif */
 </style>

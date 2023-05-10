@@ -96,16 +96,13 @@
 	import config from '@/common/data/index.js'
 	import {
 		list,
-		CompareInfo,
 		aliasReturnCompareInfo,
 		cmpIndustryNum,
 		updateList,
-		IndustryBaseInfo,
 		listData,
-		IndustryPickerDataTree,
-		SearchStockInfo
 	} from './compare-industry'
-	import {
+	import type { CompareInfo, IndustryBaseInfo, IndustryPickerDataTree, SearchStockInfo } from './compare-industry'
+	import type{
 		ListData
 	} from '../../../components/dcb-popup-panel/dcb-popup-panel'
 	let columns = ref(([{

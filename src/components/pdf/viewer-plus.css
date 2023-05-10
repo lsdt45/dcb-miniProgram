@@ -23,10 +23,6 @@ html {
   height: 70vh;
 }
 
-#viewer {
-  overflow: hidden;
-}
-
 #app {
   width: 100%;
   height: 100%;
@@ -83,20 +79,32 @@ html {
   font-size: 12px;
 }
 
-.outline-dialog, .history-dialog, .guide-dialog, .compare-dialog {
+.outline-dialog,
+.history-dialog,
+.guide-dialog,
+.compare-dialog {
   width: 100%;
   height: 100%;
 }
-.outline-dialog .el-overlay, .history-dialog .el-overlay, .guide-dialog .el-overlay, .compare-dialog .el-overlay {
+.outline-dialog .el-overlay,
+.history-dialog .el-overlay,
+.guide-dialog .el-overlay,
+.compare-dialog .el-overlay {
   z-index: 9999 !important;
 }
-.outline-dialog .el-dialog, .history-dialog .el-dialog, .guide-dialog .el-dialog, .compare-dialog .el-dialog {
+.outline-dialog .el-dialog,
+.history-dialog .el-dialog,
+.guide-dialog .el-dialog,
+.compare-dialog .el-dialog {
   margin: 0 !important;
   position: absolute;
   bottom: -13vh;
   transition: bottom 0.2s ease-in-out;
 }
-.outline-dialog .overlay, .history-dialog .overlay, .guide-dialog .overlay, .compare-dialog .overlay {
+.outline-dialog .overlay,
+.history-dialog .overlay,
+.guide-dialog .overlay,
+.compare-dialog .overlay {
   z-index: 9999;
   position: fixed;
   top: 0;
@@ -105,7 +113,10 @@ html {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.outline-dialog .dialog, .history-dialog .dialog, .guide-dialog .dialog, .compare-dialog .dialog {
+.outline-dialog .dialog,
+.history-dialog .dialog,
+.guide-dialog .dialog,
+.compare-dialog .dialog {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -119,7 +130,10 @@ html {
   font-size: 14px;
   transition: bottom, 0.3s ease-in-out;
 }
-.outline-dialog .dialog .dialog-header, .history-dialog .dialog .dialog-header, .guide-dialog .dialog .dialog-header, .compare-dialog .dialog .dialog-header {
+.outline-dialog .dialog .dialog-header,
+.history-dialog .dialog .dialog-header,
+.guide-dialog .dialog .dialog-header,
+.compare-dialog .dialog .dialog-header {
   display: flex;
   position: relative !important;
   box-sizing: border-box;
@@ -132,28 +146,46 @@ html {
   border-bottom: 1px solid #E9F1FD;
   background-color: white;
 }
-.outline-dialog .dialog .dialog-header .title, .history-dialog .dialog .dialog-header .title, .guide-dialog .dialog .dialog-header .title, .compare-dialog .dialog .dialog-header .title {
+.outline-dialog .dialog .dialog-header .title,
+.history-dialog .dialog .dialog-header .title,
+.guide-dialog .dialog .dialog-header .title,
+.compare-dialog .dialog .dialog-header .title {
   font-weight: bold;
   font-size: 17px;
 }
-.outline-dialog .dialog .dialog-body, .history-dialog .dialog .dialog-body, .guide-dialog .dialog .dialog-body, .compare-dialog .dialog .dialog-body {
+.outline-dialog .dialog .dialog-body,
+.history-dialog .dialog .dialog-body,
+.guide-dialog .dialog .dialog-body,
+.compare-dialog .dialog .dialog-body {
   overflow: auto;
   background-color: white;
 }
-.outline-dialog .dialog .dialog-body li, .history-dialog .dialog .dialog-body li, .guide-dialog .dialog .dialog-body li, .compare-dialog .dialog .dialog-body li {
+.outline-dialog .dialog .dialog-body li,
+.history-dialog .dialog .dialog-body li,
+.guide-dialog .dialog .dialog-body li,
+.compare-dialog .dialog .dialog-body li {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #E9F1FD;
   padding: 15px 30px;
 }
-.outline-dialog .dialog .dialog-body.guide, .history-dialog .dialog .dialog-body.guide, .guide-dialog .dialog .dialog-body.guide, .compare-dialog .dialog .dialog-body.guide {
+.outline-dialog .dialog .dialog-body.guide,
+.history-dialog .dialog .dialog-body.guide,
+.guide-dialog .dialog .dialog-body.guide,
+.compare-dialog .dialog .dialog-body.guide {
   padding: 20px 30px;
 }
-.outline-dialog .dialog .dialog-body .history-li-select, .history-dialog .dialog .dialog-body .history-li-select, .guide-dialog .dialog .dialog-body .history-li-select, .compare-dialog .dialog .dialog-body .history-li-select {
+.outline-dialog .dialog .dialog-body .history-li-select,
+.history-dialog .dialog .dialog-body .history-li-select,
+.guide-dialog .dialog .dialog-body .history-li-select,
+.compare-dialog .dialog .dialog-body .history-li-select {
   background: #e9f1fd;
   color: #2C72EC;
 }
-.outline-dialog .dialog .dialog-footer, .history-dialog .dialog .dialog-footer, .guide-dialog .dialog .dialog-footer, .compare-dialog .dialog .dialog-footer {
+.outline-dialog .dialog .dialog-footer,
+.history-dialog .dialog .dialog-footer,
+.guide-dialog .dialog .dialog-footer,
+.compare-dialog .dialog .dialog-footer {
   box-sizing: border-box;
   height: 64px;
   line-height: 64px;
@@ -163,24 +195,42 @@ html {
   border-top: 4px solid #F4F4F4;
   background-color: white;
 }
-.outline-dialog .dialog.show, .history-dialog .dialog.show, .guide-dialog .dialog.show, .compare-dialog .dialog.show {
+.outline-dialog .dialog.show,
+.history-dialog .dialog.show,
+.guide-dialog .dialog.show,
+.compare-dialog .dialog.show {
   bottom: 0;
 }
-.outline-dialog .el-dialog.show, .history-dialog .el-dialog.show, .guide-dialog .el-dialog.show, .compare-dialog .el-dialog.show {
+.outline-dialog .el-dialog.show,
+.history-dialog .el-dialog.show,
+.guide-dialog .el-dialog.show,
+.compare-dialog .el-dialog.show {
   bottom: 0;
 }
-.outline-dialog .list-item:active, .history-dialog .list-item:active, .guide-dialog .list-item:active, .compare-dialog .list-item:active {
+.outline-dialog .list-item:active,
+.history-dialog .list-item:active,
+.guide-dialog .list-item:active,
+.compare-dialog .list-item:active {
   color: #2C72EC;
   background-color: #e9f1fd;
 }
-.outline-dialog .list-item, .history-dialog .list-item, .guide-dialog .list-item, .compare-dialog .list-item {
+.outline-dialog .list-item,
+.history-dialog .list-item,
+.guide-dialog .list-item,
+.compare-dialog .list-item {
   position: relative;
 }
-.outline-dialog .list-item.selected, .history-dialog .list-item.selected, .guide-dialog .list-item.selected, .compare-dialog .list-item.selected {
+.outline-dialog .list-item.selected,
+.history-dialog .list-item.selected,
+.guide-dialog .list-item.selected,
+.compare-dialog .list-item.selected {
   color: #2C72EC;
   background-color: #e9f1fd;
 }
-.outline-dialog .list-item .company-main, .history-dialog .list-item .company-main, .guide-dialog .list-item .company-main, .compare-dialog .list-item .company-main {
+.outline-dialog .list-item .company-main,
+.history-dialog .list-item .company-main,
+.guide-dialog .list-item .company-main,
+.compare-dialog .list-item .company-main {
   position: absolute;
   right: 3em;
   top: 1em;
@@ -194,7 +244,10 @@ html {
   color: #fff;
   text-align: center;
 }
-.outline-dialog .list-item .company-compare, .history-dialog .list-item .company-compare, .guide-dialog .list-item .company-compare, .compare-dialog .list-item .company-compare {
+.outline-dialog .list-item .company-compare,
+.history-dialog .list-item .company-compare,
+.guide-dialog .list-item .company-compare,
+.compare-dialog .list-item .company-compare {
   position: absolute;
   right: 2.5em;
   top: 1em;
@@ -284,4 +337,8 @@ html {
 #titleBar .text {
   margin-left: 20px;
   line-height: 2em;
+}
+
+.pdfViewer {
+  overflow-x: revert !important;
 }/*# sourceMappingURL=viewer-plus.css.map */

@@ -9,14 +9,14 @@
 					<view class="first-th">{{ item.name }}</view>
 					<view class="second-th">{{ props.formatMethod(item.type) }}</view>
 				</uni-th>
-				<view class="uni-talbe-td__tooltip" :class="{ show: isShowThFullName }" style="top: 0">{{ fstTableTh }}</view>
+				<!-- <view class="uni-table-td__tooltip" :class="{ show: isShowThFullName }" style="top: 0">{{ fstTableTh }}</view> -->
 			</uni-tr>
 			<uni-tr v-for="(item, index_tr) in chartsDataProp.series" :key="index_tr" @trClick="showFullName(index_tr)">
 				<uni-td :isBold="tdClass(index_tr)">{{ item.name }}</uni-td>
 				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''">
 					{{ tableCellData(data) }}
 				</uni-td>
-				<view class="uni-talbe-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
+				<view class="uni-table-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
 			</uni-tr>
 		</uni-table>
 	</view>
@@ -28,14 +28,14 @@
 				<uni-th v-for="(item, index) in chartsDataProp.categories" :key="index">
 					{{ item }}
 				</uni-th>
-				<view class="uni-talbe-td__tooltip" :class="{ show: isShowThFullName }" style="top: 0">{{ fstTableTh }}</view>
+				<view class="uni-table-td__tooltip" :class="{ show: isShowThFullName }" style="top: 0">{{ fstTableTh }}</view>
 			</uni-tr>
 			<uni-tr v-for="(item, index_tr) in chartsDataProp.series" :key="index_tr" @trClick="showFullName(index_tr)">
 				<uni-td :isBold="tdClass(index_tr)">{{ item.name }}</uni-td>
 				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''">
 					{{ tableCellData(data) }}
 				</uni-td>
-				<view class="uni-talbe-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
+				<view class="uni-table-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
 			</uni-tr>
 		</uni-table>
 	</view>
@@ -191,5 +191,61 @@
 			position: relative;
 			left: -8px;
 		}
+		.uni-table-td__tooltip {
+			position: absolute;
+			left: 0;
+			z-index: 3;
+			word-break: break-all;
+			white-space: pre-wrap;
+			width: 150px;
+			padding: 2px;
+			border: 0;
+			opacity: 0;
+			overflow: hidden;
+			color: #fff;
+			background: #757575;
+			transition: opacity 0.3s ease-in-out;
+
+			&.show {
+				height: auto;
+				opacity: 1;
+				transition: opacity 0.3s ease-in-out;
+			}
+		}
+		/* #ifdef H5 */
+		:deep(.uni-table-th-content) {
+			width: 110px !important;
+			flex-wrap: wrap;
+		}
+		:deep(.uni-table) {
+			table-layout: fixed;
+		}
+		.uni-table .uni-table-tr:first-child {
+			:deep(.uni-table-th),
+			:deep(.uni-table-td) {
+				background-color: $table-odd-td-bgcolor;
+			}
+		}
+		.uni-table .uni-table-tr:not(:first-child) {
+			:deep(.uni-table-th),
+			:deep(.uni-table-td) {
+				background-color: #fff;
+			}
+		}
+		.second-th {
+			left: -11px;
+		}
+		:deep(.uni-table-th:first-child),
+		:deep(.uni-table-td:first-child) {
+			position: sticky;
+			left: 0;
+			z-index: 2;
+			width: 150px !important;
+			@include SingleTextEllipsis;
+		}
+		.bold {
+			font-weight: bold;
+		}
+		/* #endif */
 	}
 </style>

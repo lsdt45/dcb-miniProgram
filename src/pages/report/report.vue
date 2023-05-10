@@ -5,20 +5,20 @@
 		<uni-search-bar v-model="keyword" radius="100" placeholder="搜索" clearButton="auto" cancelButton="always"
 			@confirm="search" @cancel="reset"/>
 		<view class="report-list">
-			<article-column-list ref="articleList" parent="tabBarRpt"></article-column-list>
+			<!-- <article-column-list ref="articleList" parent="tabBarRpt"></article-column-list> -->
 		</view>
 	</view>
 </template>
 
 <script>
-	import ArticleColumnList from '@/pages/stock/article/article-column-list.vue'
+	// import ArticleColumnList from '@/pages/stock/article/article-column-list.vue'
 	import {
 		mapState
 	} from 'vuex'
 	export default {
-		components: {
-			ArticleColumnList
-		},
+		// components: {
+		// 	ArticleColumnList
+		// },
 		data() {
 			return {
 				keyword: '', // 搜索关键字

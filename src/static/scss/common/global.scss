@@ -79,3 +79,11 @@ button, button::after {
 .btn-hover-class {
 	background-color: $color-border-main;
 }
+
+// H5端改变底部tabbar的样式
+/* #ifdef H5 */
+.uni-tabbar__icon {
+	width: 30px !important;
+	height: 30px !important;
+}
+/* #endif */

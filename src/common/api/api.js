@@ -138,13 +138,9 @@ function onLogin() {
 			isLogin = true;
 			store.commit('updateLoginStatus', isLogin)
 			// 页面重载
-			// const pages = getCurrentPages()
-			// // 声明一个pages使用getCurrentPages方法
-			// const curPage = pages[pages.length - 1]
-			// curPage.onLoad(curPage.options) // 传入参数
-			// curPage.onShow()
-			// curPage.onReady()
-			
+			uni.reLaunch({
+				url: '/pages/home/home'
+			})
 		}
 	}).catch(err => {
 		uni.setStorageSync("Authorization",null)
@@ -153,7 +149,6 @@ function onLogin() {
 	})
 	// #endif
 }
-
 export default {
 	get,
 	post,
