@@ -75,6 +75,7 @@ export const columns = [{
 	name: 'mainBusinessIncome',
 	label: '主营业务收入(万元)',
 	sorter: true,
+	width: 140,
 	defaultSort: true,
 }, {
 	name: 'netProfit',
@@ -83,6 +84,7 @@ export const columns = [{
 }, {
 	name: 'totalAssets',
 	label: '总资产(万元)',
+	width: 120,
 	sorter: true,
 }, {
 	name: 'ROE',
@@ -91,6 +93,7 @@ export const columns = [{
 }, {
 	name: 'endDate',
 	label: '报告期',
+	width: 120,
 	sorter: true,	
 }]
 // 表格指标分类

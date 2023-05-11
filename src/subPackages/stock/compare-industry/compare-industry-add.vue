@@ -58,7 +58,7 @@
 				</view>
 			</view>
 			<view class="industry-info-table">
-				<zb-table :data="tableData" :columns="columns" :update="update" :fit="true" :isShowBottomText="true"
+				<zb-table :data="tableData" :columns="columns" :update="update" :fit="false" :isShowBottomText="true"
 					:loadMore="currentTab==0?false: true" @loadmore="loadMore" @toggleRowSelection="toggleRowSelection"
 					ref="table">
 				</zb-table>
@@ -111,7 +111,8 @@
 	}, {
 		name: 'name',
 		label: '股票',
-		width: 90,
+		align: 'center',
+		width: 100,
 	}, {
 		name: 'mainBusinessIncome',
 		label: '主营业务收入(万元)',

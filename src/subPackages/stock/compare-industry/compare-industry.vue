@@ -12,7 +12,7 @@
 			<text class="btn" @click="clear">清空</text>
 		</view>
 		<view class="compare-industry__body">
-			<zb-table :data="curCmpList" :columns="columns" :update="update" :fit="true" :isShowBottomText="true" @deleteTr="deleteTr"></zb-table>
+			<zb-table :data="curCmpList" :columns="columns" :update="update" :fit="false" :isShowBottomText="true" @deleteTr="deleteTr"></zb-table>
 		</view>
 		<view class="btn-add" @click="openAddPage">
 			<view class="btn-add-content">
