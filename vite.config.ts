@@ -6,4 +6,9 @@ export default defineConfig({
   plugins: [uni(), AutoImport({ /* options */
     imports: ["vue", "vue-router"]
   }),],
+  // server: {
+  //   host: "192.168.31.253",
+  //   port: 5173,
+  //   https: false,
+  // }
 });

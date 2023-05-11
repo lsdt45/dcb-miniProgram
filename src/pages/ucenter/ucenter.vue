@@ -61,14 +61,8 @@
 						<img
 							class="contact-logo2__img"
 							referrerPolicy="no-referrer"
-							src="https://infostar-2020-1301764129.file.myqcloud.com/miniProgram/static/iamge/ContactUs.png"
+							src="https://ducaibao.com.cn/miniProgram/static/iamge/PC_access.png"
 							alt="" />
-						<view class="contact-logo2__text">
-							<text class="contact-logo2__text-bottom">
-								<text class="contact-logo2__text-bottom intro">如需体验更多功能，请在电脑上浏览</text>
-								<text class="contact-logo2__text-bottom url">ducaibao.com.cn</text>
-							</text>
-						</view>
 					</view>
 				</view>
 			</view>
