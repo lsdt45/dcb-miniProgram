@@ -3,7 +3,7 @@
 <template>
 	<view class="ucenter-wrapper">
 		<uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true"></uni-nav-bar>
-		<!-- #ifdef APP-PLUS -->
+		<!-- #ifdef MP -->
 		<view class="logo" @click="goLogin()">
 			<image class="logo-img" referrerPolicy="no-referrer" :src="wxUerInfo && wxUerInfo.userClass != 99 ? loginAvatarUrl : avatarUrl"></image>
 			<view>
@@ -170,6 +170,7 @@
 			justify-content: center;
 			position: relative;
 			.contact-logo2__img {
+				margin-top: 1em;
 				width: 680rpx;
 				height: 240rpx;
 			}

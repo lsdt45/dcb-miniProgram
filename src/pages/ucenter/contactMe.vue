@@ -18,7 +18,7 @@
 				<!-- #endif -->
 			</view>
 			<!-- #ifdef MP -->
-			<view class="contact-logo2">
+			<!-- <view class="contact-logo2">
 				<img
 					class="contact-logo2__img"
 					referrerPolicy="no-referrer"
@@ -31,7 +31,7 @@
 						<text class="contact-logo2__text-bottom url">ducaibao.com.cn</text>
 					</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- #endif -->
 		</view>
 	</view>

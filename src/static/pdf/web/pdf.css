@@ -1,0 +1,105 @@
+.toolbarButton.zoomOut::before {
+  content: url(pdfImages/reduce.png);
+}
+.toolbarButton.zoomIn::before {
+  content: url(pdfImages/add.png);
+  line-height: 20px;
+}
+#viewFind.toolbarButton::before {
+  content: url(pdfImages/search.png);
+}
+html[dir='ltr'] .toolbarButton.pageUp::before {
+  content: url(pdfImages/prepage.png);
+}
+html[dir='ltr'] .toolbarButton.pageDown::before {
+  content: url(pdfImages/nextpage.png);
+}
+.toolbarButton.presentationMode::before,
+.secondaryToolbarButton.presentationMode::before {
+  content: url(pdfImages/演示模式.png);
+}
+.toolbarButton.print::before,
+.secondaryToolbarButton.print::before {
+  content: url(pdfImages/打印.png);
+}
+html[dir='ltr'] .toolbarButton#secondaryToolbarToggle::before {
+  content: url(pdfImages/大纲.png);
+}
+.secondaryToolbarButton.firstPage::before {
+  content: url(pdfImages/第一页.png);
+}
+
+.secondaryToolbarButton.lastPage::before {
+  content: url(pdfImages/最后一页.png);
+}
+
+.secondaryToolbarButton.rotateCcw::before {
+  content: url(pdfImages/顺时针旋转.png);
+}
+
+.secondaryToolbarButton.rotateCw::before {
+  content: url(pdfImages/逆时针旋转.png);
+}
+
+.secondaryToolbarButton.selectTool::before {
+  content: url(pdfImages/文本选择.png);
+}
+
+.secondaryToolbarButton.handTool::before {
+  content: url(pdfImages/手形工具.png);
+}
+
+.secondaryToolbarButton.scrollVertical::before {
+  content: url(pdfImages/垂直滚动.png);
+}
+
+.secondaryToolbarButton.scrollHorizontal::before {
+  content: url(pdfImages/水平滚动.png);
+}
+
+.secondaryToolbarButton.scrollWrapped::before {
+  content: url(pdfImages/平铺滚动.png);
+}
+
+.secondaryToolbarButton.spreadNone::before {
+  content: url(pdfImages/单页视图.png);
+}
+
+.secondaryToolbarButton.spreadOdd::before {
+  content: url(pdfImages/双页视图.png);
+}
+
+.secondaryToolbarButton.spreadEven::before {
+  content: url(pdfImages/书籍视图.png);
+}
+
+.secondaryToolbarButton.documentProperties::before {
+  content: url(pdfImages/文档属性.png);
+}
+html[dir='ltr'] .toolbarButton#sidebarToggle::before {
+  content: url(pdfImages/侧栏.png);
+}
+
+/* .toolbarButton.pdfSidebarNotification::after{
+  background-color: #1369c5;
+}
+#toolbarViewer,#toolbarContainer{
+  height: 38px;
+}
+#viewerContainer{
+  top: 40px;
+}
+html[dir='ltr'] #toolbarViewerLeft,
+html[dir='rtl'] #toolbarViewerRight {
+  margin-top: 5px;
+}
+html[dir='ltr'] #toolbarViewerRight,
+html[dir='rtl'] #toolbarViewerLeft {
+  margin-top: 5px;
+}
+#toolbarViewerMiddle {
+  margin-top: 5px;
+}
+html[dir='ltr'] .secondaryToolbar{
+  background-color: #fff;
+} */
