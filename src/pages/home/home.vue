@@ -5,6 +5,7 @@
 		<uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true"></uni-nav-bar>
 		<view class="home-main">
 			<view class="home-main__header">
+				<!-- #ifdef MP -->
 				<u-search
 					:placeholder="placeholderText"
 					shape="square"
@@ -14,6 +15,17 @@
 					input-align="center"
 					@click="toSearch"
 					@custom="toStockMarket"></u-search>
+				<!-- #endif -->
+				<!-- #ifdef H5 -->
+				<u-search
+					:placeholder="placeholderText"
+					shape="square"
+					:disabled="true"
+					:show-action="false"
+					input-align="center"
+					@click="toSearch"
+					@custom="toStockMarket"></u-search>
+				<!-- #endif -->
 				<view class="iconfont-wrapper" v-if="isShowCloseBtn" @click.stop="clearSearchBar">
 					<view class="iconfont icon-close"></view>
 				</view>
