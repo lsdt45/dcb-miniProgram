@@ -226,17 +226,22 @@
 				"selectedIconPath": "static/image/analysis-02.png",
 				"text": "分析"
 			},
+			// #ifdef MP
 			{
 				"pagePath": "pages/ucenter/ucenter",
 				"iconPath": "static/image/ucenter-01.png",
 				"selectedIconPath": "static/image/ucenter-02.png",
-				//  #ifdef MP
 				"text": "我的"
-				// #endif
-				//  #ifdef H5
+			},
+			// #endif
+			// #ifdef H5
+			{
+				"pagePath": "pages/ucenter/ucenter",
+				"iconPath": "static/image/ucenter-01.png",
+				"selectedIconPath": "static/image/ucenter-02.png",
 				"text": "更多"
-				// #endif
 			}
+			// #endif
 		]
 	},
 	"lazyCodeLoading": "requiredComponents"

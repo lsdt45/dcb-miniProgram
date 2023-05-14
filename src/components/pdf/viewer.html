@@ -37,7 +37,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 		<!-- This snippet is used in production (included from viewer.html) -->
 		<link rel="resource" type="application/l10n" href="locale/locale.properties">
 	</head>
-	<body tabindex="1" class="loadingInProgress">
+	<body tabindex="1" class="loadingInProgress" style="overflow-y: hidden;">
 			<div id="titleBar">
 				<span class="text"></span>
 			</div>
@@ -479,10 +479,9 @@ See https://github.com/adobe-type-tools/cmap-resources
 							</div> -->
 						</div>
 						<div class="tab-bar-right">
-							<div class="bts">
+							<div class="bts" v-if="!browserName">
 								<el-button size="small" @click="addOptionalStock">{{ isAdd?'已添加':'+ 自选' }}</el-button>
 								<el-button size="small" @click="toOptionalStock">自选股</el-button>
-								<!-- <el-button size="small">自选股</el-button> -->
 							</div>
 						</div>
 					</div>

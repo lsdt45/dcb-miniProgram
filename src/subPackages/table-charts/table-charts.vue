@@ -39,7 +39,7 @@
 			<view style="width: 100%; height: 720rpx">
 				<l-echart ref="chart"></l-echart>
 			</view>
-			<view class="rotate-mode-btn iconfont icon-a-appenlarge" @click="rotateMode"></view>
+			<!-- <view class="rotate-mode-btn iconfont icon-a-appenlarge" @click="rotateMode"></view> -->
 		</view>
 		<view class="table-charts table" :class="{ ios: $store.state.systemInfo.osName == 'ios' }" v-show="curSelect == 1 || curSelect == 2">
 			<dcb-table

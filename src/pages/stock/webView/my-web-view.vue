@@ -26,6 +26,9 @@
 			let auth = null
 			let chartsId = '20201107083344707001'
 			this.preUrl = this.$config.data.PdfViewerUrl
+			// // #ifdef H5
+			// this.preUrl = '@/static/pdf/web/viewer.html'
+			// // #endif
 			this.options = util.deepCopy(options)
 			// 定义一个对象，包含跳转页面所需的所有参数
 			let optionsObj = {
@@ -41,19 +44,47 @@
 				browserName: options.browserName,
 			}
 			// 将optionsObj转化为一个二维数组，且每个数组成员的value值为字符串
-			let optionsArr = Object.entries(optionsObj).map(([key, value]) => [key, String(value)])
+			// let optionsArr = Object.entries(optionsObj).map(([key, value]) => [key, String(value)])
 			// 使用URLSearchParams类来将optionsObj转化为查询字符串，避免手动拼接参数
-			let params = new URLSearchParams(optionsArr).toString()
+			// let params = new URLSearchParams(optionsArr).toString()
 			uni.getStorage({
 				key: 'Authorization',
 				success: (res) => {
 					auth = res.data
-					this.pdfUrl = this.preUrl + options.pdfUrl + '&' + params
-					// this.pdfUrl = this.preUrl + options.pdfUrl + '&auth=' + auth + '&code=' + options.code + 
-					// 	'&name=' + options.name + '&nodeid=' + options.nodeid + '&taskid=' + options.taskid + '&mainCode=' + options.code + 
-					// 	'&mainName=' + options.name + '&mainNodeid=' + options.nodeid + '&mainTaskid=' + options.taskid + '&page=' + options.page
-					// 	+ '&login=' + options.login + '&templateId=' + options.templateId + '&compareList=' + options.compareList + '&chartsId=' + chartsId
-					console.log(this.pdfUrl);
+					// this.pdfUrl = this.preUrl + options.pdfUrl + '&' + params
+					this.pdfUrl =
+						this.preUrl +
+						options.pdfUrl +
+						'&auth=' +
+						auth +
+						'&code=' +
+						options.code +
+						'&name=' +
+						options.name +
+						'&nodeid=' +
+						options.nodeid +
+						'&taskid=' +
+						options.taskid +
+						'&mainCode=' +
+						options.code +
+						'&mainName=' +
+						options.name +
+						'&mainNodeid=' +
+						options.nodeid +
+						'&mainTaskid=' +
+						options.taskid +
+						'&page=' +
+						options.page +
+						'&login=' +
+						options.login +
+						'&templateId=' +
+						options.templateId +
+						'&compareList=' +
+						options.compareList +
+						'&chartsId=' +
+						chartsId +
+						'&browserName=' +
+						options.browserName
 				},
 			})
 		},

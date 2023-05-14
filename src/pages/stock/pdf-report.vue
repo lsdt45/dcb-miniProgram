@@ -214,27 +214,55 @@
 						let browserName = systemInfo.browserName
 						// 获取报告导航模板ID
 						let templateId = this.$config.data.ReportNavigateTemplateId
-						// 定义一个对象，包含跳转页面所需的所有参数
-						let query = {
-							code: this.curStock.secCode,
-							name: this.curStock.secName,
-							pdfUrl: this.pdfUrl,
-							nodeid: nodeId,
-							taskid: this.curTaskInfo.id,
-							page: matchPage,
-							login: isLogin,
-							templateId: templateId,
-							compareList: compareList,
-							browserName: browserName,
-						}
-						// 使用Object.entries方法和map方法，将query对象转换为一个二维数组，每个子数组包含一个键值对
-						let queryArray = Object.entries(query).map(([key, value]) => [key, String(value)])
-						// 使用URLSearchParams类来构造查询字符串，避免手动拼接参数
-						let queryString = new URLSearchParams(queryArray).toString()
-						// 构造跳转的URL，使用基础路径和查询字符串拼接
-						let url = `/pages/stock/webView/my-web-view?${queryString}`
-						// 跳转到目标页面
-						uni.navigateTo({ url })
+						// // 定义一个对象，包含跳转页面所需的所有参数
+						// let query = {
+						// 	code: this.curStock.secCode,
+						// 	name: this.curStock.secName,
+						// 	pdfUrl: this.pdfUrl,
+						// 	nodeid: nodeId,
+						// 	taskid: this.curTaskInfo.id,
+						// 	page: matchPage,
+						// 	login: isLogin,
+						// 	templateId: templateId,
+						// 	compareList: compareList,
+						// 	browserName: browserName,
+						// }
+						// // 使用Object.entries方法和reduce方法，将query对象的键值对拼接成一个字符串
+						// let queryString = Object.entries(query).reduce((acc, [key, value]) => {
+						// 	// 对每个键值对，使用=和&符号进行连接，并追加到累积器字符串中
+						// 	return acc + `${key}=${value}&`
+						// }, '')
+						// // 去掉最后一个多余的&符号
+						// queryString = queryString.slice(0, -1)
+						// // 使用encodeURIComponent函数对字符串进行编码
+						// queryString = encodeURIComponent(queryString)
+						// // 构造跳转的URL，使用基础路径和查询字符串拼接
+						// let url = `/pages/stock/webView/my-web-view?${queryString}`
+						// // 跳转到目标页面
+						// uni.navigateTo({ url })
+						uni.navigateTo({
+							url:
+								'/pages/stock/webView/my-web-view?code=' +
+								this.curStock.secCode +
+								'&name=' +
+								this.curStock.secName +
+								'&pdfUrl=' +
+								this.pdfUrl +
+								'&nodeid=' +
+								nodeId +
+								'&taskid=' +
+								this.curTaskInfo.id +
+								'&page=' +
+								matchPage +
+								'&login=' +
+								isLogin +
+								'&templateId=' +
+								templateId +
+								'&compareList=' +
+								compareList +
+								'&browserName=' +
+								browserName,
+						})
 					}
 				})
 			},
