@@ -498,11 +498,11 @@
 							this.navigData = resp.data
 							this.navigData.NavigJson = JSON.parse(this.navigData.navigJson)
 							// 财务专题分析 数据
-							this.navigDataItem = this.navigData.NavigJson.children.find((item) => {
+							let navigResult = this.navigData.NavigJson.children.find((item) => {
 								let itemId = this.$util.getNodeIdById(item.id)
 								return itemId == this.curAnalysisNode.id
-							}).children			
-									
+							})
+							this.navigDataItem = navigResult.children ? navigResult.children : navigResult
 							this.formatNavData(this.navigDataItem, 1)
 							/* 将当前节点的所有子节点提取出来 */
 							// this.tempNavigDataItemTree.forEach((item, index) => {
@@ -535,17 +535,25 @@
 			},
 			// 格式化模板数据
 			formatNavData(data, treeLevel) {
-				treeLevel++
-				data.forEach((item) => {
+				if(data.length > 0) {
+					treeLevel++
+					data.forEach((item) => {
+						let navItemData = {}
+						navItemData.topic = item.topic
+						navItemData.treeLevel = treeLevel
+						navItemData.id = this.$util.getNodeIdById(item.id)
+						this.tempNavigDataItemTree.push(navItemData)
+						if (item.children && item.children.length > 0) {
+							this.formatNavData(item.children, treeLevel)
+						}
+					})
+				} else {
 					let navItemData = {}
-					navItemData.topic = item.topic
+					navItemData.topic = data.topic
 					navItemData.treeLevel = treeLevel
-					navItemData.id = this.$util.getNodeIdById(item.id)
+					navItemData.id = this.$util.getNodeIdById(data.id)
 					this.tempNavigDataItemTree.push(navItemData)
-					if (item.children && item.children.length > 0) {
-						this.formatNavData(item.children, treeLevel)
-					}
-				})
+				}
 			},
 			// 获取会计分析数据
 			getActAnalysisData() {
