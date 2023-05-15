@@ -1,25 +1,35 @@
+<!-- @format -->
+
 <template>
 	<view class="comapre-industry-add__wrapper">
-		<dcb-nav-bar :title="stockFullName" leftIconType="back" search :isCustomBack="true" @customBack="backPdfPage">
-		</dcb-nav-bar>
+		<dcb-nav-bar :title="stockFullName" leftIconType="back" search :isCustomBack="true" @customBack="backPdfPage"></dcb-nav-bar>
 		<view class="comapre-industry-add__current">
 			<!-- 当前对比公司 -->
 			<view class="text_container" @click="showTip">
 				<view class="iconfont icon-documentattribute"></view>
 				<text class="text">{{ `当前对比公司` }}</text>
 			</view>
-			<u-tag :text="`${cmpIndustryNum}个`" shape="circle" bg-color="#e9f1fd" border-color="#e9f1fd" color="#000"
-				size="mini" class="tag-count" />
+			<u-tag :text="`${cmpIndustryNum}个`" shape="circle" bg-color="#e9f1fd" border-color="#e9f1fd" color="#000" size="mini" class="tag-count" />
 			<text class="btn" @click="clear">清空</text>
 			<!-- 搜索框 -->
 			<view class="comapre-industry-search">
-				<u-search class="search" placeholder="请输入股票代码/名称/简拼" v-model="searchKeyWord" shape="square"
-					:show-action="false" input-align="center" @change="getSearchStockInfo(searchKeyWord)">
-				</u-search>
+				<u-search
+					class="search"
+					placeholder="请输入股票代码/名称/简拼"
+					v-model="searchKeyWord"
+					shape="square"
+					:show-action="false"
+					input-align="center"
+					@change="getSearchStockInfo(searchKeyWord)"></u-search>
 				<scroll-view class="search-result-list" scroll-y="true" v-if="isShowResult">
 					<uni-list>
-						<uni-list-item class="list-item" clickable v-for="(item, index) in allStockSearch"
-							:key="item.seccode" :border="false" @click="searchItemClick(item, index)">
+						<uni-list-item
+							class="list-item"
+							clickable
+							v-for="(item, index) in allStockSearch"
+							:key="item.seccode"
+							:border="false"
+							@click="searchItemClick(item, index)">
 							<template v-slot:header>
 								<view>
 									<text class="text">{{ item.secname }}</text>
@@ -39,35 +49,49 @@
 		</view>
 		<!-- 行业tab页 -->
 		<view class="comapre-industry-add__body">
-			<u-tabs :isScroll="false" :list="list" badgeColor="#000" badgeBgColor="#e9f1fd" v-model="currentTab"
-				@change="changeTab"></u-tabs>
+			<u-tabs :isScroll="false" :list="list" badgeColor="#000" badgeBgColor="#e9f1fd" v-model="currentTab" @change="changeTab"></u-tabs>
 			<view class="industry-selector">
 				<!-- 行业选择器 -->
 				<view class="industry-data-picker">
-					<uni-data-picker :localdata="industryPickerTree" :isShowBottomText="true" v-model="curIndustryId"
-						:clearIcon="false" :onlyShowLast="true" :placeholder="`当前行业：${curIndustryName}`" preText="当前行业:"
-						:noShow="currentTab==0?true:false" @change="changeIndustry" ref="dataPicker">
-					</uni-data-picker>
-					<view class="data-select__arrow" v-if="currentTab!=0"></view>
+					<uni-data-picker
+						:localdata="industryPickerTree"
+						:isShowBottomText="true"
+						v-model="curIndustryId"
+						:clearIcon="false"
+						:onlyShowLast="true"
+						:placeholder="`当前行业：${curIndustryName}`"
+						preText="当前行业:"
+						:noShow="currentTab == 0 ? true : false"
+						@change="changeIndustry"
+						ref="dataPicker"></uni-data-picker>
+					<view class="data-select__arrow" v-if="currentTab != 0"></view>
 				</view>
 				<!-- 日期选择器 -->
 				<view class="enddate-select">
-					<uni-data-select v-model="curSelectDate" :clear="false" :localdata="endDateList"
-						@change="changeEndDate">
-					</uni-data-select>
+					<uni-data-select v-model="curSelectDate" :clear="false" :localdata="endDateList" @change="changeEndDate"></uni-data-select>
 				</view>
 			</view>
 			<view class="industry-info-table">
-				<zb-table :data="tableData" :columns="columns" :update="update" :fit="false" :isShowBottomText="true"
-					:loadMore="currentTab==0?false: true" @loadmore="loadMore" @toggleRowSelection="toggleRowSelection"
-					ref="table">
-				</zb-table>
+				<zb-table
+					:data="tableData"
+					:columns="columns"
+					:update="update"
+					:fit="false"
+					:isShowBottomText="true"
+					:loadMore="currentTab == 0 ? false : true"
+					@loadmore="loadMore"
+					@toggleRowSelection="toggleRowSelection"
+					ref="table"></zb-table>
 				<view class="iconfont icon-stretch" @click="showIndexSelector"></view>
 			</view>
 		</view>
-		<dcb-popup-panel type="list" v-model:data="listData" :isShowPanel="isShowPanel"
-			@update:isShowPanel="val=>isShowPanel=val" title="指标显示设置" @itemClick="updateTableIndex">
-		</dcb-popup-panel>
+		<dcb-popup-panel
+			type="list"
+			v-model:data="listData"
+			:isShowPanel="isShowPanel"
+			@update:isShowPanel="(val) => (isShowPanel = val)"
+			title="指标显示设置"
+			@itemClick="updateTableIndex"></dcb-popup-panel>
 		<u-toast ref="toast" />
 	</view>
 </template>
@@ -82,48 +106,39 @@
 		nextTick,
 		// defineProps
 	} from 'vue'
-	import {
-		onLoad,
-		onUnload
-	} from '@dcloudio/uni-app'
+	import { onLoad, onUnload } from '@dcloudio/uni-app'
 	import api from '@/common/api/api.js'
 	import store from '@/store/index.js'
 	import util from '@/common/util'
-	import type {
-		IndustryTree
-	} from '@/types/CommonTypes'
+	import type { IndustryTree } from '@/types/CommonTypes'
 	import DcbPopupPanel from '@/components/dcb-popup-panel/dcb-popup-panel.vue'
 	import config from '@/common/data/index.js'
-	import {
-		list,
-		aliasReturnCompareInfo,
-		cmpIndustryNum,
-		updateList,
-		listData,
-	} from './compare-industry'
+	import { list, aliasReturnCompareInfo, cmpIndustryNum, updateList, listData } from './compare-industry'
 	import type { CompareInfo, IndustryBaseInfo, IndustryPickerDataTree, SearchStockInfo } from './compare-industry'
-	import type{
-		ListData
-	} from '../../../components/dcb-popup-panel/dcb-popup-panel'
-	let columns = ref(([{
-		type: 'selection',
-		width: 58
-	}, {
-		name: 'name',
-		label: '股票',
-		align: 'center',
-		width: 100,
-	}, {
-		name: 'mainBusinessIncome',
-		label: '主营业务收入(万元)',
-		width: 140,
-		align: 'right',
-		sorter: true,
-		defaultSort: true,
-	}]))
+	import type { ListData } from '../../../components/dcb-popup-panel/dcb-popup-panel'
+	let columns = ref([
+		{
+			type: 'selection',
+			width: 58,
+		},
+		{
+			name: 'name',
+			label: '股票',
+			align: 'center',
+			width: 100,
+		},
+		{
+			name: 'mainBusinessIncome',
+			label: '主营业务收入(万元)',
+			width: 140,
+			align: 'right',
+			sorter: true,
+			defaultSort: true,
+		},
+	])
 	// 股票全名
 	const stockFullName = computed(() => {
-		return store.state.curStock.secName + store.state.curStock.secCode;
+		return store.state.curStock.secName + store.state.curStock.secCode
 	})
 	// 表格组件实例
 	const table = ref(null)
@@ -132,13 +147,13 @@
 	// 行业选择器组件实例
 	const dataPicker = ref(null)
 	// 所有股票信息-搜索框
-	let allStockSearch = ref < SearchStockInfo[] > ()
+	let allStockSearch = ref<SearchStockInfo[]>()
 	// 用于获取报告期列表
 	let chartsId = ''
 	// 当前对比公司列表
-	let curCmpList = ref < CompareInfo[] > (aliasReturnCompareInfo(store.state.curCmpList))
+	let curCmpList = ref<CompareInfo[]>(aliasReturnCompareInfo(store.state.curCmpList))
 	// 当前行业信息
-	let curIndustryClassification = ref < IndustryTree > ()
+	let curIndustryClassification = ref<IndustryTree>()
 	// 当前行业基本信息
 	let curIndustryBaseInfo: IndustryBaseInfo = {} as IndustryBaseInfo
 	// 当前行业名
@@ -152,14 +167,14 @@
 	// 当前表格页数
 	let curTableIndex = ref(1)
 	// 默认对比公司
-	let defaultIndustyList = ref < CompareInfo[] > (aliasReturnCompareInfo(store.state.defaultIndustyList))
+	let defaultIndustyList = ref<CompareInfo[]>(aliasReturnCompareInfo(store.state.defaultIndustyList))
 	let endDateList = ref([])
 	// 所有行业树结构
-	let otherIndustriesTree = ref < IndustryTree[] > ([])
+	let otherIndustriesTree = ref<IndustryTree[]>([])
 	// 当前行业树结构
-	let identicalIndustriesTreeList = ref < IndustryTree[] > ([])
+	let identicalIndustriesTreeList = ref<IndustryTree[]>([])
 	// 行业选择器数据
-	let industryPickerTree = ref < IndustryPickerDataTree[] > ([])
+	let industryPickerTree = ref<IndustryPickerDataTree[]>([])
 	// 是否显示设置面板
 	let isShowPanel = ref(false)
 	// 是否显示搜索结果
@@ -171,7 +186,7 @@
 	// 搜索框关键词
 	let searchKeyWord = ref('')
 	// 表格数据
-	let tableData = ref < CompareInfo[] > (util.deepCopy(defaultIndustyList.value))
+	let tableData = ref<CompareInfo[]>(util.deepCopy(defaultIndustyList.value))
 	// 时间跨度
 	let timeRange = []
 	let update = ref(false)
@@ -183,7 +198,7 @@
 		store.state.endDateList.forEach((item, index) => {
 			endDateList.value.push({
 				value: index,
-				text: item
+				text: item,
 			})
 		})
 	}
@@ -211,7 +226,7 @@
 	// 点击「对比公司」文本左边的icon显示的提示语
 	function showTip() {
 		toast.value.show({
-			title: '您可以在此自定义对比公司，最多可选8个'
+			title: '您可以在此自定义对比公司，最多可选8个',
 		})
 	}
 	/**
@@ -248,7 +263,6 @@
 			curTableIndex.value = 1
 			getCurIndustryInfo()
 		}
-
 	}
 	/**
 	 * description: 改变当前报告期后重新获取数据
@@ -294,20 +308,20 @@
 			end--
 		}
 	}
-		/**
-		 * description: 获取行业分类信息
-		 * @return 
-		 * @createTime: 2022-11-01 16:59:49
-		 */
-		function getIndustryClassificationInfo() {
-			api.post("/Compare/IndustryClassificationTree").then((resp) => {
-				if (resp.data) {
-					identicalIndustriesTreeList.value = resp.data.identicalIndustriesTree
-					otherIndustriesTree.value = resp.data.otherIndustriesTree
-					industryPickerTree.value = getIndustryPickerData(otherIndustriesTree.value)
-				}
-			})
-		}
+	/**
+	 * description: 获取行业分类信息
+	 * @return
+	 * @createTime: 2022-11-01 16:59:49
+	 */
+	function getIndustryClassificationInfo() {
+		api.post('/Compare/IndustryClassificationTree').then((resp) => {
+			if (resp.data) {
+				identicalIndustriesTreeList.value = resp.data.identicalIndustriesTree
+				otherIndustriesTree.value = resp.data.otherIndustriesTree
+				industryPickerTree.value = getIndustryPickerData(otherIndustriesTree.value)
+			}
+		})
+	}
 	/**
 	 * description: 获取当前行业分类下的股票信息
 	 * @createTime: 2022-11-01 16:59:49
@@ -352,8 +366,7 @@
 	 */
 	function getCurIndustryInfo(industryNameParam = null) {
 		let industryName = ''
-		industryName = industryNameParam ? industryNameParam :
-			curIndustryClassification.value.typeName
+		industryName = industryNameParam ? industryNameParam : curIndustryClassification.value.typeName
 		let param = {
 			Code: store.state.curStock.secCode,
 			IndustryName: industryName,
@@ -384,20 +397,20 @@
 			if (resp.status) {
 				console.log(resp)
 				// 获取日期列表
-				let timePeriodTemp = resp.data.codeDataList[0].data.calculationAllData.slice(1);
+				let timePeriodTemp = resp.data.codeDataList[0].data.calculationAllData.slice(1)
 				let timePeriod = []
-				timePeriodTemp.forEach(item => {
+				timePeriodTemp.forEach((item) => {
 					if (item && item.length > 0) {
-						timePeriod.unshift(item[0]);
+						timePeriod.unshift(item[0])
 					}
 				})
-				timePeriod.unshift('最新日期');
+				timePeriod.unshift('最新日期')
 				timePeriod.forEach((item, index) => {
 					endDateList.value.push({
 						value: index,
-						text: item
+						text: item,
 					})
-				})				
+				})
 			}
 		})
 	}
@@ -412,10 +425,14 @@
 			})
 			if (result) {
 				arr[index].checked = true
-				table.value.checkboxSelected({
-					checked: true,
-					data: arr[index]
-				}, arr[index], false)
+				table.value.checkboxSelected(
+					{
+						checked: true,
+						data: arr[index],
+					},
+					arr[index],
+					false
+				)
 			}
 		})
 	}
@@ -438,26 +455,34 @@
 			if (result) {
 				toast.value.show({
 					title: '股票已存在！',
-					type: 'warning'
+					type: 'warning',
 				})
 				setTimeout(() => {
-					table.value.checkboxSelected({
-						checked: false,
-						data: item
-					}, item, false)
+					table.value.checkboxSelected(
+						{
+							checked: false,
+							data: item,
+						},
+						item,
+						false
+					)
 				}, 10)
 				return
 			}
 			if (curCmpList.value.length >= 8) {
 				toast.value.show({
 					title: '最多可选8个对比公司，请先删除后再添加！',
-					type: 'warning'
+					type: 'warning',
 				})
 				setTimeout(() => {
-					table.value.checkboxSelected({
-						checked: false,
-						data: item
-					}, item, false)
+					table.value.checkboxSelected(
+						{
+							checked: false,
+							data: item,
+						},
+						item,
+						false
+					)
 				}, 10)
 				return
 			}
@@ -507,16 +532,23 @@
 	function getDefaultCompareList(date) {
 		let param = {
 			Code: store.state.curStock.secCode,
-			ReportDate: date
+			ReportDate: date,
 		}
-		api.post('/Compare/GetToCompareList_CompanyAndFinance', param)
+		api
+			.post('/Compare/GetToCompareList_CompanyAndFinance', param)
 			.then((res: any) => {
 				// store.commit('updateCurCmpList', res.data.defaultCompareList)
 				// store.commit('updateDefaultIndustyList', res.data.defaultCompareList)
 				tableData.value = aliasReturnCompareInfo(res.data.defaultCompareList)
 				initItemChecked()
 			})
-			.catch((err: Error) => console.log(err));
+			.catch((err: Error) => console.log(err))
+	}
+	// 获取从pdf详情页传过来的信息
+	function getPdfInfo() {
+		window.addEventListener('message', (e) => {
+			console.log(e.data);
+		})
 	}
 	// 获取所有股票信息，用于搜索
 	const getSearchStockInfo = util.debounce((val) => {
@@ -526,21 +558,21 @@
 		val = isPureLetter ? val.toUpperCase() : val
 		let param = {
 			search: val.toString(),
-		};
+		}
 		if (val) {
-			api.get("/Report/GetStockInfoSearch", param).then((resp: any) => {
+			api.get('/Report/GetStockInfoSearch', param).then((resp: any) => {
 				if (resp.status) {
-					allStockSearch.value = resp.data;
+					allStockSearch.value = resp.data
 					// 是否有搜索结果
 					if (allStockSearch.value.length != 0) {
-						isShowResult.value = true;
+						isShowResult.value = true
 						// isResultExit = true;
 					} else {
-						isShowResult.value = false;
+						isShowResult.value = false
 						// isResultExit = false;
 					}
 				}
-			});
+			})
 		}
 	}, 1000)
 	// 点击搜索结果列表中的项
@@ -551,7 +583,7 @@
 		if (result) {
 			toast.value.show({
 				title: '股票已存在！',
-				type: 'warning'
+				type: 'warning',
 			})
 			isShowResult.value = false
 			return
@@ -559,7 +591,7 @@
 		if (curCmpList.value.length >= 8) {
 			toast.value.show({
 				title: '最多可选8个对比公司，请先删除后再添加！',
-				type: 'warning'
+				type: 'warning',
 			})
 			isShowResult.value = false
 			return
@@ -574,7 +606,7 @@
 			ROE: null,
 			listingDate: null,
 			isCurCompare: false,
-			checked: false
+			checked: false,
 		})
 		updateList(curCmpList.value)
 		initItemChecked()
@@ -589,11 +621,18 @@
 	}
 	// 返回pdf页面
 	function backPdfPage() {
+		// #ifdef MP
 		uni.navigateBack({
-			delta: 1
+			delta: 1,
 		})
+		// #endif
+		// #ifdef H5
+		uni.navigateTo({
+			url: '/pages/stock/webView/my-web-view?test=test',
+		})
+		// #endif
 	}
-	
+
 	onMounted(() => {
 		initData()
 		getIndustryClassificationInfo()
@@ -602,17 +641,17 @@
 	onLoad((options) => {
 		// 如果是从pdf详情页跳转过来的，则需要单独获取一下报告期列表数据
 		isFromPdf.value = options.isFromPdf
-		if(isFromPdf) {
+		if (isFromPdf) {
 			chartsId = options.chartsId
 			getAnalysisTime()
-			getChartsData()		
+			getChartsData()
 		}
 	})
 	onUnload(() => {
 		// 如果是从pdf详情页跳转过来的，返回之后进行额外处理
-		if(isFromPdf.value) {
+		if (isFromPdf.value) {
 			uni.$emit('updateCompareList', {
-				isLogin: true
+				isLogin: true,
 			})
 		}
 	})

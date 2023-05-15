@@ -1,11 +1,11 @@
 <!-- @format -->
 
 <template>
-	<view class="web-view-wrapper">
+	<div class="web-view-wrapper">
 		<!-- <uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true"> -->
 		<!-- </uni-nav-bar> -->
-		<web-view :src="pdfUrl"></web-view>
-	</view>
+		<web-view id="pdf-viewer" :src="pdfUrl"></web-view>
+	</div>
 </template>
 
 <script>
@@ -22,13 +22,33 @@
 		computed: {
 			...mapState(['navBarHeight']),
 		},
+		methods: {
+			// 监听pdf html页面的消息，跳转到pdf报告页面
+			listenMessage() {
+				window.addEventListener(
+					'message',
+					(e) => {
+						uni[e.data.action]({
+							url: e.data.url,
+						})
+						// if (e.data.action == 'switchTab') {
+						// 	uni.switchTab({
+						// 		url: e.data.url,
+						// 	})
+						// } else if(e.data.action == 'navigateTo') {
+						// 	uni.navigateTo({
+						// 		url: e.data.url,
+						// 	})
+						// }
+					},
+					false
+				)
+			},
+		},
 		onLoad(options) {
 			let auth = null
 			let chartsId = '20201107083344707001'
 			this.preUrl = this.$config.data.PdfViewerUrl
-			// // #ifdef H5
-			// this.preUrl = '@/static/pdf/web/viewer.html'
-			// // #endif
 			this.options = util.deepCopy(options)
 			// 定义一个对象，包含跳转页面所需的所有参数
 			let optionsObj = {
@@ -87,8 +107,11 @@
 						options.browserName
 				},
 			})
+			this.listenMessage()
 		},
 		onShow() {
+			const options = this.$route.query
+			console.log('options', options);
 			uni.$once('update', function (data) {
 				if (data.isLogin) {
 					// this.options.login = true
@@ -119,7 +142,14 @@
 						compareList.push(listItem)
 					})
 					curPage.$vm.options.compareList = compareList.join(',')
+					// #ifdef MP
 					curPage.onLoad(curPage.$vm.options)
+					// #endif
+					// #ifdef H5
+					uni.navigateTo({
+						url: '/pages/stock/webView/my-web-view?test=test',
+					})
+					// #endif
 				}
 			})
 		},

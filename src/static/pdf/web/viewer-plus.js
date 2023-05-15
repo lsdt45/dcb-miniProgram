@@ -1,7 +1,6 @@
 var $ = mdui.$;
 
 window.onload = () => {
-	console.log('returnCitySN=' + returnCitySN);
 	let url = window.location.href;
 	let siteInfo = getAddress();
 	let token = getQueryVariable('auth')
@@ -256,21 +255,31 @@ const main = {
 		// 返回到之前的页面
 		back() {
 			let backFun = () => { }
+			let self = this
 			if (this.browserName) {
 				backFun = this.backToBrowser
 			} else {
 				backFun = this.backToMiniProgram
 			}
 			document.addEventListener('UniAppJSBridgeReady', function () {
-				uni.postMessage({
-					data: {
-						action: 'message'
-					}
-				});
+				// uni.postMessage({
+				// 	data: {
+				// 		content: 'hello world'
+				// 	}
+				// });
 				uni.getEnv(function (res) {
 					console.log('当前环境：' + JSON.stringify(res));
 				});
-				document.querySelector('#goback').addEventListener('click', backFun);
+				document.querySelector('#goback').addEventListener('click', function (evt) {
+					self.postMessage('switchTab', '/pages/stock/pdf-report')
+					// let target = evt.target
+					// if(target.tagName == 'BUTTON') {
+					// 	let action = target.getAttribute('data-action')
+					// 	uni.webView.navigateTo({
+					// 		url: '/pages/stock/pdf-report',
+					// 	})
+					// }
+				});
 			});
 
 
@@ -301,13 +310,15 @@ const main = {
 		},
 		// 返回浏览器之前的页面
 		backToBrowser() {
-			console.log('uni=', uni);
-			uni.switchTab({
+			uni.navigateTo({
 				url: '/pages/stock/pdf-report',
 			})
 			// uni.navigateBack({
 			//     delta: 2
 			// })
+		},
+		postMessage(action, url) {
+			window.parent.postMessage({ action, url }, '*')
 		},
 		showOutline() {
 			this.isShowOutlineDialog = true
@@ -645,12 +656,13 @@ const main = {
 		},
 		// 跳转到对比公司添加界面
 		toCompareAddPage() {
-			wx.miniProgram.navigateTo({
-				url: `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`,
-				success: (resp) => {
-					console.log('跳转成功')
-				}
-			})
+			this.postMessage('navigateTo', `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`)
+			// wx.miniProgram.navigateTo({
+			// 	url: `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`,
+			// 	success: (resp) => {
+			// 		console.log('跳转成功')
+			// 	}
+			// })
 		},
 		// 切换回主报告
 		toMainReport() {
