@@ -100,7 +100,7 @@
 				<view class="panel-footer">
 					<view class="panel-footer-btns">
 						<u-button class="cancel" size="medium " @click="closePanel('btn', 'time')">取消</u-button>
-						<u-button class="ok" type="primary" size="medium" @click="changeRptType('time')">确定</u-button>
+						<u-button class="ok" type="primary" size="medium" @click="changeTimeRange">确定</u-button>
 					</view>
 				</view>
 			</u-popup>
@@ -790,9 +790,22 @@
 				if(!this.curReportStr) {
 					this.curReportStr = '请选择'
 				}
-				// setTimeout(() => {
-				// 	uni.showTabBar()
-				// }, 320)
+			},
+			changeTimeRange() {
+				this.isShowRptType = false
+				this.isShowAnalyTime = false
+				let dataFilter = {
+					report: this.rptTypeData,
+					time: this.anlyTimeData,
+				}
+				if (this.curAnalysisNode.type == 'single') {
+					this.$refs.singleTable.changeTimeRange(dataFilter)
+				} else {
+					this.chartsIdArr.forEach((item, index) => {
+						let temp = 'multiTalbe' + index
+						this.$refs[temp][0].changeTimeRange(dataFilter)
+					})
+				}
 			},
 			// 根据用户信息改变当前股票并初始化
 			changeCurStockByUserInfo(userInfo) {

@@ -682,7 +682,6 @@
 					dataFilter.time.push(item.year)
 				})
 				this.$store.commit('updateDataFilter', dataFilter)
-
 				// 判断是否选中了最新，是：将最新报告的信息push进数组
 				let result = dataFilter.report.find((item) => {
 					return item == 'new'
@@ -695,7 +694,7 @@
 					})
 					if (isExist == undefined) {
 						data_temp.categories.push(lastTime)
-						data_temp.year.push(lastTime.split('-')[0])
+						data_temp.year.push(lastTime.name.split('-')[0])
 						data_temp.index.push(this.baseData.timeData.length - 1)
 					}
 				}
@@ -728,6 +727,8 @@
 					})
 					this.chartsData.series[seriesIndex].data = data_temp_series
 				})
+				this.chartsDataProcess()
+
 				// 判断数据数量是否不大于图表配置中的单屏显示数量，是：不显示滚动条。否：显示
 				if (this.chartsData.series.length > 0 && this.chartsData.series[0].data.length <= this.opts.xAxis.itemCount) {
 					this.opts.xAxis.scrollShow = false
@@ -747,8 +748,29 @@
 			changeCompareCompany(e) {
 				this.chartsDataProcess()
 			},
+			/**
+			 * description:  改变时间范围
+			 */
+			changeTimeRange(data: any) {
+				// 数据筛选临时obj
+				let dataFilter: any = {
+					report: this.dataFilter.report,
+					time: [],
+				}
+				let checkedTimeList = data.time.filter((item: any) => {
+					return item.checked == true
+				})
+				// 将改变后的条件作为之后的筛选条件
+				checkedTimeList.forEach((item: any) => {
+					dataFilter.time.push(item.year.toString())
+				})
+				this.$store.commit('updateDataFilter', dataFilter)
+				// 更新timeList，然后重新获取数据
+				this.timeList = dataFilter.time
+				this.getChartsData()
+			},
 			// 筛选出默认报告类型和分析时间的数据
-			chartsDataFilter(res) {
+			chartsDataFilter(res: any) {
 				let data_temp = {
 					categories: [],
 					data: [],
@@ -762,6 +784,8 @@
 					for (let j = 0; j < this.dataFilter.report.length; j++) {
 						let type = curSelectTimeData[i].name.split('-')[1]
 						let year = curSelectTimeData[i].name.split('-')[0]
+						console.log('type=', type);
+						console.log('this.dataFilter.report[j]=', this.dataFilter.report[j]);
 						if (type == this.dataFilter.report[j]) {
 							data_temp.categories.push(curSelectTimeData[i])
 							data_temp.year.push(year)
