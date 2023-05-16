@@ -348,7 +348,7 @@
 		.stock-home__menu {
 			// display: flex;
 			display: grid;
-    	grid-template-columns: repeat(auto-fill, 183px);
+    	grid-template-columns: repeat(auto-fill, 340rpx);
 			justify-content: space-between;
 			flex-wrap: wrap;
 			position: relative;

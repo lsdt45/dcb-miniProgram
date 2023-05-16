@@ -784,8 +784,6 @@
 					for (let j = 0; j < this.dataFilter.report.length; j++) {
 						let type = curSelectTimeData[i].name.split('-')[1]
 						let year = curSelectTimeData[i].name.split('-')[0]
-						console.log('type=', type);
-						console.log('this.dataFilter.report[j]=', this.dataFilter.report[j]);
 						if (type == this.dataFilter.report[j]) {
 							data_temp.categories.push(curSelectTimeData[i])
 							data_temp.year.push(year)

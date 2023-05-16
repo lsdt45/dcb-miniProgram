@@ -2,7 +2,13 @@
 
 <template>
 	<view class="home-wrapper">
+		<!-- #ifdef MP -->
 		<uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true"></uni-nav-bar>
+		
+		<!-- #endif -->
+		<!-- #ifdef H5 -->
+		<uni-nav-bar title="读财报" height="50px" backgroundColor="#2C72EC" color="#FFF" :fixed="true"></uni-nav-bar>
+		<!-- #endif -->
 		<view class="home-main">
 			<view class="home-main__header">
 				<!-- #ifdef MP -->
