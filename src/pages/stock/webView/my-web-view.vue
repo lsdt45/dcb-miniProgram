@@ -28,18 +28,18 @@
 				window.addEventListener(
 					'message',
 					(e) => {
-						uni[e.data.action]({
-							url: e.data.url,
-						})
-						// if (e.data.action == 'switchTab') {
-						// 	uni.switchTab({
-						// 		url: e.data.url,
-						// 	})
-						// } else if(e.data.action == 'navigateTo') {
-						// 	uni.navigateTo({
-						// 		url: e.data.url,
-						// 	})
-						// }
+						// uni[`${e.data.action}`]({
+						// 	url: e.data.url,
+						// })
+						if (e.data.action == 'switchTab') {
+							uni.switchTab({
+								url: e.data.url,
+							})
+						} else if(e.data.action == 'navigateTo') {
+							uni.navigateTo({
+								url: e.data.url,
+							})
+						}
 					},
 					false
 				)

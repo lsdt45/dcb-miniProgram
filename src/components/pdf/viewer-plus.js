@@ -411,8 +411,7 @@ const main = {
                     window.open(this.preUrl + this.newPdfUrl + '&auth=' + this.token + '&code=' + this.targetStock.code
                         + '&name=' + this.targetStock.name + '&nodeid=' + this.nodeId + '&mainCode=' + this.mainReport.stockCode
                         + '&mainName=' + this.mainReport.stockName + '&mainNodeid=' + this.mainReport.nodeId + '&mainTaskid=' + this.mainReport.taskId
-                        + '&taskid=' + this.taskId + '&login=' + this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList)
-                        + '&chartsId=' + this.chartsId
+                        + '&taskid=' + this.taskId + '&login=' + this.isLogin + '&templateId=' + this.templateId + '&compareList=' + this.oriCompareList + '&chartsId=' + this.chartsId)
                 },
             })
         },

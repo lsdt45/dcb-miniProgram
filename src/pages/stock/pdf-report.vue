@@ -437,9 +437,9 @@
 	// @import "@/static/scss/common/pdf-report.scss";
 	/* #ifdef H5 */
 	@media screen and (min-width: 960px) {
-		// .report-wrapper__bg-img {
-		// 	width: calc(100% - 42px);
-		// }
+		.report-wrapper__bg-img {
+			width: calc(100% - 42px);
+		}
 	}
 
 	/* #endif */
