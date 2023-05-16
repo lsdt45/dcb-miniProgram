@@ -335,7 +335,7 @@
 					margin-right: 7.5px;
 					// flex-basis: calc(50% - $margin-left);
 				}
-
+				&:nth-child(1),
 				&:nth-child(3),
 				&:nth-child(4) {
 					.baseinfo-item__name {

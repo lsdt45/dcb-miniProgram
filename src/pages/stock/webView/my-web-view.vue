@@ -2,9 +2,13 @@
 
 <template>
 	<div class="web-view-wrapper">
-		<!-- <uni-nav-bar title="读财报" :height="navBarHeight" backgroundColor="#2C72EC" color="#FFF" :fixed="true"> -->
-		<!-- </uni-nav-bar> -->
+		<!-- #ifdef H5 -->
+		<uni-nav-bar title="读财报" height="50px" backgroundColor="#2C72EC" color="#FFF" left-icon="left" :fixed="true" @clickLeft="back"></uni-nav-bar>
+		<iframe id="pdf-viewer" :src="pdfUrl" style="width: 100%; height: calc(100vh - 58px)"></iframe>
+		<!-- #endif -->
+		<!-- #ifdef MP -->
 		<web-view id="pdf-viewer" :src="pdfUrl"></web-view>
+		<!-- #endif -->
 	</div>
 </template>
 
@@ -35,7 +39,7 @@
 							uni.switchTab({
 								url: e.data.url,
 							})
-						} else if(e.data.action == 'navigateTo') {
+						} else if (e.data.action == 'navigateTo') {
 							uni.navigateTo({
 								url: e.data.url,
 							})
@@ -43,6 +47,12 @@
 					},
 					false
 				)
+			},
+			// 返回前一个页面
+			back() {
+				uni.switchTab({
+					url: '/pages/stock/pdf-report',
+				})
 			},
 		},
 		onLoad(options) {

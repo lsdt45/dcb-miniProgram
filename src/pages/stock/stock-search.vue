@@ -27,11 +27,13 @@
 							<template v-slot:header class="search-result__item-name">
 								{{ item.secname + '(' + item.seccode + ')' }}
 							</template>
+							<!-- #ifdef MP -->
 							<template v-slot:footer>
 								<button class="add-stock-btn" type="default" size="mini" @click.stop="addOptionalStock(item)">
 									{{ addBtnText(item) }}
 								</button>
 							</template>
+							<!-- #endif -->
 						</uni-list-item>
 					</uni-list>
 				</uni-transition>
