@@ -110,8 +110,6 @@
 			this.listenMessage()
 		},
 		onShow() {
-			const options = this.$route.query
-			console.log('options', options);
 			uni.$once('update', function (data) {
 				if (data.isLogin) {
 					// this.options.login = true

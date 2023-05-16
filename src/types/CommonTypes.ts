@@ -26,3 +26,19 @@ export type LocalData = {
 	value: number,
 	text: string
 }
+
+// pdf链接对象
+export let pdfLinkObj = {
+	code: '',
+	name: '',
+	compareList: '',
+	login: false,
+	nodeId: '',
+	page: '',
+	pdfUrl: '',
+	taskId: '',
+	templateId: '',
+	browserName: ''
+}
+
+export type pdfLinkType = typeof pdfLinkObj

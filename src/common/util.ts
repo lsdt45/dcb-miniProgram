@@ -1,41 +1,51 @@
+/** @format */
+
 var dateUtils = {
 	UNITS: {
-		'年': 31557600000,
-		'月': 2629800000,
-		'天': 86400000,
-		'小时': 3600000,
-		'分钟': 60000,
-		'秒': 1000
+		年: 31557600000,
+		月: 2629800000,
+		天: 86400000,
+		小时: 3600000,
+		分钟: 60000,
+		秒: 1000,
 	},
 	humanize: function (milliseconds: number) {
-		var humanize = '';
+		var humanize = ''
 		for (var key in this.UNITS) {
 			if (milliseconds >= this.UNITS[key]) {
-				humanize = Math.floor(milliseconds / this.UNITS[key]) + key + '前';
-				break;
+				humanize = Math.floor(milliseconds / this.UNITS[key]) + key + '前'
+				break
 			}
 		}
-		return humanize || '刚刚';
+		return humanize || '刚刚'
 	},
 	format: function (dateStr) {
 		var date = this.parse(dateStr)
-		var diff = Date.now() - date.getTime();
+		var diff = Date.now() - date.getTime()
 		if (diff < this.UNITS['天']) {
-			return this.humanize(diff);
+			return this.humanize(diff)
 		}
 		var _format = function (number) {
-			return (number < 10 ? ('0' + number) : number);
-		};
-		return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDate()) +
+			return number < 10 ? '0' + number : number
+		}
+		return (
+			date.getFullYear() +
+			'/' +
+			_format(date.getMonth() + 1) +
+			'/' +
+			_format(date.getDate()) +
 			'-' +
-			_format(date.getHours()) + ':' + _format(date.getMinutes());
+			_format(date.getHours()) +
+			':' +
+			_format(date.getMinutes())
+		)
 	},
-	parse: function (str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
-		var a = str.split(/[^0-9]/);
-		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
-	}
-};
-
+	parse: function (str) {
+		//将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+		var a = str.split(/[^0-9]/)
+		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5])
+	},
+}
 
 export default {
 	/**
@@ -45,78 +55,71 @@ export default {
 	 * @return 格式化后的日期字符串。
 	 */
 	FormatDate(now: Date, mask: string) {
-		var d = now;
+		var d = now
 		var zeroize = function (value, length) {
-			if (!length) length = 2;
-			value = String(value);
-			for (var i = 0, zeros = ''; i < (length - value.length); i++) {
-				zeros += '0';
+			if (!length) length = 2
+			value = String(value)
+			for (var i = 0, zeros = ''; i < length - value.length; i++) {
+				zeros += '0'
 			}
-			return zeros + value;
+			return zeros + value
 		}
 
 		return mask.replace(/"[^"]*"|'[^']*'|\b(?:d{1,4}|m{1,4}|yy(?:yy)?|([hHMstT])\1?|[lLZ])\b/g, function ($0) {
 			switch ($0) {
 				case 'd':
-					return d.getDate();
+					return d.getDate()
 				case 'dd':
-					return zeroize(d.getDate());
+					return zeroize(d.getDate())
 				case 'ddd':
-					return ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'][d.getDay()];
+					return ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'][d.getDay()]
 				case 'dddd':
-					return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d
-						.getDay()
-					];
+					return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()]
 				case 'M':
-					return d.getMonth() + 1;
+					return d.getMonth() + 1
 				case 'MM':
-					return zeroize(d.getMonth() + 1);
+					return zeroize(d.getMonth() + 1)
 				case 'MMM':
-					return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-					[
-						d.getMonth()
-					];
+					return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()]
 				case 'MMMM':
-					return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-						'September', 'October', 'November', 'December'
-					][d.getMonth()];
+					return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()]
 				case 'yy':
-					return String(d.getFullYear()).substr(2);
+					return String(d.getFullYear()).substr(2)
 				case 'yyyy':
-					return d.getFullYear();
+					return d.getFullYear()
 				case 'h':
-					return d.getHours() % 12 || 12;
+					return d.getHours() % 12 || 12
 				case 'hh':
-					return zeroize(d.getHours() % 12 || 12);
+					return zeroize(d.getHours() % 12 || 12)
 				case 'H':
-					return d.getHours();
+					return d.getHours()
 				case 'HH':
-					return zeroize(d.getHours());
+					return zeroize(d.getHours())
 				case 'm':
-					return d.getMinutes();
+					return d.getMinutes()
 				case 'mm':
-					return zeroize(d.getMinutes());
+					return zeroize(d.getMinutes())
 				case 's':
-					return d.getSeconds();
+					return d.getSeconds()
 				case 'ss':
-					return zeroize(d.getSeconds());
+					return zeroize(d.getSeconds())
 				case 'l':
-					return zeroize(d.getMilliseconds(), 3);
+					return zeroize(d.getMilliseconds(), 3)
 				case 'L':
-					var m = d.getMilliseconds();
-					if (m > 99) m = Math.round(m / 10);
-					return zeroize(m);
+					var m = d.getMilliseconds()
+					if (m > 99) m = Math.round(m / 10)
+					return zeroize(m)
 				case 'tt':
-					return d.getHours() < 12 ? 'am' : 'pm';
+					return d.getHours() < 12 ? 'am' : 'pm'
 				case 'TT':
-					return d.getHours() < 12 ? 'AM' : 'PM';
+					return d.getHours() < 12 ? 'AM' : 'PM'
 				case 'Z':
-					return d.toUTCString().match(/[A-Z]+$/);
+					return d.toUTCString().match(/[A-Z]+$/)
 				// Return quoted strings with the surrounding quotes removed
 				default:
-					return $0.substr(1, $0.length - 2);
+					return $0.substr(1, $0.length - 2)
 			}
-		});
+		})
 	},
 	/**
 	 * description: 格式化经度和纬度值。
@@ -135,10 +138,9 @@ export default {
 
 		return {
 			longitude: longitude.toString().split('.'),
-			latitude: latitude.toString().split('.')
+			latitude: latitude.toString().split('.'),
 		}
 	},
-
 
 	/**
 	 * 格式化文章生成时间
@@ -147,21 +149,21 @@ export default {
 	 */
 	formatCreateTime(dateTime1: string, dateTime2: string) {
 		// 转换成秒数
-		let parseDate1 = Date.parse(dateTime1);
-		let parseDate2 = Date.parse(dateTime2);
+		let parseDate1 = Date.parse(dateTime1)
+		let parseDate2 = Date.parse(dateTime2)
 		// 计算绝对差值
-		let diffNum = Math.abs(parseDate1 - parseDate2);
+		let diffNum = Math.abs(parseDate1 - parseDate2)
 		// 向下取整，如果为0，则小于1小时
 		if (Math.floor(diffNum / (1000 * 3600)) === 0) {
 			return {
 				type: 'm',
-				value: Math.ceil(diffNum / (1000 * 60))
-			};
+				value: Math.ceil(diffNum / (1000 * 60)),
+			}
 		} else {
 			return {
 				type: 'h',
-				value: Math.ceil(diffNum / (1000 * 3600))
-			};
+				value: Math.ceil(diffNum / (1000 * 3600)),
+			}
 		}
 	},
 
@@ -172,17 +174,17 @@ export default {
 	//  * 不应传入匿名函数
 
 	debounce(fn: Function, delay: number) {
-		let timer = false;
+		let timer = false
 		return function () {
-			timer && clearTimeout(timer);
+			timer && clearTimeout(timer)
 			timer = setTimeout(() => {
-				fn.apply(this, arguments); // 把参数传进去
-			}, delay);
-		};
+				fn.apply(this, arguments) // 把参数传进去
+			}, delay)
+		}
 	},
 
 	// 格式化报告类型名称
-	formatRptType(name: string, type = "") {
+	formatRptType(name: string, type = '') {
 		let fmtName = ''
 		let typeReturn = ''
 		if (name === '第一季度报告') {
@@ -198,7 +200,7 @@ export default {
 			fmtName = '年报'
 			typeReturn = '12'
 		}
-		if (type === "type") {
+		if (type === 'type') {
 			return typeReturn
 		} else {
 			return fmtName
@@ -212,22 +214,82 @@ export default {
 	 */
 
 	randomWord(randomFlag: boolean, min: number, max: number) {
-		let str = "",
+		let str = '',
 			range = min,
-			arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-				'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
-				'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-			];
+			arr = [
+				'0',
+				'1',
+				'2',
+				'3',
+				'4',
+				'5',
+				'6',
+				'7',
+				'8',
+				'9',
+				'a',
+				'b',
+				'c',
+				'd',
+				'e',
+				'f',
+				'g',
+				'h',
+				'i',
+				'j',
+				'k',
+				'l',
+				'm',
+				'n',
+				'o',
+				'p',
+				'q',
+				'r',
+				's',
+				't',
+				'u',
+				'v',
+				'w',
+				'x',
+				'y',
+				'z',
+				'A',
+				'B',
+				'C',
+				'D',
+				'E',
+				'F',
+				'G',
+				'H',
+				'I',
+				'J',
+				'K',
+				'L',
+				'M',
+				'N',
+				'O',
+				'P',
+				'Q',
+				'R',
+				'S',
+				'T',
+				'U',
+				'V',
+				'W',
+				'X',
+				'Y',
+				'Z',
+			]
 		let pos = 0
 		// 随机产生
 		if (randomFlag) {
-			range = Math.round(Math.random() * (max - min)) + min;
+			range = Math.round(Math.random() * (max - min)) + min
 		}
 		for (let i = 0; i < range; i++) {
-			pos = Math.round(Math.random() * (arr.length - 1));
-			str += arr[pos];
+			pos = Math.round(Math.random() * (arr.length - 1))
+			str += arr[pos]
 		}
-		return str;
+		return str
 	},
 	/**
 	 * description: 格式化指标数据
@@ -236,7 +298,7 @@ export default {
 	 * @return any
 	 */
 	dataFormat(num: any, quantile = 0) {
-		return (typeof (num) == 'number' && num != 0) ? num.toFixed(quantile).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, '$1,') : num;
+		return typeof num == 'number' && num != 0 ? num.toFixed(quantile).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, '$1,') : num
 	},
 	/**
 	 * author: ljw
@@ -276,8 +338,10 @@ export default {
 		let newObj = Array.isArray(obj) ? [] : {}
 		//遍历obj
 		for (let i in obj) {
-			if (obj.hasOwnProperty(i)) { //判断当前属性是否为obj自身的属性
-				if ((typeof obj[i]).toLowerCase() === 'object') { //判断当前属性是否为对象类型
+			if (obj.hasOwnProperty(i)) {
+				//判断当前属性是否为obj自身的属性
+				if ((typeof obj[i]).toLowerCase() === 'object') {
+					//判断当前属性是否为对象类型
 					newObj[i] = this.deepCopy(obj[i], map) //如果是对象类型就使用该方法进行递归处理
 				} else {
 					newObj[i] = obj[i] //不是对象类型就直接拷贝
@@ -288,7 +352,7 @@ export default {
 	},
 }
 
-export function formatRptType(name, type = "") {
+export function formatRptType(name, type = '') {
 	let fmtName = ''
 	let typeReturn = ''
 	if (name === '第一季度报告') {
@@ -304,9 +368,27 @@ export function formatRptType(name, type = "") {
 		fmtName = '年报'
 		typeReturn = '12'
 	}
-	if (type === "type") {
+	if (type === 'type') {
 		return typeReturn
 	} else {
 		return fmtName
 	}
+}
+
+/**
+ * description: 根据传入的对象，将其转换为url的查询字符串
+ * @return 组合好的查询字符串
+ * @createTime: 2023-5-16 15:26:32
+ */
+export function generateQueryStringByObj(obj: object): string {
+	// 使用Object.entries方法和reduce方法，将query对象的键值对拼接成一个字符串
+	let queryString = Object.entries(obj).reduce((acc, [key, value]) => {
+		// 对每个键值对，使用=和&符号进行连接，并追加到累积器字符串中
+		return acc + `${key}=${value}&`
+	}, '')
+	// 去掉最后一个多余的&符号
+	queryString = queryString.slice(0, -1)
+	// 使用encodeURIComponent函数对字符串进行编码
+	// queryString = encodeURIComponent(queryString)
+	return queryString
 }

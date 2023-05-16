@@ -227,6 +227,7 @@ const main = {
 			this.mainReport.nodeId = getQueryVariable('mainNodeid')
 			this.mainReport.taskId = getQueryVariable('mainTaskid')
 			this.chartsId = getQueryVariable('chartsId')
+			this.pdfUrl = getQueryVariable('file')
 			// 初始化对比公司列表 start
 			this.oriCompareList = getQueryVariable('compareList')
 			this.compareList = decodeURI(getQueryVariable('compareList')).split(',')
@@ -656,13 +657,19 @@ const main = {
 		},
 		// 跳转到对比公司添加界面
 		toCompareAddPage() {
-			this.postMessage('navigateTo', `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`)
-			// wx.miniProgram.navigateTo({
-			// 	url: `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=${this.chartsId}`,
-			// 	success: (resp) => {
-			// 		console.log('跳转成功')
-			// 	}
-			// })
+			// 将compareList中的name组合成用,分隔的字符串，最后一个不加,
+			let compareList = ''
+			this.compareList.forEach((item, index) => {
+				compareList += item.name
+				if(index < this.compareList.length - 1) {
+					compareList += ','
+				}
+			})
+			this.postMessage('navigateTo', `/subPackages/stock/compare-industry/compare-industry-add?isFromPdf=true&chartsId=
+				${this.chartsId}&compareList=${compareList}&name=${this.curStock.secName}&code=
+				${this.curStock.secCode}&browserName=${this.browserName}&pdfUrl=${this.pdfUrl}&login=
+				${this.isLogin}&nodeId=${this.nodeId}&page=${this.curPage}&taskId=${this.taskId}&templateId=
+				${this.templateId}&auth=${this.token}`)
 		},
 		// 切换回主报告
 		toMainReport() {

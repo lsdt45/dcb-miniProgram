@@ -1,3 +1,4 @@
+import type { pdfLinkType } from '@/types/CommonTypes';
 import utils from '@/common/util'
 import store from '@/store/index.js'
 import {
@@ -168,9 +169,21 @@ function updateList(list: CompareInfo[]) {
 	})
 	store.commit('updateCurCmpList', curCmpList)
 }
-// 添加对比公司前的验证规则
-// function checkAddRule(list: CompareInfo[]) {
-	
-// }
+/**
+ * description: 更新后的compareList
+ * @return compareList:更新后的compareList
+ */
+
+export function updatePdfLinkCompareList(pdfLink: pdfLinkType) {
+	let compareList: any = ''
+	store.state.curCmpList.forEach((item: any, index) => {
+		compareList += `${item.comp004_OrgName}(${item.comp004_Seccode})`
+		if(index < store.state.curCmpList.length - 1) {
+			compareList += ','
+		}
+	});
+	pdfLink.compareList = compareList
+	return compareList
+}
 
 export { aliasReturnCompareInfo, updateList }

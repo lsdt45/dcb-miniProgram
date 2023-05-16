@@ -13,7 +13,7 @@
 			</uni-tr>
 			<uni-tr v-for="(item, index_tr) in chartsDataProp.series" :key="index_tr" @trClick="showFullName(index_tr)">
 				<uni-td :isBold="tdClass(index_tr)">{{ item.name }}</uni-td>
-				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''">
+				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''" align="right">
 					{{ tableCellData(data) }}
 				</uni-td>
 				<view class="uni-table-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
@@ -32,7 +32,7 @@
 			</uni-tr>
 			<uni-tr v-for="(item, index_tr) in chartsDataProp.series" :key="index_tr" @trClick="showFullName(index_tr)">
 				<uni-td :isBold="tdClass(index_tr)">{{ item.name }}</uni-td>
-				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''">
+				<uni-td :class="negativeStyle(data)" v-for="(data, index) in item.data" :key="index" :color="data < 0 ? 'red' : ''" align="right">
 					{{ tableCellData(data) }}
 				</uni-td>
 				<view class="uni-table-td__tooltip" :class="{ show: curClickTd == index_tr }" :style="tooltipOffset(index_tr)">{{ item.name }}</view>
@@ -120,6 +120,11 @@
 		}
 	})
 
+	const tdStyle = computed(() => {
+		return (data: any) => {
+			return data < 0 ? 'red' : ''
+		}
+	})
 	watch(
 		() => props.chartsData,
 		() => {}
@@ -245,6 +250,9 @@
 		}
 		.bold {
 			font-weight: bold;
+		}
+		.negative {
+			color: red;
 		}
 		/* #endif */
 	}

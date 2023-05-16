@@ -110,10 +110,12 @@
 	import api from '@/common/api/api.js'
 	import store from '@/store/index.js'
 	import util from '@/common/util'
-	import type { IndustryTree } from '@/types/CommonTypes'
+	import { generateQueryStringByObj } from '@/common/util'
+	import type { IndustryTree, pdfLinkType } from '@/types/CommonTypes'
+	import { pdfLinkObj } from '@/types/CommonTypes'
 	import DcbPopupPanel from '@/components/dcb-popup-panel/dcb-popup-panel.vue'
 	import config from '@/common/data/index.js'
-	import { list, aliasReturnCompareInfo, cmpIndustryNum, updateList, listData } from './compare-industry'
+	import { list, aliasReturnCompareInfo, cmpIndustryNum, updateList, listData, updatePdfLinkCompareList } from './compare-industry'
 	import type { CompareInfo, IndustryBaseInfo, IndustryPickerDataTree, SearchStockInfo } from './compare-industry'
 	import type { ListData } from '../../../components/dcb-popup-panel/dcb-popup-panel'
 	let columns = ref([
@@ -189,6 +191,8 @@
 	let tableData = ref<CompareInfo[]>(util.deepCopy(defaultIndustyList.value))
 	// 时间跨度
 	let timeRange = []
+	// pdf链接的查询字符串对象
+	let pdfLink = ref(pdfLinkObj)
 	let update = ref(false)
 	// 初始化数据
 	function initData() {
@@ -547,7 +551,7 @@
 	// 获取从pdf详情页传过来的信息
 	function getPdfInfo() {
 		window.addEventListener('message', (e) => {
-			console.log(e.data);
+			console.log(e.data)
 		})
 	}
 	// 获取所有股票信息，用于搜索
@@ -627,8 +631,10 @@
 		})
 		// #endif
 		// #ifdef H5
+		// 更新pdfLink中的compareList
+		updatePdfLinkCompareList(pdfLink.value)
 		uni.navigateTo({
-			url: '/pages/stock/webView/my-web-view?test=test',
+			url: '/pages/stock/webView/my-web-view?' + generateQueryStringByObj(pdfLink.value),
 		})
 		// #endif
 	}
@@ -638,7 +644,8 @@
 		getIndustryClassificationInfo()
 		initItemChecked()
 	})
-	onLoad((options) => {
+	onLoad((options: any) => {
+		pdfLink.value = { ...options }
 		// 如果是从pdf详情页跳转过来的，则需要单独获取一下报告期列表数据
 		isFromPdf.value = options.isFromPdf
 		if (isFromPdf) {
