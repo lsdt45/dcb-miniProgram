@@ -339,6 +339,8 @@
 				&:nth-child(3),
 				&:nth-child(4) {
 					.baseinfo-item__name {
+						position: relative;
+						top: 3px;
 						font-size: 12px;
 					}
 				}

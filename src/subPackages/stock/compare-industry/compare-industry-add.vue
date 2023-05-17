@@ -631,11 +631,19 @@
 		})
 		// #endif
 		// #ifdef H5
+		// 如果是从pdf详情页过来的，则返回时需要重新带上参数
 		// 更新pdfLink中的compareList
-		updatePdfLinkCompareList(pdfLink.value)
-		uni.navigateTo({
-			url: '/pages/stock/webView/my-web-view?' + generateQueryStringByObj(pdfLink.value),
-		})
+		if(isFromPdf.value) {
+			updatePdfLinkCompareList(pdfLink.value)
+			uni.navigateTo({
+				url: '/pages/stock/webView/my-web-view?' + generateQueryStringByObj(pdfLink.value),
+			})
+		} else {
+			// 否则只返回上一页
+			uni.navigateBack({
+				delta: 1,
+			})
+		}
 		// #endif
 	}
 
