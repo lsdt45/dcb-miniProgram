@@ -399,7 +399,7 @@
 		}
 		api.post('/Report/GetChartsData', param).then((resp) => {
 			if (resp.status) {
-				console.log(resp)
+				endDateList.value = []
 				// 获取日期列表
 				let timePeriodTemp = resp.data.codeDataList[0].data.calculationAllData.slice(1)
 				let timePeriod = []
@@ -408,6 +408,8 @@
 						timePeriod.unshift(item[0])
 					}
 				})
+				// 去重
+				timePeriod = [...new Set(timePeriod)]
 				timePeriod.unshift('最新日期')
 				timePeriod.forEach((item, index) => {
 					endDateList.value.push({
@@ -633,7 +635,7 @@
 		// #ifdef H5
 		// 如果是从pdf详情页过来的，则返回时需要重新带上参数
 		// 更新pdfLink中的compareList
-		if(isFromPdf.value) {
+		if (isFromPdf.value) {
 			updatePdfLinkCompareList(pdfLink.value)
 			uni.navigateTo({
 				url: '/pages/stock/webView/my-web-view?' + generateQueryStringByObj(pdfLink.value),
@@ -656,7 +658,7 @@
 		pdfLink.value = { ...options }
 		// 如果是从pdf详情页跳转过来的，则需要单独获取一下报告期列表数据
 		isFromPdf.value = options.isFromPdf
-		if (isFromPdf) {
+		if (isFromPdf.value) {
 			chartsId = options.chartsId
 			getAnalysisTime()
 			getChartsData()
@@ -674,4 +676,12 @@
 
 <style lang="scss">
 	@import '@/static/scss/common/compare-industry.scss';
+	/* #ifdef H5 */
+	:deep(.input-value) {
+		height: 35px;
+		padding-right: 15px;
+		border-radius: 2px !important;
+		border-color: #e9f1fd !important;
+	}
+	/* #endif */
 </style>

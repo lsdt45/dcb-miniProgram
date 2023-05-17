@@ -601,6 +601,7 @@
 			 * @createTime: 2022-07-03 15:39:48
 			 */
 			getChartsData() {
+				this.timePeriod = []
 				let BenchCodeList: any[] = []
 				this.$store.state.curCmpList.forEach((item: any) => {
 					if (item.comp004_Seccode != this.curStock.secCode) {
@@ -632,6 +633,8 @@
 								this.timePeriod.unshift(item[0])
 							}
 						})
+						// 去重
+						this.timePeriod = [...new Set(this.timePeriod)]
 						this.timePeriod.unshift('最新日期')
 						this.$store.commit('updateEndDateList', this.timePeriod)
 					}
