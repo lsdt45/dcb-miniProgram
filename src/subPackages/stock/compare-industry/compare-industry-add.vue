@@ -49,7 +49,7 @@
 		</view>
 		<!-- 行业tab页 -->
 		<view class="comapre-industry-add__body">
-			<u-tabs :isScroll="false" :list="list" badgeColor="#000" badgeBgColor="#e9f1fd" v-model="currentTab" @change="changeTab"></u-tabs>
+			<u-tabs :isScroll="false" :list="list" :offset="[2, 10]" badgeColor="#000" badgeBgColor="#e9f1fd" v-model="currentTab" @change="changeTab"></u-tabs>
 			<view class="industry-selector">
 				<!-- 行业选择器 -->
 				<view class="industry-data-picker">
@@ -64,7 +64,7 @@
 						:noShow="currentTab == 0 ? true : false"
 						@change="changeIndustry"
 						ref="dataPicker"></uni-data-picker>
-					<view class="data-select__arrow" v-if="currentTab != 0"></view>
+					<!-- <view class="data-select__arrow" v-if="currentTab != 0"></view> -->
 				</view>
 				<!-- 日期选择器 -->
 				<view class="enddate-select">

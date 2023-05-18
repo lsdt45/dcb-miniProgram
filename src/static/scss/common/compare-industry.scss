@@ -1,6 +1,13 @@
 	.comapre-industry-add__wrapper {
 		background: #f4f4f4;
-
+		:deep(.selected-area) {
+			height: 100%;
+			span {
+				position: relative;
+				top: -2px;
+				color: #000;
+			}
+		}
 		.data-select {
 			display: flex;
 			justify-content: space-between;
@@ -49,7 +56,7 @@
 
 	.comapre-industry-add__current {
 		display: grid;
-		grid-template-columns: 240rpx auto 56rpx;
+		grid-template-columns: 8.5rem auto 1.75rem;
 		padding: 40rpx 28rpx;
 		margin-bottom: 5px;
 		background-color: #fff;

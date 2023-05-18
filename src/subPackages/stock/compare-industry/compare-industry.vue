@@ -93,7 +93,7 @@
 		/* #ifdef MP */
 		.compare-industry__header {
 			display: grid;
-			grid-template-columns: 240rpx auto 2.2em;
+			grid-template-columns: 8.5rem auto 2.2em;
 			padding: 20px 15px;
 			margin-bottom: 5px;
 			background-color: #fff;
@@ -116,7 +116,7 @@
 		/* #ifdef H5 */
 		.compare-industry__header {
 			display: grid;
-			grid-template-columns: 240rpx auto 2.2em;
+			grid-template-columns: 8.5rem auto 2.2em;
 			padding: 20px 15px;
 			margin-bottom: 5px;
 			background-color: #fff;
