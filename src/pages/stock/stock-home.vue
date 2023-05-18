@@ -1,37 +1,35 @@
+<!-- @format -->
+
 <template>
 	<view class="stock-home__wrapper">
 		<dcb-nav-bar :title="stockFullName" :leftIconType="leftIconType" :stock-home="true" search></dcb-nav-bar>
 		<view class="stock-home__baseinfo-wrapper" v-if="!isShowDetail">
 			<view class="baseinfo-item" v-for="(item, index) in baseInfoData.values()" :key="index">
-				<text class="baseinfo-item__name"> {{ item.name }} </text>
-				<text class="baseinfo-item__value"> {{ item.value + item.unit}} </text>
+				<text class="baseinfo-item__name">{{ item.name }}</text>
+				<text class="baseinfo-item__value">{{ item.value + item.unit }}</text>
 			</view>
 		</view>
-		<view class="stock-home__menu" v-if="!isShowDetail">
-			<view class="stock-home__menu-card" v-for="(item,index) in navigMenuData" :key="index"	@click="toStock(item)">
-				<view >
-					<image referrerPolicy='no-referrer' class="stock-home__menu-card-img" :src="setImgUrl(index)"
-						mode="scaleToFill"></image>
-					<view class="stock-home__menu-card-content">
-						<text :class="menuIconType(index)" :style="menuIconColor(index)"></text>
-						<text class="stock-home__menu-card-topic"> {{ item.topic }} </text>
+		<scroll-view class="stock-home-menu__wrapper" scroll-y>
+			<view class="stock-home__menu" v-if="!isShowDetail">
+				<view class="stock-home__menu-card" v-for="(item, index) in navigMenuData" :key="index" @click="toStock(item)">
+					<view>
+						<image referrerPolicy="no-referrer" class="stock-home__menu-card-img" :src="setImgUrl(index)" mode="scaleToFill"></image>
+						<view class="stock-home__menu-card-content">
+							<text :class="menuIconType(index)" :style="menuIconColor(index)"></text>
+							<text class="stock-home__menu-card-topic">{{ item.topic }}</text>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<!-- 		<view class="stock-home__stock-detail" v-else>
-			<stock :analyseNodeProp="analyseNodeProp"></stock>
-		</view> -->
+		</scroll-view>
 	</view>
 </template>
 
 <script lang="ts">
-	import {
-		mapState
-	} from 'vuex'
+	import { mapState } from 'vuex'
 	// import stock from "@/pages/stock/stock.vue"
-	import DcbNavBar from "@/components/dcb-nav-bar/dcb-nav-bar.vue"
-	import stockHomeData from "@/common/data/stock-home.js"
+	import DcbNavBar from '@/components/dcb-nav-bar/dcb-nav-bar.vue'
+	import stockHomeData from '@/common/data/stock-home.js'
 	export default {
 		data() {
 			return {
@@ -41,17 +39,18 @@
 				isShowDetail: false, // 是否显示财务分析详情页
 				analyseNodeProp: {}, // 传递给stock组件的当前选中的节点信息
 				value: 0,
-				range: [{
+				range: [
+					{
 						value: 0,
-						text: "篮球"
+						text: '篮球',
 					},
 					{
 						value: 1,
-						text: "足球"
+						text: '足球',
 					},
 					{
 						value: 2,
-						text: "游泳"
+						text: '游泳',
 					},
 				],
 				imgSrc: '', // 背景图路径
@@ -59,14 +58,14 @@
 				baseInfoData: new Map(), // 基础指标信息
 				indexData: [],
 				userStock: [],
-				userStockStr: "",
-				userInfo:"",
-				serverTime:""
+				userStockStr: '',
+				userInfo: '',
+				serverTime: '',
 			}
 		},
 		components: {
 			// stock,
-			DcbNavBar
+			DcbNavBar,
 		},
 		computed: {
 			...mapState(['navBarHeight', 'curStock']),
@@ -104,7 +103,7 @@
 					}
 					return 'background-color:' + stockHomeData.iconStyleArr[typeIndex].color
 				}
-			}
+			},
 			// 导航菜单小图标的颜色
 		},
 		methods: {
@@ -118,43 +117,48 @@
 			getTemplateData() {
 				this.navigMenuData = []
 				let param = {
-					Id: this.$config.data.FinancialAnalysisTemplateId
+					Id: this.$config.data.FinancialAnalysisTemplateId,
 				}
-				this.$api.get('/Report/GetNavigJsonById', param).then(resp => {
-					if (resp.status) {
-						let navigData = resp.data
-						navigData.NavigJson = JSON.parse(navigData.navigJson)
-						// 财务专题分析 数据
-						// this.navigDataItem = navigData.NavigJson.children[0].children
-						this.navigDataItem = navigData.NavigJson.children
-						this.formatNavData(this.navigDataItem, 0)
-						// 获取一级模板作为首页导航菜单，并去掉id中"_"后面的数据
-						
-						this.navigDataItem.forEach((item, index) => {
-							let userClass=new Date(this.userInfo.endTime)>this.serverTime?this.userInfo.userClass:this.userInfo.userDegradeClass
-							let info =item.userClassAuth.filter(t=>t.userClass==userClass)[0]
-							if(info && info.detailedAuth==0 && item.isShow){
-								item.id = this.$util.getNodeIdById(item.id)
-								this.navigMenuData.push(item)
-								//this.navigMenuData[index].id = this.$util.getNodeIdById(this.navigMenuData[index].id)
-							}
-						})
-					}
-				}).catch(err => {
-					console.log(err)
-				})
+				this.$api
+					.get('/Report/GetNavigJsonById', param)
+					.then((resp) => {
+						if (resp.status) {
+							let navigData = resp.data
+							navigData.NavigJson = JSON.parse(navigData.navigJson)
+							// 财务专题分析 数据
+							// this.navigDataItem = navigData.NavigJson.children[0].children
+							this.navigDataItem = navigData.NavigJson.children
+							this.formatNavData(this.navigDataItem, 0)
+							// 获取一级模板作为首页导航菜单，并去掉id中"_"后面的数据
+
+							this.navigDataItem.forEach((item, index) => {
+								let userClass = new Date(this.userInfo.endTime) > this.serverTime ? this.userInfo.userClass : this.userInfo.userDegradeClass
+								let info = item.userClassAuth.filter((t) => t.userClass == userClass)[0]
+								if (info && info.detailedAuth == 0 && item.isShow) {
+									item.id = this.$util.getNodeIdById(item.id)
+									this.navigMenuData.push(item)
+									//this.navigMenuData[index].id = this.$util.getNodeIdById(this.navigMenuData[index].id)
+								}
+							})
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
 			},
 			// 获取当前股票的基础指标信息
 			getStockBaseInfo() {
-				this.baseInfoData = stockHomeData.data;
+				this.baseInfoData = stockHomeData.data
 				let param = {
-					QueryList: [{
-						code: this.curStock.secCode,
-						year: this.curStock.year,
-						name: this.curStock.rptType
-					}]
+					QueryList: [
+						{
+							code: this.curStock.secCode,
+							year: this.curStock.year,
+							name: this.curStock.rptType,
+						},
+					],
 				}
-				this.$api.post('/Report/GetRecentStockBaseInfo', param).then(resp => {
+				this.$api.post('/Report/GetRecentStockBaseInfo', param).then((resp) => {
 					if (resp.status) {
 						let dataMap = new Map(Object.entries(resp.data[0]))
 						for (let [key, value] of this.baseInfoData.entries()) {
@@ -162,7 +166,7 @@
 							let value_temp = {
 								name: value.name,
 								value: this.$util.dataFormat(result, 2),
-								unit: value.unit
+								unit: value.unit,
 							}
 							if (result != undefined) {
 								this.baseInfoData.set(key, value_temp)
@@ -173,38 +177,44 @@
 			},
 			// 获取k线数据
 			getStockQuotesBaseDayInfo(Secids, type) {
-				this.$api.post('/Report/GetStockQuotesBaseDayInfo', {
-					Secids: Secids,
-				}, {}, false).then(res => {
-					if (res.status) {
-						if (type == 0)
-							this.indexData = res.data
-						if (type == 1)
-							this.userStock = res.data
-					}
-				}).catch(err => {
-					if (type == 0)
-						this.indexData = []
-					if (type == 1)
-						this.userStock = []
-				})
+				this.$api
+					.post(
+						'/Report/GetStockQuotesBaseDayInfo',
+						{
+							Secids: Secids,
+						},
+						{},
+						false
+					)
+					.then((res) => {
+						if (res.status) {
+							if (type == 0) this.indexData = res.data
+							if (type == 1) this.userStock = res.data
+						}
+					})
+					.catch((err) => {
+						if (type == 0) this.indexData = []
+						if (type == 1) this.userStock = []
+					})
 			},
 			getUserStockThirdParty() {
-				this.$api.post('/Report/GetUserStock', {}, {}, false).then(res => {
-					if (res.status) {
-						res.data.forEach(t => {
-							this.userStockStr = this.userStockStr + (t.market == "SH" ? "1." + t.seccode :
-								"0." + t.seccode) + ","
-						})
-						this.getStockData()
-					}
-				}).catch(err => {
-					this.userStockStr = []
-				})
+				this.$api
+					.post('/Report/GetUserStock', {}, {}, false)
+					.then((res) => {
+						if (res.status) {
+							res.data.forEach((t) => {
+								this.userStockStr = this.userStockStr + (t.market == 'SH' ? '1.' + t.seccode : '0.' + t.seccode) + ','
+							})
+							this.getStockData()
+						}
+					})
+					.catch((err) => {
+						this.userStockStr = []
+					})
 			},
 			// 获取指数行情基础信息数据
 			getIndexData() {
-				this.getStockQuotesBaseDayInfo("1.000001,0.399001,0.399006", 0)
+				this.getStockQuotesBaseDayInfo('1.000001,0.399001,0.399006', 0)
 			},
 			getStockData() {
 				setTimeout(() => {
@@ -229,12 +239,12 @@
 			toStock(item) {
 				this.analyseNodeProp = {
 					id: item.id,
-					topic: item.topic
+					topic: item.topic,
 				}
 				// this.isShowDetail = true
 				// uni.hideTabBar()
 				uni.navigateTo({
-					url: `/subPackages/stock/stock?id=${item.id}&topic=${item.topic}`
+					url: `/subPackages/stock/stock?id=${item.id}&topic=${item.topic}`,
 				})
 			},
 			// 返回前一个页面
@@ -243,14 +253,14 @@
 					delta: 1,
 					fail: () => {
 						this.isShowDetail = false
-					}
+					},
 				})
 			},
 			// 循环设置背景图
 			setImgUrl(index) {
 				let imgIndex = 0
 				if (index > 9) {
-					imgIndex = index % 10 + 1
+					imgIndex = (index % 10) + 1
 				} else {
 					imgIndex = index + 1
 				}
@@ -263,20 +273,21 @@
 			getDefaultCompareList() {
 				let param = {
 					Code: this.$store.state.curStock.secCode,
-					ReportDate: null
+					ReportDate: null,
 				}
-				this.$api.post('/Compare/GetToCompareList_CompanyAndFinance', param)
+				this.$api
+					.post('/Compare/GetToCompareList_CompanyAndFinance', param)
 					.then((res: any) => {
 						this.$store.commit('updateCurCmpList', res.data.defaultCompareList)
 						this.$store.commit('updateDefaultIndustyList', res.data.defaultCompareList)
 						let industryName = ''
-						let curStock = {...this.$store.state.curStock}
+						let curStock = { ...this.$store.state.curStock }
 						this.$config.data.IndustryTree.forEach((industry) => {
 							let result = res.data.compareIndustry.find((compareIndustry) => {
 								return compareIndustry.comp004_002 == industry
 							})
-							if(result) {
-								if(result.comp004_006) {
+							if (result) {
+								if (result.comp004_006) {
 									industryName = result.comp004_006
 								}
 							}
@@ -284,15 +295,15 @@
 						curStock.industry = industryName
 						this.$store.commit('setCurStock', curStock)
 					})
-					.catch((err: Error) => console.log(err));
+					.catch((err: Error) => console.log(err))
 			},
 		},
 		onShow() {
-			this.initData();
-			this.getDefaultCompareList();
-			this.userInfo=uni.getStorageSync("UserInfo")
-			this.serverTime =uni.getStorageSync("serverTime")
-		}
+			this.initData()
+			this.getDefaultCompareList()
+			this.userInfo = uni.getStorageSync('UserInfo')
+			this.serverTime = uni.getStorageSync('serverTime')
+		},
 	}
 </script>
 
@@ -346,11 +357,13 @@
 				}
 			}
 		}
-
+		.stock-home-menu__wrapper {
+			height: calc(100% - 220px);
+		}
 		.stock-home__menu {
 			// display: flex;
 			display: grid;
-    	grid-template-columns: repeat(auto-fill, 340rpx);
+			grid-template-columns: repeat(auto-fill, 340rpx);
 			justify-content: space-between;
 			flex-wrap: wrap;
 			position: relative;

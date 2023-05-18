@@ -182,7 +182,7 @@
 	// 是否显示搜索结果
 	let isShowResult = ref(false)
 	// 是否来自pdf页面
-	let isFromPdf = ref('')
+	let isFromPdf = ref(false)
 	// 每次获取数据的个数
 	let pageSize = ref(65)
 	// 搜索框关键词
@@ -682,6 +682,13 @@
 		padding-right: 15px;
 		border-radius: 2px !important;
 		border-color: #e9f1fd !important;
+	}
+	:deep(.zb-table-thead) {
+		.item-tr:first-of-type {
+			.uni-table-checkbox {
+				display: none;
+			}
+		}
 	}
 	/* #endif */
 </style>
